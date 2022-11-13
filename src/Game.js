@@ -58,6 +58,14 @@ export const Game = {
     moves: {
         discoverPiece: ({ G }, id) => {
             G.knownCells[id] = true;
+        },
+
+        placeHint: ({ G }, id, action) => {
+            G.knownCells[id] = action;
+        },
+
+        removeHint: ({ G }, id) => {
+            G.knownCells[id] = false;
         }
     },
 

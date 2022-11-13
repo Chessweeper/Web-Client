@@ -19,6 +19,9 @@
     background-color: green;
 }
 
+.cell img {
+    width: 30px;
+}
 
 .cell {
     border: 1px solid #555;

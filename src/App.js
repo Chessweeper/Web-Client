@@ -1,5 +1,6 @@
 import { Client } from 'boardgame.io/client';
 import { Game } from './Game';
+import rook from '../img/wR.png';
 
 class App {
     constructor(rootElement) {
@@ -27,6 +28,7 @@ class App {
                     s.classList.remove("selected");
                 }
                 curr.classList.add("selected");
+                this.currAction = curr.dataset.id === "" ? null : curr.dataset.id;
             })
         }
     }
@@ -73,7 +75,15 @@ class App {
             cell.onclick = (_) =>
             {
                 const id = cell.dataset.id;
-                if (!this.state.G.knownCells[id]) {
+                if (this.currAction !== null) {
+                    if (this.state.G.knownCells[id] !== true) {
+                        if (this.state.G.knownCells[id] === this.currAction) {
+                            this.client.moves.removeHint(id);
+                        } else {
+                            this.client.moves.placeHint(id, this.currAction);
+                        }
+                    }
+                } else if (this.state.G.knownCells[id] === false) {
                     if (Number.isInteger(this.state.G.cells[id])) {
                         /* To discover many pieces at once, doesn't really work well game design wise
                         if (this.state.G.cells[id] === 0) {
@@ -120,9 +130,11 @@ class App {
         cells.forEach(cell => {
             const cellId = parseInt(cell.dataset.id);
 
-            if (state.G.knownCells[cellId] && state.G.cells[cellId] !== 0) {
+            if (state.G.knownCells[cellId] === true && state.G.cells[cellId] !== 0) {
                 const cellValue = state.G.cells[cellId];
                 cell.innerHTML = cellValue;
+            } else if (state.G.knownCells[cellId] !== false && state.G.knownCells[cellId] !== true) {
+                cell.innerHTML = `<img src="${rook}"/>`;
             } else {
                 cell.innerHTML = "";
             }
