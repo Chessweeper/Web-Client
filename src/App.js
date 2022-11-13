@@ -58,11 +58,10 @@ class App {
         const cells = this.rootElement.querySelectorAll('.cell');
         cells.forEach(cell => {
             const cellId = parseInt(cell.dataset.id);
-            const cellValue = state.G.cells[cellId];
 
-            if (cellValue !== null) {
+            if (state.G.knownCells[cellId]) {
+                const cellValue = state.G.cells[cellId];
                 const player = cellValue[0];
-
                 cell.innerHTML = player;
             } else {
                 cell.innerHTML = "";
