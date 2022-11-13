@@ -15,16 +15,23 @@ export const Game = {
 
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
-                const value = data[y * 8 + i];
+                const value = data[y * 8 + x];
                 if (!Number.isInteger(value)) {
-                    if (value === 'r') { // Rook
-                        console.log(y - 1);
+                    if (value === 'r' || value === 'q') { // Rook
                         for (let yi = y - 1; yi >= 0; yi--) {
-                            if (Number.isInteger(data[yi * 8 + i])) data[yi * 8 + i]++;
+                            if (Number.isInteger(data[yi * 8 + x])) data[yi * 8 + x]++;
                             else break;
                         }
                         for (let yi = y + 1; yi < 8; yi++) {
-                            if (Number.isInteger(data[yi * 8 + i])) data[yi * 8 + i]++;
+                            if (Number.isInteger(data[yi * 8 + x])) data[yi * 8 + x]++;
+                            else break;
+                        }
+                        for (let xi = x - 1; xi >= 0; xi--) {
+                            if (Number.isInteger(data[y * 8 + xi])) data[y * 8 + xi]++;
+                            else break;
+                        }
+                        for (let xi = x + 1; xi < 8; xi++) {
+                            if (Number.isInteger(data[y * 8 + xi])) data[y * 8 + xi]++;
                             else break;
                         }
                     }
