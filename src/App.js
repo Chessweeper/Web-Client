@@ -48,7 +48,13 @@ class App {
             {
                 const id = cell.dataset.id;
                 if (!this.state.G.knownCells[id]) {
-                    console.log(this.state.G.cells[id]);
+                    if (Number.isInteger(this.state.G.cells[id])) {
+                        this.client.moves.discoverPiece(id);
+                        cell.classList.add("open");
+                    } else {
+                        console.log("You lost");
+                        cell.classList.add("red");
+                    }
                 }
             };
         });
@@ -61,8 +67,7 @@ class App {
 
             if (state.G.knownCells[cellId]) {
                 const cellValue = state.G.cells[cellId];
-                const player = cellValue[0];
-                cell.innerHTML = player;
+                cell.innerHTML = cellValue;
             } else {
                 cell.innerHTML = "";
             }

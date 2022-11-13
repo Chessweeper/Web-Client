@@ -5,3 +5,11 @@
     text-align: center;
     background-color: #555;
 }
+
+.red {
+    background-color: red;
+}
+
+.open {
+    background-color: white;
+}

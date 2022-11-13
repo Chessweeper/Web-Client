@@ -17,7 +17,7 @@ export const Game = {
             for (let x = 0; x < 8; x++) {
                 const value = data[y * 8 + x];
                 if (!Number.isInteger(value)) {
-                    if (value === 'r' || value === 'q') { // Rook
+                    if (value === 'r' || value === 'q') { // Rook movements
                         for (let yi = y - 1; yi >= 0; yi--) {
                             if (Number.isInteger(data[yi * 8 + x])) data[yi * 8 + x]++;
                             else break;
@@ -56,8 +56,8 @@ export const Game = {
     },
   
     moves: {
-        movePiece: (G, ctx, id) => {
-            console.log("click")
+        discoverPiece: ({ G }, id) => {
+            G.knownCells[id] = true;
         }
     },
 
