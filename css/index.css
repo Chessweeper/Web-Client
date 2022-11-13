@@ -3,8 +3,22 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    height: 90vh;
 }
+
+.flex.hor {
+    flex-direction: row;
+}
+
+.flex.hor img {
+    width: 64px;
+    padding: 5px;
+    margin: 5px;
+}
+
+.flex.hor .selected {
+    background-color: green;
+}
+
 
 .cell {
     border: 1px solid #555;

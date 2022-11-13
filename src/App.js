@@ -17,6 +17,18 @@ class App {
         });
 
         this.selected = null;
+
+        this.currAction = null;
+
+        for (const elem of document.getElementsByClassName("action")) {
+            const curr = elem;
+            elem.addEventListener("click", e => {
+                for (const s of document.getElementsByClassName("selected")) {
+                    s.classList.remove("selected");
+                }
+                curr.classList.add("selected");
+            })
+        }
     }
 
     createBoard() {
