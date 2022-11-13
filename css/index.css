@@ -44,3 +44,16 @@
 .open.black {
     background-color: #D28C45;
 }
+
+#popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    font-weight: bolder;
+    font-size: 30px;
+}

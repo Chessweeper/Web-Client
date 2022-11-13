@@ -40,6 +40,7 @@ export const Game = {
         }
 
         // Debug display the grid
+        /*
         let str = "";
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
@@ -48,6 +49,7 @@ export const Game = {
             str += "\n";
         }
         console.log(str);
+        */
 
         return {
             knownCells: knownData,

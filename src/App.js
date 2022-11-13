@@ -20,6 +20,7 @@ class App {
         this.selected = null;
 
         this.currAction = null;
+        this.didLost = false;
 
         for (const elem of document.getElementsByClassName("action")) {
             const curr = elem;
@@ -74,6 +75,9 @@ class App {
         cells.forEach(cell => {
             cell.onclick = (_) =>
             {
+                if (this.didLost) {
+                    return;
+                }
                 const id = cell.dataset.id;
                 if (this.currAction !== null) {
                     if (this.state.G.knownCells[id] !== true) {
@@ -117,7 +121,9 @@ class App {
                             cell.style = "color: " + color + ";";
                         }
                     } else {
-                        console.log("You lost");
+                        this.didLost = true;
+                        document.getElementById("popup").hidden = false;
+                        document.getElementById("popup").innerHTML = "You lost";
                         cell.classList.add("red");
                     }
                 }
