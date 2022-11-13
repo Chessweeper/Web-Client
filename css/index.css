@@ -1,15 +1,28 @@
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+
 .cell {
     border: 1px solid #555;
     width: 45px;
     height: 45px;
     text-align: center;
     background-color: #555;
+    font-weight: bolder;
+    font-size: 25px;
 }
 
 .red {
     background-color: red;
 }
 
-.open {
-    background-color: white;
+.open.white {
+    background-color: #FFCF9F;
+}
+
+.open.black {
+    background-color: #D28C45;
 }
