@@ -42,6 +42,20 @@ class App {
     }
 
     attachListeners() {
+        function tryDiscover(client, G, root, y, x, tmpBuffer) {
+            const v = y * 8 + x;
+            if (y >= 0 && y < 8 && x >= 0 && x < 8 && !G.knownCells[v] && G.cells[v] === 0 && !tmpBuffer.includes(v)) {
+                const cells = root.querySelectorAll('[data-id~="' + v + '"]');
+                cells[0].classList.add("open");
+                client.moves.discoverPiece(v);
+                tmpBuffer.push(v);
+                tryDiscover(client, G, root, y - 1, x, tmpBuffer);
+                tryDiscover(client, G, root, y + 1, x, tmpBuffer);
+                tryDiscover(client, G, root, y, x - 1, tmpBuffer);
+                tryDiscover(client, G, root, y, x + 1, tmpBuffer);
+            }
+        }
+
         const cells = this.rootElement.querySelectorAll('.cell');
         cells.forEach(cell => {
             cell.onclick = (_) =>
@@ -49,8 +63,12 @@ class App {
                 const id = cell.dataset.id;
                 if (!this.state.G.knownCells[id]) {
                     if (Number.isInteger(this.state.G.cells[id])) {
-                        this.client.moves.discoverPiece(id);
-                        cell.classList.add("open");
+                        if (this.state.G.cells[id] === 0) {
+                            tryDiscover(this.client, this.state.G, this.rootElement, Math.floor(id / 8), id % 8, []);
+                        } else {
+                            this.client.moves.discoverPiece(id);
+                            cell.classList.add("open");
+                        }
                     } else {
                         console.log("You lost");
                         cell.classList.add("red");
