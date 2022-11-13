@@ -83,7 +83,7 @@ class App {
         cells.forEach(cell => {
             const cellId = parseInt(cell.dataset.id);
 
-            if (state.G.knownCells[cellId]) {
+            if (state.G.knownCells[cellId] && state.G.cells[cellId] !== 0) {
                 const cellValue = state.G.cells[cellId];
                 cell.innerHTML = cellValue;
             } else {
