@@ -1,0 +1,6 @@
+.cell {
+    border: 1px solid #555;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+}
