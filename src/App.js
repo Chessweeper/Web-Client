@@ -47,8 +47,9 @@ class App {
             cell.onclick = (_) =>
             {
                 const id = cell.dataset.id;
-                const value = this.state.G.cells[id];
-                console.log(value);
+                if (!this.state.G.knownCells[id]) {
+                    console.log(this.state.G.cells[id]);
+                }
             };
         });
     }
