@@ -60,14 +60,20 @@ export const Game = {
                         }
                     }
                     if (value === 'N') {
-                        if (Number.isInteger(data[(y - 2) * 8 + (x - 1)])) data[(y - 2) * 8 + (x - 1)]++;
-                        if (Number.isInteger(data[(y - 2) * 8 + (x + 1)])) data[(y - 2) * 8 + (x + 1)]++;
-                        if (Number.isInteger(data[(y + 2) * 8 + (x - 1)])) data[(y + 2) * 8 + (x - 1)]++;
-                        if (Number.isInteger(data[(y + 2) * 8 + (x + 1)])) data[(y + 2) * 8 + (x + 1)]++;
-                        if (Number.isInteger(data[(y - 1) * 8 + (x - 2)])) data[(y - 1) * 8 + (x - 2)]++;
-                        if (Number.isInteger(data[(y - 1) * 8 + (x + 2)])) data[(y - 1) * 8 + (x + 2)]++;
-                        if (Number.isInteger(data[(y + 1) * 8 + (x - 2)])) data[(y + 1) * 8 + (x - 2)]++;
-                        if (Number.isInteger(data[(y + 1) * 8 + (x + 2)])) data[(y + 1) * 8 + (x + 2)]++;
+                        function addIfValid(xi, yi) {
+                            if (xi >= 0 && xi < 8 && yi >= 0 && yi < 8 && Number.isInteger(data[yi * 8 + xi])) {
+                                data[yi * 8 + xi]++;
+                            }
+                        }
+
+                        addIfValid(x - 2, y - 1);
+                        addIfValid(x - 2, y + 1);
+                        addIfValid(x + 2, y - 1);
+                        addIfValid(x + 2, y + 1);
+                        addIfValid(x - 1, y - 2);
+                        addIfValid(x - 1, y + 2);
+                        addIfValid(x + 1, y - 2);
+                        addIfValid(x + 1, y + 2);
                     }
                 }
             }
