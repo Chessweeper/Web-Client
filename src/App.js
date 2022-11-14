@@ -53,10 +53,14 @@ class App {
         let pieces = findGetParameter("p");
         this.size = findGetParameter("s");
         this.count = findGetParameter("c");
-        if (this.size === null || this.size < 3 || this.size > 100) { // Invalid board size
+
+        this.size = this.size === null ? 8 : parseInt(this.size);
+        this.count = this.count === null ? 3 : parseInt(this.count);
+
+        if (this.size < 3 || this.size > 100) { // Invalid board size
             this.size = 8;
         }
-        if (this.count === null || this.count < 1 || this.size * this.size < this.count + 1) { // Board size can't fit all pieces
+        if (this.count < 1 || this.count >= this.size * this.size) { // Board size can't fit all pieces
             this.count = 3;
         }
 
@@ -121,7 +125,7 @@ class App {
                     }, 10);
                 }
 
-                const id = cell.dataset.id;
+                const id = parseInt(cell.dataset.id);
                 if (this.currAction !== null) {
                     if (this.state.G.knownCells !== null && this.state.G.knownCells[id] !== true) {
                         if (this.state.G.knownCells[id] === this.currAction) {
