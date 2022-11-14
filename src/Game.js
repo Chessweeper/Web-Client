@@ -60,14 +60,20 @@ export const Game = {
                         }
                     }
                     if (value === 'N') {
-                        if (Number.isInteger(data[(y - 2) * 8 + (x - 1)])) data[(y - 2) * 8 + (x - 1)]++;
-                        if (Number.isInteger(data[(y - 2) * 8 + (x + 1)])) data[(y - 2) * 8 + (x + 1)]++;
-                        if (Number.isInteger(data[(y + 2) * 8 + (x - 1)])) data[(y + 2) * 8 + (x - 1)]++;
-                        if (Number.isInteger(data[(y + 2) * 8 + (x + 1)])) data[(y + 2) * 8 + (x + 1)]++;
-                        if (Number.isInteger(data[(y - 1) * 8 + (x - 2)])) data[(y - 1) * 8 + (x - 2)]++;
-                        if (Number.isInteger(data[(y - 1) * 8 + (x + 2)])) data[(y - 1) * 8 + (x + 2)]++;
-                        if (Number.isInteger(data[(y + 1) * 8 + (x - 2)])) data[(y + 1) * 8 + (x - 2)]++;
-                        if (Number.isInteger(data[(y + 1) * 8 + (x + 2)])) data[(y + 1) * 8 + (x + 2)]++;
+                        const positions = [
+                            [x - 1, y - 2],
+                            [x - 1, y + 2],
+                            [x + 1, y - 2],
+                            [x + 1, y + 2],
+                            [x - 2, y - 1],
+                            [x - 2, y + 1],
+                            [x + 2, y - 1],
+                            [x + 2, y + 1],
+                        ];
+                        for (const [x, y] of positions) {
+                            if (x < 0 || x >= 8 || y < 0 || y >= 8) continue;
+                            if (Number.isInteger(data[y * 8 + x])) data[y * 8 + x]++;
+                        }
                     }
                 }
             }
