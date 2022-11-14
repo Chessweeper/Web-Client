@@ -252,7 +252,7 @@ describe('Board tests', () => {
         ]);
     });
 
-    it('Complex board', () => {
+    it('Small board', () => {
         assert.deepStrictEqual(fillPositions([
             0, 0, N, K,
             0, R, 0, 0,
