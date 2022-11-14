@@ -96,6 +96,11 @@ class App {
             document.getElementById("popup").hidden = true;
         });
 
+        // Remove selected buttons from a previous game
+        for (const s of document.getElementsByClassName("selected")) {
+            s.classList.remove("selected");
+        }
+
         // Display/hide action button and select the first one
         let selected = false;
         for (let action of document.getElementsByClassName("action")) {
