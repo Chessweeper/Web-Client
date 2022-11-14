@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build index.html --out-dir build",
+    "build": "parcel build index.html --out-dir build && cp favicon.ico build || @powershell copy favicon.ico build",
     "test": "mocha"
   },
   "browserslist": "defaults and supports async-functions",
