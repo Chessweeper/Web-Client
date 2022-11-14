@@ -103,13 +103,23 @@ export const Game = {
                 let data = Array(size * size).fill(0);
                 let i = count;
 
+                let kingCount = 0;
+
                 while (i > 0) {
                     const rand = Math.floor(Math.random() * (size * size));
                     if (rand !== id && Number.isInteger(data[rand])) {
                         const value = Math.floor(Math.random() * pieces.length);
                         let piece = pieces[value];
+
                         if (piece === 'P' && rand < size) { // Pawns shouldn't be able to spawn on the top line
                             continue;
+                        }
+                        if (piece === 'K' && kingCount === 1) { // Can't have 2 kings
+                            continue;
+                        }
+
+                        if (piece === 'K') {
+                            kingCount++;
                         }
                         data[rand] = piece;
                         i--;
