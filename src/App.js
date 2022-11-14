@@ -6,6 +6,7 @@ import bishop from '../img/wB.png';
 import queen from '../img/wQ.png';
 import king from '../img/wK.png';
 import pawn from '../img/wP.png';
+import blackPawn from '../img/bP.png';
 
 class App {
     constructor(rootElement) {
@@ -64,7 +65,7 @@ class App {
             this.count = 3;
         }
 
-        const validLetters = ['R', 'B', 'Q', 'N', 'P', 'K'];
+        const validLetters = ['R', 'B', 'Q', 'N', 'P', 'K', 'A', 'D'];
         this.availablePieces = "";
         if (pieces !== null) {
             for (let letter of pieces) {
@@ -78,7 +79,8 @@ class App {
         }
 
         // Since pawns can't spawn on the top line, we need to be careful for boards only containing them
-        if (this.availablePieces === 'P' && this.count >= this.size * (this.size - 1)) {
+        const isOnlyPawn = this.availablePieces === 'P' || this.availablePieces === 'D' || (this.availablePieces.length === 2 && this.availablePieces.includes('P') && this.availablePieces.includes('D'))
+        if (isOnlyPawn && this.count >= this.size * (this.size - 1)) {
             this.count = 3;
         }
 
@@ -218,6 +220,7 @@ class App {
             else if (c === 'N') image = knight;
             else if (c === 'K') image = king;
             else if (c === 'P') image = pawn;
+            else if (c === 'D') image = blackPawn;
             return `<img src="${image}"/>`;
         }
 

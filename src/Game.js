@@ -82,6 +82,10 @@ export function fillPositions(data) {
                     }
                     */
                 }
+                if (value === 'D') {
+                    addIfValid(x + 1, y + 1);
+                    addIfValid(x - 1, y + 1);
+                }
             }
         }
     }
@@ -112,6 +116,9 @@ export const Game = {
                         let piece = pieces[value];
 
                         if (piece === 'P' && rand < size) { // Pawns shouldn't be able to spawn on the top line
+                            continue;
+                        }
+                        if (piece === 'D' && rand >= (size * (size - 1))) { // Pawns shouldn't be able to spawn on the top line
                             continue;
                         }
                         if (piece === 'K' && kingCount === 1) { // Can't have 2 kings
