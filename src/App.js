@@ -4,6 +4,8 @@ import rook from '../img/wR.png';
 import knight from '../img/wN.png';
 import bishop from '../img/wB.png';
 import queen from '../img/wQ.png';
+import king from '../img/wK.png';
+import pawn from '../img/wP.png';
 
 class App {
     constructor(rootElement) {
@@ -174,6 +176,8 @@ class App {
             else if (c === 'B') image = bishop;
             else if (c === 'Q') image = queen;
             else if (c === 'N') image = knight;
+            else if (c === 'K') image = king;
+            else if (c === 'P') image = pawn;
             return `<img src="${image}"/>`;
         }
 
