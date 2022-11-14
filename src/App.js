@@ -127,6 +127,10 @@ class App {
             })
         }
 
+        if (this.gamemode === 'p') {
+            this.client.moves.generatePuzzleBoard(this.availablePieces, this.size, this.count);
+        }
+
         console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${this.availablePieces.length > 1 ? "s" : ""} allowed: ${this.availablePieces}`)
     }
 
