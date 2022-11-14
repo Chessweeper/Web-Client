@@ -164,8 +164,13 @@ class App {
                 }
 
                 const id = parseInt(cell.dataset.id);
+
+                if (this.state.G.cells === null) {
+                    this.client.moves.generateBoard(id, this.availablePieces, this.size, this.count);
+                }
+
                 if (this.currAction !== null) {
-                    if (this.state.G.knownCells !== null && this.state.G.knownCells[id] !== true) {
+                    if (this.state.G.knownCells[id] !== true) {
                         if (this.state.G.knownCells[id] === this.currAction) {
                             this.client.moves.removeHint(id);
                         } else {
@@ -192,9 +197,9 @@ class App {
                         document.getElementById("popup").hidden = false;
                         document.getElementById("popup-content").innerHTML = "You won";
                     }
-                } else if (this.state.G.knownCells === null || this.state.G.knownCells[id] === false) {
-                    if (this.state.G.cells === null || Number.isInteger(this.state.G.cells[id])) {
-                        this.client.moves.discoverPiece(id, this.availablePieces, this.size, this.count);
+                } else if (this.state.G.knownCells[id] === false) {
+                    if (Number.isInteger(this.state.G.cells[id])) {
+                        this.client.moves.discoverPiece(id);
                         cell.classList.add("open");
 
                         // Board color

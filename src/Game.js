@@ -102,41 +102,41 @@ export const Game = {
     },
   
     moves: {
-        discoverPiece: ({ G }, id, pieces, size, count) => {
-            if (G.cells === null) {
-                let data = Array(size * size).fill(0);
-                let i = count;
+        generateBoard: ({ G }, id, pieces, size, count) => {
+            let data = Array(size * size).fill(0);
+            let i = count;
 
-                let kingCount = 0;
+            let kingCount = 0;
 
-                while (i > 0) {
-                    const rand = Math.floor(Math.random() * (size * size));
-                    if (rand !== id && Number.isInteger(data[rand])) {
-                        const value = Math.floor(Math.random() * pieces.length);
-                        let piece = pieces[value];
+            while (i > 0) {
+                const rand = Math.floor(Math.random() * (size * size));
+                if (rand !== id && Number.isInteger(data[rand])) {
+                    const value = Math.floor(Math.random() * pieces.length);
+                    let piece = pieces[value];
 
-                        if (piece === 'P' && rand < size) { // Pawns shouldn't be able to spawn on the top line
-                            continue;
-                        }
-                        if (piece === 'D' && rand >= (size * (size - 1))) { // Pawns shouldn't be able to spawn on the top line
-                            continue;
-                        }
-                        if (piece === 'K' && kingCount === 1) { // Can't have 2 kings
-                            continue;
-                        }
-
-                        if (piece === 'K') {
-                            kingCount++;
-                        }
-                        data[rand] = piece;
-                        i--;
+                    if (piece === 'P' && rand < size) { // Pawns shouldn't be able to spawn on the top line
+                        continue;
                     }
-                }
+                    if (piece === 'D' && rand >= (size * (size - 1))) { // Pawns shouldn't be able to spawn on the top line
+                        continue;
+                    }
+                    if (piece === 'K' && kingCount === 1) { // Can't have 2 kings
+                        continue;
+                    }
 
-                G.cells = fillPositions(data);
-                G.knownCells = Array(size * size).fill(false)
+                    if (piece === 'K') {
+                        kingCount++;
+                    }
+                    data[rand] = piece;
+                    i--;
+                }
             }
 
+            G.cells = fillPositions(data);
+            G.knownCells = Array(size * size).fill(false)
+        },
+
+        discoverPiece: ({ G }) => {
             G.knownCells[id] = true;
         },
 
