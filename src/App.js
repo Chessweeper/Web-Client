@@ -102,7 +102,7 @@ class App {
                         }
 
                         // TODO: rewrite this using proper victory condition thing
-                        if (Number.isInteger(this.state.G.cells[id]) || this.state.G.cells[id] != this.state.G.knownCells[id]) {
+                        if ( this.state.G.cells === null || Number.isInteger(this.state.G.cells[id]) || this.state.G.cells[id] != this.state.G.knownCells[id]) {
                             return;
                         }
 
@@ -122,7 +122,7 @@ class App {
                         document.getElementById("popup").innerHTML = "You won";
                     }
                 } else if (this.state.G.knownCells[id] === false) {
-                    if (Number.isInteger(this.state.G.cells[id])) {
+                    if (this.state.G.cells === null || Number.isInteger(this.state.G.cells[id])) {
                         /* To discover many pieces at once, doesn't really work well game design wise
                         if (this.state.G.cells[id] === 0) {
                             tryDiscover(this.client, this.state.G, this.rootElement, Math.floor(id / 8), id % 8, []);

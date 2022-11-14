@@ -1,25 +1,9 @@
 export function prepareBoard() {
-    let data = Array(8 * 8).fill(0);
     let knownData = Array(8 * 8).fill(false);
 
-    let i = 3;
-    while (i > 0) {
-        const rand = Math.floor(Math.random() * 64);
-        if (Number.isInteger(data[rand])) {
-            const value = Math.floor(Math.random() * 4);
-            let piece = '';
-            if (value === 0) piece = 'R';
-            else if (value === 1) piece = 'B';
-            else if (value === 2) piece = 'Q';
-            else if (value === 3) piece = 'N';
-            data[rand] = piece;
-            i--;
-        }
-    }
     return {
         knownCells: knownData,
-        cells: fillPositions(data),
-        targetCount: i
+        cells: null
     };
 }
 
@@ -104,6 +88,26 @@ export const Game = {
   
     moves: {
         discoverPiece: ({ G }, id) => {
+            if (G.cells === null) {
+                let data = Array(8 * 8).fill(0);
+                let i = 3;
+                while (i > 0) {
+                    const rand = Math.floor(Math.random() * 64);
+                    if (rand !== id && Number.isInteger(data[rand])) {
+                        const value = Math.floor(Math.random() * 4);
+                        let piece = '';
+                        if (value === 0) piece = 'R';
+                        else if (value === 1) piece = 'B';
+                        else if (value === 2) piece = 'Q';
+                        else if (value === 3) piece = 'N';
+                        data[rand] = piece;
+                        i--;
+                    }
+                }
+
+                G.cells = fillPositions(data);
+            }
+
             G.knownCells[id] = true;
         },
 
