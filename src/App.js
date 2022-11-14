@@ -99,31 +99,27 @@ class App {
                             this.client.moves.removeHint(id);
                         } else {
                             this.client.moves.placeHint(id, this.currAction);
+                        }
 
-                            // TODO: rewrite this using proper victory condition thing
-                            if (Number.isInteger(this.state.G.cells[id]) || this.state.G.cells[id] != this.state.G.knownCells[id])
-                            {
-                                return;
-                            }
+                        // TODO: rewrite this using proper victory condition thing
+                        if (Number.isInteger(this.state.G.cells[id]) || this.state.G.cells[id] != this.state.G.knownCells[id]) {
+                            return;
+                        }
 
-                            for (let i = 0; i < 64; i++) {
-                                if (!Number.isInteger(this.state.G.cells[i]))
-                                {
-                                    if (this.state.G.cells[i] !== this.state.G.knownCells[i] && this.state.G.cells[i] !== id)
-                                    {
-                                        return;
-                                    }
-                                }
-                                else if (this.state.G.knownCells[i] !== true && this.state.G.knownCells[i] !== false)
-                                {
+                        for (let i = 0; i < 64; i++) {
+                            if (!Number.isInteger(this.state.G.cells[i])) {
+                                if (this.state.G.cells[i] !== this.state.G.knownCells[i] && this.state.G.cells[i] !== id) {
                                     return;
                                 }
                             }
-                            clearInterval(this.timer);
-                            this.didLost = true;
-                            document.getElementById("popup").hidden = false;
-                            document.getElementById("popup").innerHTML = "You won";
+                            else if (this.state.G.knownCells[i] !== true && this.state.G.knownCells[i] !== false) {
+                                return;
+                            }
                         }
+                        clearInterval(this.timer);
+                        this.didLost = true;
+                        document.getElementById("popup").hidden = false;
+                        document.getElementById("popup").innerHTML = "You won";
                     }
                 } else if (this.state.G.knownCells[id] === false) {
                     if (Number.isInteger(this.state.G.cells[id])) {
