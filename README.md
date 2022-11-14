@@ -1,5 +1,6 @@
 # Chessweeper
 Chess X Minesweeper
+![Preview](.github/Preview.png)
 
 ## Credits
  - Chess icons from https://github.com/oakmac/chessboardjs
