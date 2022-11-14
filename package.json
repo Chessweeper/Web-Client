@@ -1,11 +1,13 @@
 {
+  "type": "module",
   "name": "chessweeper",
   "version": "1.0.0",
   "description": "Chess X Minesweeper",
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build index.html --out-dir build"
+    "build": "parcel build index.html --out-dir build",
+    "test": "mocha"
   },
   "browserslist": "defaults and supports async-functions",
   "repository": {
@@ -23,6 +25,7 @@
     "boardgame.io": "^0.50.2"
   },
   "devDependencies": {
+    "mocha": "^10.1.0",
     "parcel-bundler": "^1.12.5"
   }
 }
