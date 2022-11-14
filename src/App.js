@@ -82,6 +82,10 @@ class App {
             this.count = 3;
         }
 
+        if (this.availablePieces === 'K' && this.count > 1) { // We can't have more than one king
+            this.count = 1;
+        }
+
         for (let action of document.getElementsByClassName("action")) {
             action.parentNode.hidden = !this.availablePieces.includes(action.dataset.id);
         }
@@ -95,7 +99,7 @@ class App {
             this.update(state);
         });
 
-        console.log(`Game loaded: ${this.count} pieces, ${this.size}x${this.size} grid, pieces allowed: ${this.availablePieces}`)
+        console.log(`Game loaded: ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${this.availablePieces.length > 1 ? "s" : ""} allowed: ${this.availablePieces}`)
     }
 
     createBoard() {
