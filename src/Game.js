@@ -8,7 +8,13 @@ export const Game = {
         while (i > 0) {
             const rand = Math.floor(Math.random() * 64);
             if (Number.isInteger(data[rand])) {
-                data[rand] = 'r';
+                const value = Math.floor(Math.random() * 4);
+                let piece = '';
+                if (value === 0) piece = 'R';
+                else if (value === 1) piece = 'B';
+                else if (value === 2) piece = 'Q';
+                else if (value === 3) piece = 'N';
+                data[rand] = piece;
                 i--;
             }
         }
@@ -17,7 +23,7 @@ export const Game = {
             for (let x = 0; x < 8; x++) {
                 const value = data[y * 8 + x];
                 if (!Number.isInteger(value)) {
-                    if (value === 'r' || value === 'q') { // Rook movements
+                    if (value === 'R' || value === 'Q') { // Rook movements
                         for (let yi = y - 1; yi >= 0; yi--) {
                             if (Number.isInteger(data[yi * 8 + x])) data[yi * 8 + x]++;
                             else break;
@@ -34,6 +40,34 @@ export const Game = {
                             if (Number.isInteger(data[y * 8 + xi])) data[y * 8 + xi]++;
                             else break;
                         }
+                    }
+                    if (value === 'B' || value === 'Q') {
+                        for (let i = 1; y - i >= 0 && x - i >= 0; i++) {
+                            if (Number.isInteger(data[(y - i) * 8 + (x - i)])) data[(y - i) * 8 + (x - i)]++;
+                            else break;
+                        }
+                        for (let i = 1; y + i < 8 && x + i < 8; i++) {
+                            if (Number.isInteger(data[(y + i) * 8 + (x + i)])) data[(y + i) * 8 + (x + i)]++;
+                            else break;
+                        }
+                        for (let i = 1; y - i >= 0 && x + i < 8; i++) {
+                            if (Number.isInteger(data[(y - i) * 8 + (x + i)])) data[(y - i) * 8 + (x + i)]++;
+                            else break;
+                        }
+                        for (let i = 1; y - i < 8 && x - i >= 0; i++) {
+                            if (Number.isInteger(data[(y + i) * 8 + (x - i)])) data[(y + i) * 8 + (x - i)]++;
+                            else break;
+                        }
+                    }
+                    if (value === 'N') {
+                        if (Number.isInteger(data[(y - 2) * 8 + (x - 1)])) data[(y - 2) * 8 + (x - 1)]++;
+                        if (Number.isInteger(data[(y - 2) * 8 + (x + 1)])) data[(y - 2) * 8 + (x + 1)]++;
+                        if (Number.isInteger(data[(y + 2) * 8 + (x - 1)])) data[(y + 2) * 8 + (x - 1)]++;
+                        if (Number.isInteger(data[(y + 2) * 8 + (x + 1)])) data[(y + 2) * 8 + (x + 1)]++;
+                        if (Number.isInteger(data[(y - 1) * 8 + (x - 2)])) data[(y - 1) * 8 + (x - 2)]++;
+                        if (Number.isInteger(data[(y - 1) * 8 + (x + 2)])) data[(y - 1) * 8 + (x + 2)]++;
+                        if (Number.isInteger(data[(y + 1) * 8 + (x - 2)])) data[(y + 1) * 8 + (x - 2)]++;
+                        if (Number.isInteger(data[(y + 1) * 8 + (x + 2)])) data[(y + 1) * 8 + (x + 2)]++;
                     }
                 }
             }
@@ -53,7 +87,8 @@ export const Game = {
 
         return {
             knownCells: knownData,
-            cells: data
+            cells: data,
+            targetCount: i
         };
     },
   

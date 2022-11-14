@@ -1,6 +1,9 @@
 import { Client } from 'boardgame.io/client';
 import { Game } from './Game';
 import rook from '../img/wR.png';
+import knight from '../img/wN.png';
+import bishop from '../img/wB.png';
+import queen from '../img/wQ.png';
 
 class App {
     constructor(rootElement) {
@@ -85,6 +88,29 @@ class App {
                             this.client.moves.removeHint(id);
                         } else {
                             this.client.moves.placeHint(id, this.currAction);
+
+                            // TODO: rewrite this using proper victory condition thing
+                            if (Number.isInteger(this.state.G.cells[id]) || this.state.G.cells[id] != this.state.G.knownCells[id])
+                            {
+                                return;
+                            }
+
+                            for (let i = 0; i < 64; i++) {
+                                if (!Number.isInteger(this.state.G.cells[i]))
+                                {
+                                    if (this.state.G.cells[i] !== this.state.G.knownCells[i] && this.state.G.cells[i] !== id)
+                                    {
+                                        return;
+                                    }
+                                }
+                                else if (this.state.G.knownCells[i] !== true && this.state.G.knownCells[i] !== false)
+                                {
+                                    return;
+                                }
+                            }
+                            this.didLost = true;
+                            document.getElementById("popup").hidden = false;
+                            document.getElementById("popup").innerHTML = "You won";
                         }
                     }
                 } else if (this.state.G.knownCells[id] === false) {
@@ -140,7 +166,12 @@ class App {
                 const cellValue = state.G.cells[cellId];
                 cell.innerHTML = cellValue;
             } else if (state.G.knownCells[cellId] !== false && state.G.knownCells[cellId] !== true) {
-                cell.innerHTML = `<img src="${rook}"/>`;
+                let image = "";
+                if (state.G.knownCells[cellId] === 'R') image = rook;
+                else if (state.G.knownCells[cellId] === 'B') image = bishop;
+                else if (state.G.knownCells[cellId] === 'Q') image = queen;
+                else if (state.G.knownCells[cellId] === 'N') image = knight;
+                cell.innerHTML = `<img src="${image}"/>`;
             } else {
                 cell.innerHTML = "";
             }
