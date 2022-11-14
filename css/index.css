@@ -86,6 +86,10 @@
     margin: 10px 5px;
 }
 
+#popup button {
+    font-size: 20px;
+}
+
 /* Game timer */
 
 #timer {

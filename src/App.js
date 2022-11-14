@@ -98,7 +98,11 @@ class App {
         for (let action of document.getElementsByClassName("action")) {
             action.parentNode.hidden = !this.availablePieces.includes(action.dataset.id);
         }
-        document.getElementById("popup-reload").href = window.location.href;
+        document.getElementById("popup-reload").addEventListener("click", _ => {
+            this.timerDiv.innerHTML = "0:00";
+            app = new App(document.getElementById('app'));
+            document.getElementById("popup").hidden = true;
+        });
 
         console.log(`Game loaded: ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${this.availablePieces.length > 1 ? "s" : ""} allowed: ${this.availablePieces}`)
     }
@@ -238,4 +242,4 @@ class App {
     }
 }
 
-const app = new App(document.getElementById('app'));
+let app = new App(document.getElementById('app'));
