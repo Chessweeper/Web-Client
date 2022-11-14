@@ -131,7 +131,8 @@ class App {
                 if (this.timer === null) {
                     this.timer = setInterval(() => {
                         this.currTime++;
-                        this.timerDiv.innerHTML = `${Math.floor(this.currTime / 100)}:${this.currTime % 100}`;
+                        const secs = this.currTime % 100;
+                        this.timerDiv.innerHTML = `${Math.floor(this.currTime / 100)}:${secs < 10 ? ("0" + secs) : secs}`;
                     }, 10);
                 }
 
