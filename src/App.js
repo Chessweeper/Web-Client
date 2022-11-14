@@ -85,10 +85,6 @@ class App {
         if (this.availablePieces === 'K' && this.count > 1) { // We can't have more than one king
             this.count = 1;
         }
-
-        for (let action of document.getElementsByClassName("action")) {
-            action.parentNode.hidden = !this.availablePieces.includes(action.dataset.id);
-        }
         
         this.createBoard();
         this.attachListeners();
@@ -98,6 +94,11 @@ class App {
             this.state = state;
             this.update(state);
         });
+
+        for (let action of document.getElementsByClassName("action")) {
+            action.parentNode.hidden = !this.availablePieces.includes(action.dataset.id);
+        }
+        document.getElementById("popup-reload").href = window.location.href;
 
         console.log(`Game loaded: ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${this.availablePieces.length > 1 ? "s" : ""} allowed: ${this.availablePieces}`)
     }
@@ -161,7 +162,7 @@ class App {
                         clearInterval(this.timer);
                         this.didLost = true;
                         document.getElementById("popup").hidden = false;
-                        document.getElementById("popup").innerHTML = "You won";
+                        document.getElementById("popup-content").innerHTML = "You won";
                     }
                 } else if (this.state.G.knownCells === null || this.state.G.knownCells[id] === false) {
                     if (this.state.G.cells === null || Number.isInteger(this.state.G.cells[id])) {
@@ -194,7 +195,7 @@ class App {
                         clearInterval(this.timer);
                         this.didLost = true;
                         document.getElementById("popup").hidden = false;
-                        document.getElementById("popup").innerHTML = "You lost";
+                        document.getElementById("popup-content").innerHTML = "You lost";
                         cell.classList.add("red");
                         this.update(this.state);
                     }

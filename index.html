@@ -9,7 +9,10 @@
         <meta property="og:description" content="Chess X Minesweeper"/>
     </head>
     <body>
-        <div id="popup" hidden></div>
+        <div id="popup" hidden>
+            <h3 id="popup-content"></h3>
+            <a href="" id="popup-reload" class="button">Replay</a>
+        </div>
         <div class="flex">
             <div id="timer">0:00</div>
             <div id="app"></div>
@@ -29,21 +32,21 @@
         <hr/>
         <h1>More boards</h1>
         <div class="flex hor">
-            <a class="gamemode" href="?p=R&s=6&c=2">
+            <a class="gamemode button" href="?p=R&s=6&c=2">
                 <h2>Easy</h2>
                 2 pieces<br/>
                 Rook only<br/>
                 6x6
             </a>
             </br>
-            <a class="gamemode" href="?p=RBQN&s=8&c=3">
+            <a class="gamemode button" href="?p=RBQN&s=8&c=3">
                 <h2>Normal</h2>
                 3 pieces<br/>
                 Rook, Bishop, Queen and Knight<br/>
                 8x8
             </a>
             </br>
-            <a class="gamemode" href="?p=RBQNKP&s=10&c=5">
+            <a class="gamemode button" href="?p=RBQNKP&s=10&c=5">
                 <h2>Hard</h2>
                 5 pieces<br/>
                 All pieces<br/>
