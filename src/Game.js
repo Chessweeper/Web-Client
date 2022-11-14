@@ -108,6 +108,9 @@ export const Game = {
                     if (rand !== id && Number.isInteger(data[rand])) {
                         const value = Math.floor(Math.random() * pieces.length);
                         let piece = pieces[value];
+                        if (piece === 'P' && rand < size) { // Pawns shouldn't be able to spawn on the top line
+                            continue;
+                        }
                         data[rand] = piece;
                         i--;
                     }

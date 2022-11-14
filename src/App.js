@@ -77,6 +77,11 @@ class App {
             this.availablePieces = "RBNQ";
         }
 
+        // Since pawns can't spawn on the top line, we need to be careful for boards only containing them
+        if (this.availablePieces === 'P' && this.count >= this.size * (this.size - 1)) {
+            this.count = 3;
+        }
+
         for (let action of document.getElementsByClassName("action")) {
             action.parentNode.hidden = !this.availablePieces.includes(action.dataset.id);
         }
