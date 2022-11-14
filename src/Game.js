@@ -1,56 +1,49 @@
-export function prepareBoard() {
-    let knownData = Array(8 * 8).fill(false);
-
-    return {
-        knownCells: knownData,
-        cells: null
-    };
-}
-
 export function fillPositions(data) {
+    let size = Math.sqrt(data.length); // Boards are always squared
+
     function addIfValid(xi, yi) {
-        if (xi >= 0 && xi < 8 && yi >= 0 && yi < 8 && Number.isInteger(data[yi * 8 + xi])) {
-            data[yi * 8 + xi]++;
+        if (xi >= 0 && xi < size && yi >= 0 && yi < size && Number.isInteger(data[yi * size + xi])) {
+            data[yi * size + xi]++;
         }
     }
 
-    for (let y = 0; y < 8; y++) {
-        for (let x = 0; x < 8; x++) {
-            const value = data[y * 8 + x];
+    for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+            const value = data[y * size + x];
             if (!Number.isInteger(value)) {
                 if (value === 'R' || value === 'Q') { // Rook movements
                     for (let yi = y - 1; yi >= 0; yi--) {
-                        if (Number.isInteger(data[yi * 8 + x])) data[yi * 8 + x]++;
+                        if (Number.isInteger(data[yi * size + x])) data[yi * size + x]++;
                         else break;
                     }
-                    for (let yi = y + 1; yi < 8; yi++) {
-                        if (Number.isInteger(data[yi * 8 + x])) data[yi * 8 + x]++;
+                    for (let yi = y + 1; yi < size; yi++) {
+                        if (Number.isInteger(data[yi * size + x])) data[yi * size + x]++;
                         else break;
                     }
                     for (let xi = x - 1; xi >= 0; xi--) {
-                        if (Number.isInteger(data[y * 8 + xi])) data[y * 8 + xi]++;
+                        if (Number.isInteger(data[y * size + xi])) data[y * size + xi]++;
                         else break;
                     }
-                    for (let xi = x + 1; xi < 8; xi++) {
-                        if (Number.isInteger(data[y * 8 + xi])) data[y * 8 + xi]++;
+                    for (let xi = x + 1; xi < size; xi++) {
+                        if (Number.isInteger(data[y * size + xi])) data[y * size + xi]++;
                         else break;
                     }
                 }
                 if (value === 'B' || value === 'Q') {
                     for (let i = 1; y - i >= 0 && x - i >= 0; i++) {
-                        if (Number.isInteger(data[(y - i) * 8 + (x - i)])) data[(y - i) * 8 + (x - i)]++;
+                        if (Number.isInteger(data[(y - i) * size + (x - i)])) data[(y - i) * size + (x - i)]++;
                         else break;
                     }
-                    for (let i = 1; y + i < 8 && x + i < 8; i++) {
-                        if (Number.isInteger(data[(y + i) * 8 + (x + i)])) data[(y + i) * 8 + (x + i)]++;
+                    for (let i = 1; y + i < size && x + i < size; i++) {
+                        if (Number.isInteger(data[(y + i) * size + (x + i)])) data[(y + i) * size + (x + i)]++;
                         else break;
                     }
-                    for (let i = 1; y - i >= 0 && x + i < 8; i++) {
-                        if (Number.isInteger(data[(y - i) * 8 + (x + i)])) data[(y - i) * 8 + (x + i)]++;
+                    for (let i = 1; y - i >= 0 && x + i < size; i++) {
+                        if (Number.isInteger(data[(y - i) * size + (x + i)])) data[(y - i) * size + (x + i)]++;
                         else break;
                     }
-                    for (let i = 1; y - i < 8 && x - i >= 0; i++) {
-                        if (Number.isInteger(data[(y + i) * 8 + (x - i)])) data[(y + i) * 8 + (x - i)]++;
+                    for (let i = 1; y - i < size && x - i >= 0; i++) {
+                        if (Number.isInteger(data[(y + i) * size + (x - i)])) data[(y + i) * size + (x - i)]++;
                         else break;
                     }
                 }
@@ -80,11 +73,11 @@ export function fillPositions(data) {
                     // En passant, may be too confusing?
                     /*
                     if (y === 3) {
-                        if (x > 0 && Number.isInteger(data[y * 8 + (x - 1)]) && Number.isInteger(data[(y - 1) * 8 + (x - 1)])) {
-                            data[y * 8 + (x - 1)]++;
+                        if (x > 0 && Number.isInteger(data[y * size + (x - 1)]) && Number.isInteger(data[(y - 1) * size + (x - 1)])) {
+                            data[y * size + (x - 1)]++;
                         }
-                        if (x < (8 - 1) && Number.isInteger(data[y * 8 + (x + 1)]) && Number.isInteger(data[(y - 1) * 8 + (x + 1)])) {
-                            data[y * 8 + (x + 1)]++;
+                        if (x < (size - 1) && Number.isInteger(data[y * size + (x + 1)]) && Number.isInteger(data[(y - 1) * size + (x + 1)])) {
+                            data[y * size + (x + 1)]++;
                         }
                     }
                     */
@@ -92,33 +85,26 @@ export function fillPositions(data) {
             }
         }
     }
-
-    // Debug display the grid
-    /*
-    let str = "";
-    for (let y = 0; y < 8; y++) {
-        for (let x = 0; x < 8; x++) {
-            str += data[y * 8 + x];
-        }
-        str += "\n";
-    }
-    console.log(str);
-    */
     
     return data;
 }
 
 export const Game = {
-    setup: prepareBoard,
+    setup: () => {
+        return {
+            knownCells: null,
+            cells: null
+        };
+    },
   
     moves: {
-        discoverPiece: ({ G }, id, pieces) => {
+        discoverPiece: ({ G }, id, pieces, size, count) => {
             if (G.cells === null) {
-                let data = Array(8 * 8).fill(0);
-                let i = 3;
+                let data = Array(size * size).fill(0);
+                let i = count;
 
                 while (i > 0) {
-                    const rand = Math.floor(Math.random() * 64);
+                    const rand = Math.floor(Math.random() * (size * size));
                     if (rand !== id && Number.isInteger(data[rand])) {
                         const value = Math.floor(Math.random() * pieces.length);
                         let piece = pieces[value];
@@ -128,6 +114,7 @@ export const Game = {
                 }
 
                 G.cells = fillPositions(data);
+                G.knownCells = Array(size * size).fill(false)
             }
 
             G.knownCells[id] = true;

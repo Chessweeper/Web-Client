@@ -14,15 +14,6 @@ class App {
         this.client.start();
         this.rootElement = rootElement;
 
-        this.createBoard();
-        this.attachListeners();
-
-        this.client.subscribe(state =>
-        {
-            this.state = state;
-            this.update(state);
-        });
-
         // Current action selected under the board
         this.currAction = null;
 
@@ -60,6 +51,15 @@ class App {
             return result;
         }
         let pieces = findGetParameter("p");
+        this.size = findGetParameter("s");
+        this.count = findGetParameter("c");
+        if (this.size === null || this.size < 3 || this.size > 100) { // Invalid board size
+            this.size = 8;
+        }
+        if (this.count === null || this.count < 1 || this.size * this.size < this.count + 1) { // Board size can't fit all pieces
+            this.count = 3;
+        }
+
         const validLetters = ['R', 'B', 'Q', 'N', 'P', 'K'];
         this.availablePieces = "";
         if (pieces !== null) {
@@ -76,15 +76,25 @@ class App {
         for (let action of document.getElementsByClassName("action")) {
             action.parentNode.hidden = !this.availablePieces.includes(action.dataset.id);
         }
+        
+        this.createBoard();
+        this.attachListeners();
+
+        this.client.subscribe(state =>
+        {
+            this.state = state;
+            this.update(state);
+        });
+
+        console.log(`Game loaded: ${this.count} pieces, ${this.size}x${this.size} grid, pieces allowed: ${this.availablePieces}`)
     }
 
     createBoard() {
-        const size = 8;
         const rows = [];
-        for (let i = 0; i < size; i++) {
+        for (let i = 0; i < this.size; i++) {
             const cells = [];
-            for (let j = 0; j < size; j++) {
-                const id = size * i + j;
+            for (let j = 0; j < this.size; j++) {
+                const id = this.size * i + j;
                 cells.push(`<td class="cell" data-id="${id}"></td>`);
             }
             rows.push(`<tr>${cells.join('')}</tr>`);
@@ -113,7 +123,7 @@ class App {
 
                 const id = cell.dataset.id;
                 if (this.currAction !== null) {
-                    if (this.state.G.knownCells[id] !== true) {
+                    if (this.state.G.knownCells !== null && this.state.G.knownCells[id] !== true) {
                         if (this.state.G.knownCells[id] === this.currAction) {
                             this.client.moves.removeHint(id);
                         } else {
@@ -140,14 +150,14 @@ class App {
                         document.getElementById("popup").hidden = false;
                         document.getElementById("popup").innerHTML = "You won";
                     }
-                } else if (this.state.G.knownCells[id] === false) {
+                } else if (this.state.G.knownCells === null || this.state.G.knownCells[id] === false) {
                     if (this.state.G.cells === null || Number.isInteger(this.state.G.cells[id])) {
-                        this.client.moves.discoverPiece(id, this.availablePieces);
+                        this.client.moves.discoverPiece(id, this.availablePieces, this.size, this.count);
                         cell.classList.add("open");
 
                         // Board color
-                        const y = Math.floor(id / 8);
-                        const x = id % 8;
+                        const y = Math.floor(id / this.size);
+                        const x = id % this.size;
                         const isWhite = (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1)
                         cell.classList.add(isWhite ? "white" : "black");
 
@@ -196,7 +206,9 @@ class App {
         cells.forEach(cell => {
             const cellId = parseInt(cell.dataset.id);
 
-            if (this.didLost === true && !Number.isInteger(state.G.cells[cellId])) { // Display pieces of gameover
+            if (state.G.cells === null) {
+                cell.innerHTML = "";
+            } else if (this.didLost === true && !Number.isInteger(state.G.cells[cellId])) { // Display pieces of gameover
                 cell.innerHTML = getPiece(state.G.cells[cellId]);
                 cell.classList.add("red");
             } else if (state.G.knownCells[cellId] === true && state.G.cells[cellId] !== 0) {
