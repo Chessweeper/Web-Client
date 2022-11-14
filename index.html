@@ -30,28 +30,36 @@
         <h1>More boards</h1>
         <div class="flex hor">
             <a class="gamemode" href="?p=R">
-                Easy<br/>
+                <h2>Easy</h2>
                 3 pieces<br/>
                 Rook only<br/>
                 8x8
             </a></br>
             <a class="gamemode" href="?p=RBQN">
-                Normal<br/>
+                <h2>Normal</h2>
                 3 pieces<br/>
                 Rook, Bishop, Queen and Knight<br/>
                 8x8
             </a>
         </div>
         <hr/>
-        <h1>How to play?</h1>
-        <p>
-            The goal is to find where and what the 3 chess pieces are<br/>
-            The shovel allow you to dig a tile, you'll see a number representing the number of pieces that have it in check<br/>
-            Once you identified a piece, click on the related button under the board then click on the tile<br/>
-            You loose if you use your shover on a chess piece, you win if you find the 3 pieces correctly<br/>
-            Reload the page to play again<br/><br/>
-            Source code available under MIT license on <a href="https://github.com/Xwilarg/Chessweeper" target="_blank">GitHub</a>
-        </p>
+        <div id="rules">
+            <h1>How to play?</h1>
+            <h2>Basic Rules</h2>
+            <p>
+                The goal is to find where and what the 3 chess pieces are<br/>
+                The shovel allow you to dig a tile, you'll see a number representing the number of pieces that have it in check<br/>
+                Once you identified a piece, click on the related button under the board then click on the tile, click again to remove it<br/>
+                You loose if you use your shover on a chess piece, you win if you find the 3 pieces correctly<br/>
+                Reload the page to play again<br/><br/>
+
+                For more information on how to moves the piece, please click <a href="https://en.wikipedia.org/wiki/Chess#Movement" target="_blank">here</a>
+            </p>
+            <h2>Others Links</h2>
+            <p>
+                Source code available under MIT license on <a href="https://github.com/Xwilarg/Chessweeper" target="_blank">GitHub</a>
+            </p>
+        </div>
         <script src="./src/App.js"></script>
     </body>
 </html>

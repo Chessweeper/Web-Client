@@ -77,7 +77,8 @@ export function fillPositions(data) {
                     addIfValid(x + 1, y - 1);
                     addIfValid(x - 1, y - 1);
 
-                    // En passant
+                    // En passant, may be too confusing?
+                    /*
                     if (y === 3) {
                         if (x > 0 && Number.isInteger(data[y * 8 + (x - 1)]) && Number.isInteger(data[(y - 1) * 8 + (x - 1)])) {
                             data[y * 8 + (x - 1)]++;
@@ -86,6 +87,7 @@ export function fillPositions(data) {
                             data[y * 8 + (x + 1)]++;
                         }
                     }
+                    */
                 }
             }
         }
