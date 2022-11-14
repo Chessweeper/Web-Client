@@ -129,6 +129,17 @@ class App {
 
         if (this.gamemode === 'p') {
             this.client.moves.generatePuzzleBoard(this.availablePieces, this.size, this.count);
+            const cells = this.rootElement.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                const id = parseInt(cell.dataset.id);
+
+                if (this.state.G.knownCells[id]) {
+                    console.log(id);
+                    const isWhite = this.isPosWhite(id)
+                    cell.classList.add("open");
+                    cell.classList.add(isWhite ? "white" : "black");
+                }
+            });
         }
 
         console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${this.availablePieces.length > 1 ? "s" : ""} allowed: ${this.availablePieces}`)
@@ -148,6 +159,12 @@ class App {
         this.rootElement.innerHTML = `
             <table>${rows.join('')}</table>
         `;
+    }
+
+    isPosWhite(id) {
+        const y = Math.floor(id / this.size);
+        const x = id % this.size;
+        return (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1)
     }
 
     attachListeners() {
@@ -182,7 +199,7 @@ class App {
                         }
 
                         // TODO: rewrite this using proper victory condition thing
-                        if ( this.state.G.cells === null || Number.isInteger(this.state.G.cells[id]) || this.state.G.cells[id] != this.state.G.knownCells[id]) {
+                        if (this.state.G.cells === null || Number.isInteger(this.state.G.cells[id]) || this.state.G.cells[id] != this.state.G.knownCells[id]) {
                             return;
                         }
 
@@ -207,9 +224,7 @@ class App {
                         cell.classList.add("open");
 
                         // Board color
-                        const y = Math.floor(id / this.size);
-                        const x = id % this.size;
-                        const isWhite = (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1)
+                        const isWhite = this.isPosWhite(id)
                         cell.classList.add(isWhite ? "white" : "black");
 
                         // Text color

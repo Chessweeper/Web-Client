@@ -88,6 +88,16 @@ export function BlackPawnMoves(data, size, x, y) {
     return moves;
 }
 
+const pieceMovesCheck = {
+    'R': RookMoves,
+    'B': BishopMoves,
+    'Q': QueenMoves,
+    'N': KnightMoves,
+    'K': KingMoves,
+    'P': PawnMoves,
+    'D': BlackPawnMoves
+}
+
 export function fillPositions(data) {
     let size = Math.sqrt(data.length); // Boards are always squared
 
@@ -95,17 +105,7 @@ export function fillPositions(data) {
         for (let x = 0; x < size; x++) {
             const value = data[y * size + x];
             if (!Number.isInteger(value)) {
-                let moves = [];
-                switch (value)
-                {
-                    case 'R': moves = RookMoves(data, size, x, y); break;
-                    case 'B': moves = BishopMoves(data, size, x, y); break;
-                    case 'Q': moves = QueenMoves(data, size, x, y); break;
-                    case 'N': moves = KnightMoves(data, size, x, y); break;
-                    case 'K': moves = KingMoves(data, size, x, y); break;
-                    case 'P': moves = PawnMoves(data, size, x, y); break;
-                    case 'D': moves = BlackPawnMoves(data, size, x, y); break;
-                }
+                let moves = pieceMovesCheck[value](data, size, x, y);
                 for (let move of moves) {
                     data[move]++;
                 }
@@ -158,21 +158,57 @@ export const Game = {
   
     moves: {
         generatePuzzleBoard: ({ G }, pieces, size, count) => {
-            let data = fillPositions(generateBoard(id, pieces, size, count));
-            let thinkData = Array(size * size).fill("");
+            let data = fillPositions(generateBoard(-1, pieces, size, count));
+            let thinkData = Array(size * size).fill(0);
+            let discovered = Array(size * size).fill(false);
 
-            do {
-                let isSolvable = false;
+            let isSolved = false;
+            let a = 0;
+            while (!isSolved && a < 10) {
+                a++;
+                let randPos;
+                do {
+                    randPos = Math.floor(Math.random() * (size * size));
+                } while (discovered[randPos] || !Number.isInteger(data[randPos]));
+                discovered[randPos] = true;
+
                 for (let i = 0; i < data.length; i++) {
-                    if ((Number.isInteger(data[i]) && thinkData[i] !== "") ||
-                        (!Number.isInteger(data[i]) && thinkData[i] !== data[i]))
+                    let str = "";
+                    for (let piece of pieces)
                     {
+                        let moves = pieceMovesCheck[piece](discovered, size, i % size, Math.floor(i / size));
+                        let isValid = true;
+                        for (let move of moves) {
+                            if (discovered[move] && data[move] === 0) {
+                                isValid = false;
+                                break;
+                            }
+                        }
+                        if (isValid) {
+                            str += piece;
+                        }
                     }
                 }
-            } while (true);
+
+                isSolved = true;
+                for (let i = 0; i < data.length; i++) {
+                    if ((Number.isInteger(data[i]) && thinkData[i] !== 0) ||
+                        (!Number.isInteger(data[i]) && thinkData[i] !== data[i]))
+                    {
+                        isSolved = false;
+                        break;
+                    }
+                }
+            }
 
             G.cells = data;
             G.knownCells = Array(size * size).fill(false);
+
+            for (let i in discovered) {
+                if (discovered[i]) {
+                    G.knownCells[i] = true;
+                }
+            }
         },
 
         generateBoard: ({ G }, id, pieces, size, count) => {
