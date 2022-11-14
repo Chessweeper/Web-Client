@@ -8,6 +8,12 @@ export function prepareBoard() {
 }
 
 export function fillPositions(data) {
+    function addIfValid(xi, yi) {
+        if (xi >= 0 && xi < 8 && yi >= 0 && yi < 8 && Number.isInteger(data[yi * 8 + xi])) {
+            data[yi * 8 + xi]++;
+        }
+    }
+
     for (let y = 0; y < 8; y++) {
         for (let x = 0; x < 8; x++) {
             const value = data[y * 8 + x];
@@ -49,12 +55,6 @@ export function fillPositions(data) {
                     }
                 }
                 if (value === 'N') {
-                    function addIfValid(xi, yi) {
-                        if (xi >= 0 && xi < 8 && yi >= 0 && yi < 8 && Number.isInteger(data[yi * 8 + xi])) {
-                            data[yi * 8 + xi]++;
-                        }
-                    }
-
                     addIfValid(x - 2, y - 1);
                     addIfValid(x - 2, y + 1);
                     addIfValid(x + 2, y - 1);
@@ -63,6 +63,29 @@ export function fillPositions(data) {
                     addIfValid(x - 1, y + 2);
                     addIfValid(x + 1, y - 2);
                     addIfValid(x + 1, y + 2);
+                }
+                if (value === 'K') {
+                    for (let yi = -1; yi <= 1; yi++) {
+                        for (let xi = -1; xi <= 1; xi++) {
+                            if (xi !== 0 || yi !== 0) {
+                                addIfValid(x + xi, y + yi);
+                            }
+                        }
+                    }
+                }
+                if (value === 'P') {
+                    addIfValid(x + 1, y - 1);
+                    addIfValid(x - 1, y - 1);
+
+                    // En passant
+                    if (y === 3) {
+                        if (x > 0 && Number.isInteger(data[y * 8 + (x - 1)]) && Number.isInteger(data[(y - 1) * 8 + (x - 1)])) {
+                            data[y * 8 + (x - 1)]++;
+                        }
+                        if (x < (8 - 1) && Number.isInteger(data[y * 8 + (x + 1)]) && Number.isInteger(data[(y - 1) * 8 + (x + 1)])) {
+                            data[y * 8 + (x + 1)]++;
+                        }
+                    }
                 }
             }
         }
