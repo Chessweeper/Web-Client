@@ -1,3 +1,5 @@
+/* Flex */
+
 .flex {
     display: flex;
     align-items: center;
@@ -19,6 +21,8 @@
 .flex.hor .selected {
     background-color: green;
 }
+
+/* Game board */
 
 .cell img {
     width: 30px;
@@ -46,6 +50,8 @@
     background-color: #D28C45;
 }
 
+/* Popup displayed on game end */
+
 #popup {
     position: fixed;
     top: 50%;
@@ -59,7 +65,27 @@
     font-size: 30px;
 }
 
+/* Game timer */
+
 #timer {
     font-weight: bolder;
     font-size: 30px;
+}
+
+/* Buttons used for gamemodes */
+
+.gamemode {
+    border: 1px solid black;
+    border-radius: 15px;
+    color: black;
+    text-decoration: none;
+    padding: 5px;
+    display: inline-block;
+    background-color: #eee;
+    text-align: center;
+    width: 300px;
+}
+
+.gamemode:hover {
+    background-color: #ddd;
 }

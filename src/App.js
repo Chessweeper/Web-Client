@@ -45,6 +45,37 @@ class App {
                 this.currAction = curr.dataset.id === "" ? null : curr.dataset.id;
             })
         }
+
+        // List of pieces we can spawn
+        function findGetParameter(parameterName) { // https://stackoverflow.com/a/5448595
+            var result = null,
+                tmp = [];
+            location.search
+                .substring(1)
+                .split("&")
+                .forEach(function (item) {
+                  tmp = item.split("=");
+                  if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                });
+            return result;
+        }
+        let pieces = findGetParameter("p");
+        const validLetters = ['R', 'B', 'Q', 'N', 'P', 'K'];
+        this.availablePieces = "";
+        if (pieces !== null) {
+            for (let letter of pieces) {
+                if (validLetters.includes(letter.toUpperCase())) {
+                    this.availablePieces += letter.toUpperCase();
+                }
+            }
+        }
+        if (this.availablePieces === "") { // No piece found, fallback on default value
+            this.availablePieces = "RBNQ";
+        }
+
+        for (let action of document.getElementsByClassName("action")) {
+            action.parentNode.hidden = !this.availablePieces.includes(action.dataset.id);
+        }
     }
 
     createBoard() {
@@ -65,20 +96,6 @@ class App {
     }
 
     attachListeners() {
-        function tryDiscover(client, G, root, y, x, tmpBuffer) {
-            const v = y * 8 + x;
-            if (y >= 0 && y < 8 && x >= 0 && x < 8 && !G.knownCells[v] && G.cells[v] === 0 && !tmpBuffer.includes(v)) {
-                const cells = root.querySelectorAll('[data-id~="' + v + '"]');
-                cells[0].classList.add("open");
-                client.moves.discoverPiece(v);
-                tmpBuffer.push(v);
-                tryDiscover(client, G, root, y - 1, x, tmpBuffer);
-                tryDiscover(client, G, root, y + 1, x, tmpBuffer);
-                tryDiscover(client, G, root, y, x - 1, tmpBuffer);
-                tryDiscover(client, G, root, y, x + 1, tmpBuffer);
-            }
-        }
-
         const cells = this.rootElement.querySelectorAll('.cell');
         cells.forEach(cell => {
             cell.onclick = (_) =>
@@ -125,37 +142,31 @@ class App {
                     }
                 } else if (this.state.G.knownCells[id] === false) {
                     if (this.state.G.cells === null || Number.isInteger(this.state.G.cells[id])) {
-                        /* To discover many pieces at once, doesn't really work well game design wise
-                        if (this.state.G.cells[id] === 0) {
-                            tryDiscover(this.client, this.state.G, this.rootElement, Math.floor(id / 8), id % 8, []);
-                        } else */
-                        {
-                            this.client.moves.discoverPiece(id);
-                            cell.classList.add("open");
+                        this.client.moves.discoverPiece(id, this.availablePieces);
+                        cell.classList.add("open");
 
-                            // Board color
-                            const y = Math.floor(id / 8);
-                            const x = id % 8;
-                            const isWhite = (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1)
-                            cell.classList.add(isWhite ? "white" : "black");
+                        // Board color
+                        const y = Math.floor(id / 8);
+                        const x = id % 8;
+                        const isWhite = (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1)
+                        cell.classList.add(isWhite ? "white" : "black");
 
-                            // Text color
-                            const colors = [
-                                "#0001FD", // 1
-                                "#017E00", // 2
-                                "#FE0000", // 3
-                                "#010082", // 4
-                                "#830003", // 5
-                                "#008080", // 6
-                                "#000000", // 7
-                                "#808080", // 8
-                            ];
-                            let color = "";
-                            if (this.state.G.cells[id] === 0) color = "";
-                            else if (this.state.G.cells[id] > 8) color = colors[7];
-                            else color = colors[this.state.G.cells[id] - 1];
-                            cell.style = "color: " + color + ";";
-                        }
+                        // Text color
+                        const colors = [
+                            "#0001FD", // 1
+                            "#017E00", // 2
+                            "#FE0000", // 3
+                            "#010082", // 4
+                            "#830003", // 5
+                            "#008080", // 6
+                            "#000000", // 7
+                            "#808080", // 8
+                        ];
+                        let color = "";
+                        if (this.state.G.cells[id] === 0) color = "";
+                        else if (this.state.G.cells[id] > 8) color = colors[7];
+                        else color = colors[this.state.G.cells[id] - 1];
+                        cell.style = "color: " + color + ";";
                     } else {
                         clearInterval(this.timer);
                         this.didLost = true;

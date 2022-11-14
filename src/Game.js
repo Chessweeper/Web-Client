@@ -110,19 +110,16 @@ export const Game = {
     setup: prepareBoard,
   
     moves: {
-        discoverPiece: ({ G }, id) => {
+        discoverPiece: ({ G }, id, pieces) => {
             if (G.cells === null) {
                 let data = Array(8 * 8).fill(0);
                 let i = 3;
+
                 while (i > 0) {
                     const rand = Math.floor(Math.random() * 64);
                     if (rand !== id && Number.isInteger(data[rand])) {
-                        const value = Math.floor(Math.random() * 4);
-                        let piece = '';
-                        if (value === 0) piece = 'R';
-                        else if (value === 1) piece = 'B';
-                        else if (value === 2) piece = 'Q';
-                        else if (value === 3) piece = 'N';
+                        const value = Math.floor(Math.random() * pieces.length);
+                        let piece = pieces[value];
                         data[rand] = piece;
                         i--;
                     }
