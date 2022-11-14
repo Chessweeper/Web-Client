@@ -158,54 +158,94 @@ export const Game = {
   
     moves: {
         generatePuzzleBoard: ({ G }, pieces, size, count) => {
-            let data = fillPositions(generateBoard(-1, pieces, size, count));
-            let thinkData = Array(size * size).fill(0);
-            let discovered = Array(size * size).fill(false);
+            let bestPuzzle = null;
 
-            let isSolved = false;
-            let a = 0;
-            while (!isSolved && a < 10) {
-                a++;
-                let randPos;
-                do {
-                    randPos = Math.floor(Math.random() * (size * size));
-                } while (discovered[randPos] || !Number.isInteger(data[randPos]));
-                discovered[randPos] = true;
+            for (let c = 0; c < 10; c++)
+            {
+                let data = fillPositions(generateBoard(-1, pieces, size, count));
+                let discovered = Array(size * size).fill(false);
 
-                for (let i = 0; i < data.length; i++) {
-                    let str = "";
-                    for (let piece of pieces)
-                    {
-                        let moves = pieceMovesCheck[piece](discovered, size, i % size, Math.floor(i / size));
-                        let isValid = true;
-                        for (let move of moves) {
-                            if (discovered[move] && data[move] === 0) {
-                                isValid = false;
-                                break;
+                let thinkData = null;
+                let it = 0;
+                let isSolved = false;
+                while (!isSolved && it < 1000) {
+                    it++; // After 1000 iterations we just give up
+
+                    // Get a random position that is not a piece and wasn't already taken
+                    let possibilities = [];
+                    for (let i in data) {
+                        if (!discovered[i] && Number.isInteger(data[i]) && (thinkData === null || thinkData[i] !== 0)) {
+                            possibilities.push(i);
+                        }
+                    }
+                    if (possibilities.length > 0) {
+                        let randPos = Math.floor(Math.random() * possibilities.length);
+                        discovered[possibilities[randPos]] = true;
+                    } else {
+                        it = 1000; // Algorithm failed with this generation, we give up
+                        continue;
+                    }
+
+                    thinkData = Array(size * size).fill(0);
+
+                    // For each tile...
+                    for (let i = 0; i < data.length; i++) {
+                        if (discovered[i]) { // We only want the ones we don't know about
+                            continue;
+                        }
+
+                        let str = "";
+                        for (let piece of pieces) // Check all pieces
+                        {
+                            // List of all moves for the current piece
+                            let moves = pieceMovesCheck[piece](thinkData, size, i % size, Math.floor(i / size));
+
+                            // If the piece have a move that is impossible, it means it can't be this one
+                            let isValid = true;
+                            for (let move of moves) {
+                                if (discovered[move] && data[move] === 0) {
+                                    isValid = false;
+                                    break;
+                                }
+                            }
+                            if (isValid) {
+                                str += piece;
                             }
                         }
-                        if (isValid) {
-                            str += piece;
+                        thinkData[i] = str;
+                    }
+
+                    // Check if we are sure that only one position is possible
+                    isSolved = true;
+                    for (let i = 0; i < data.length; i++) {
+                        if (!discovered[i] &&
+                            ((Number.isInteger(data[i]) && thinkData[i] !== "") ||
+                                (!Number.isInteger(data[i]) && thinkData[i] !== data[i]))) {
+                            isSolved = false;
+                            break;
                         }
                     }
                 }
 
-                isSolved = true;
-                for (let i = 0; i < data.length; i++) {
-                    if ((Number.isInteger(data[i]) && thinkData[i] !== 0) ||
-                        (!Number.isInteger(data[i]) && thinkData[i] !== data[i]))
-                    {
-                        isSolved = false;
-                        break;
+                let emptyCases = discovered.filter(x => x === false).length;
+                console.log(`Generated ${isSolved ? "" : "un"}solved puzzle with ${emptyCases} empty cases after ${it} iterations`);
+
+                let isBetter = bestPuzzle === null || (isSolved && !bestPuzzle["isSolved"]) || emptyCases > bestPuzzle["emptyCases"];
+                if (isBetter) {
+                    bestPuzzle = {
+                        "emptyCases": emptyCases,
+                        "data": data,
+                        "discovered": discovered,
+                        "isSolved": isSolved
                     }
                 }
             }
 
-            G.cells = data;
+            G.cells = bestPuzzle["data"];
             G.knownCells = Array(size * size).fill(false);
 
-            for (let i in discovered) {
-                if (discovered[i]) {
+            for (let i in bestPuzzle["discovered"]) {
+                if (bestPuzzle["discovered"][i]) {
                     G.knownCells[i] = true;
                 }
             }

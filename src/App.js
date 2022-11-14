@@ -134,7 +134,6 @@ class App {
                 const id = parseInt(cell.dataset.id);
 
                 if (this.state.G.knownCells[id]) {
-                    console.log(id);
                     const isWhite = this.isPosWhite(id)
                     cell.classList.add("open");
                     cell.classList.add(isWhite ? "white" : "black");
