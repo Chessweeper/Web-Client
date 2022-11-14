@@ -228,4 +228,18 @@ describe('Board tests', () => {
             1, 1, 0, 1, 2, 0, 0, 1
         ]);
     });
+
+    it('Complex board', () => {
+        assert.deepStrictEqual(fillPositions([
+            0, 0, N, K,
+            0, R, 0, 0,
+            0, 0, 0, 0,
+            0, 0, B, 0
+        ]), [
+            0, 1, N, K,
+            3, R, 2, 2,
+            0, 3, 0, 2,
+            0, 1, B, 0
+        ]);
+    });
 });
