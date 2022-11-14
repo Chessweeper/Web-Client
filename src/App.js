@@ -7,6 +7,7 @@ import queen from '../img/wQ.png';
 
 class App {
     constructor(rootElement) {
+        // Boardgame.io stuffs
         this.client = Client({ game: Game });
         this.client.start();
         this.rootElement = rootElement;
@@ -20,11 +21,18 @@ class App {
             this.update(state);
         });
 
-        this.selected = null;
-
+        // Current action selected under the board
         this.currAction = null;
+
+        // Is the game over yet?
         this.didLost = false;
 
+        // Method used for the timer
+        this.timer = null;
+        this.currTime = 0;
+        this.timerDiv = document.getElementById("timer");
+
+        // For each action we assign the callback
         for (const elem of document.getElementsByClassName("action")) {
             const curr = elem;
             elem.addEventListener("click", e => {
@@ -54,11 +62,6 @@ class App {
         `;
     }
 
-    cleanTiles() {
-        const cells = this.rootElement.querySelectorAll('.cell');
-        this.selected = null;
-    }
-
     attachListeners() {
         function tryDiscover(client, G, root, y, x, tmpBuffer) {
             const v = y * 8 + x;
@@ -81,6 +84,14 @@ class App {
                 if (this.didLost) {
                     return;
                 }
+
+                if (this.timer === null) {
+                    this.timer = setInterval(() => {
+                        this.currTime++;
+                        this.timerDiv.innerHTML = `${Math.floor(this.currTime / 100)}:${this.currTime % 100}`;
+                    }, 10);
+                }
+
                 const id = cell.dataset.id;
                 if (this.currAction !== null) {
                     if (this.state.G.knownCells[id] !== true) {
@@ -108,6 +119,7 @@ class App {
                                     return;
                                 }
                             }
+                            clearInterval(this.timer);
                             this.didLost = true;
                             document.getElementById("popup").hidden = false;
                             document.getElementById("popup").innerHTML = "You won";
@@ -147,6 +159,7 @@ class App {
                             cell.style = "color: " + color + ";";
                         }
                     } else {
+                        clearInterval(this.timer);
                         this.didLost = true;
                         document.getElementById("popup").hidden = false;
                         document.getElementById("popup").innerHTML = "You lost";
