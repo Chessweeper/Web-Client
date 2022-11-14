@@ -151,6 +151,7 @@ class App {
                         document.getElementById("popup").hidden = false;
                         document.getElementById("popup").innerHTML = "You lost";
                         cell.classList.add("red");
+                        this.update(this.state);
                     }
                 }
             };
@@ -158,20 +159,27 @@ class App {
     }
 
     update(state) {
+        function getPiece(c) {
+            let image = "";
+            if (c === 'R') image = rook;
+            else if (c === 'B') image = bishop;
+            else if (c === 'Q') image = queen;
+            else if (c === 'N') image = knight;
+            return `<img src="${image}"/>`;
+        }
+
         const cells = this.rootElement.querySelectorAll('.cell');
         cells.forEach(cell => {
             const cellId = parseInt(cell.dataset.id);
 
-            if (state.G.knownCells[cellId] === true && state.G.cells[cellId] !== 0) {
+            if (this.didLost === true && !Number.isInteger(state.G.cells[cellId])) { // Display pieces of gameover
+                cell.innerHTML = getPiece(state.G.cells[cellId]);
+                cell.classList.add("red");
+            } else if (state.G.knownCells[cellId] === true && state.G.cells[cellId] !== 0) {
                 const cellValue = state.G.cells[cellId];
                 cell.innerHTML = cellValue;
             } else if (state.G.knownCells[cellId] !== false && state.G.knownCells[cellId] !== true) {
-                let image = "";
-                if (state.G.knownCells[cellId] === 'R') image = rook;
-                else if (state.G.knownCells[cellId] === 'B') image = bishop;
-                else if (state.G.knownCells[cellId] === 'Q') image = queen;
-                else if (state.G.knownCells[cellId] === 'N') image = knight;
-                cell.innerHTML = `<img src="${image}"/>`;
+                cell.innerHTML = getPiece(state.G.knownCells[cellId]);
             } else {
                 cell.innerHTML = "";
             }

@@ -50,7 +50,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.418);
     padding: 10px;
     border: 1px solid black;
     border-radius: 10px;
