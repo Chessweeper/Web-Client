@@ -26,18 +26,6 @@ class App {
         this.currTime = 0;
         this.timerDiv = document.getElementById("timer");
 
-        // For each action we assign the callback
-        for (const elem of document.getElementsByClassName("action")) {
-            const curr = elem;
-            elem.addEventListener("click", e => {
-                for (const s of document.getElementsByClassName("selected")) {
-                    s.classList.remove("selected");
-                }
-                curr.classList.add("selected");
-                this.currAction = curr.dataset.id === "" ? null : curr.dataset.id;
-            })
-        }
-
         // List of pieces we can spawn
         function findGetParameter(parameterName) { // https://stackoverflow.com/a/5448595
             var result = null,
@@ -54,9 +42,13 @@ class App {
         let pieces = findGetParameter("p");
         this.size = findGetParameter("s");
         this.count = findGetParameter("c");
+        this.gamemode = findGetParameter("g");
 
         this.size = this.size === null ? 8 : parseInt(this.size);
         this.count = this.count === null ? 3 : parseInt(this.count);
+        if (this.gamemode !== 'p' && this.gamemode !== 'c') {
+            this.gamemode = 'c';
+        }
 
         if (this.size < 3 || this.size > 100) { // Invalid board size
             this.size = 8;
@@ -97,16 +89,45 @@ class App {
             this.update(state);
         });
 
-        for (let action of document.getElementsByClassName("action")) {
-            action.parentNode.hidden = !this.availablePieces.includes(action.dataset.id);
-        }
+        // When we click "Restart" on the end of the game popup
         document.getElementById("popup-reload").addEventListener("click", _ => {
             this.timerDiv.innerHTML = "0:00";
             app = new App(document.getElementById('app'));
             document.getElementById("popup").hidden = true;
         });
 
-        console.log(`Game loaded: ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${this.availablePieces.length > 1 ? "s" : ""} allowed: ${this.availablePieces}`)
+        // Display/hide action button and select the first one
+        let selected = false;
+        for (let action of document.getElementsByClassName("action")) {
+            // If we are on the shovel action we hide it if we are on puzzle mode
+            // Else we hide it if the piece is not in the list of the one available
+            const hidden = action.dataset.id === "" ? this.gamemode === 'p' : !this.availablePieces.includes(action.dataset.id);
+            action.parentNode.hidden = hidden;
+            if (!hidden && !selected) {
+                action.classList.add("selected");
+                this.currAction = action.dataset.id === "" ? null : action.dataset.id;
+                selected = true;
+            }
+        }
+
+        // For each action we assign the callback
+        for (const elem of document.getElementsByClassName("action")) {
+            // No point setting the callback of a button we won't be able to click
+            if (elem.parentNode.hidden) {
+                continue;
+            }
+
+            const curr = elem;
+            elem.addEventListener("click", e => {
+                for (const s of document.getElementsByClassName("selected")) {
+                    s.classList.remove("selected");
+                }
+                curr.classList.add("selected");
+                this.currAction = curr.dataset.id === "" ? null : curr.dataset.id;
+            })
+        }
+
+        console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${this.availablePieces.length > 1 ? "s" : ""} allowed: ${this.availablePieces}`)
     }
 
     createBoard() {
