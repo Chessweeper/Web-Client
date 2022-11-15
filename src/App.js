@@ -1,6 +1,5 @@
 import { Client } from 'boardgame.io/client';
 import { Game } from './Game';
-import { Random } from './Random';
 import rook from '../img/wR.png';
 import knight from '../img/wN.png';
 import bishop from '../img/wB.png';
@@ -21,8 +20,6 @@ import shogiGoldGeneral from '../img/shogiGoldGeneral.svg';
 class App {
     constructor(rootElement) {
         // Boardgame.io stuffs
-        this.client = Client({ game: Game });
-        this.client.start();
         this.rootElement = rootElement;
 
         // Current action selected under the board
@@ -35,8 +32,6 @@ class App {
         this.timer = null;
         this.currTime = 0;
         this.timerDiv = document.getElementById("timer");
-
-        this.random = new Random();
 
         // List of pieces we can spawn
         function findGetParameter(parameterName) { // https://stackoverflow.com/a/5448595
@@ -55,27 +50,12 @@ class App {
         this.size = findGetParameter("s");
         this.count = findGetParameter("c");
         this.gamemode = findGetParameter("g");
-        this.seed = findGetParameter("r");
+        const seed = findGetParameter("r") ?? undefined;
 
         this.size = this.size === null ? 8 : parseInt(this.size);
         this.count = this.count === null ? 3 : parseInt(this.count);
         if (this.gamemode === null) {
             this.gamemode = 'c';
-        }
-
-        if (this.seed !== null) {
-            function getHashCode(value) { // https://stackoverflow.com/a/7616484
-                var hash = 0,
-                    i, chr;
-                if (value.length === 0) return hash;
-                for (i = 0; i < value.length; i++) {
-                    chr = value.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + chr;
-                    hash |= 0; // Convert to 32bit integer
-                }
-                return hash;
-            }
-            this.random.setSeed(getHashCode(this.seed));
         }
 
         if (this.gamemode !== 'p' && this.gamemode !== 'c') {
@@ -168,6 +148,8 @@ class App {
         this.createBoard();
         this.attachListeners();
 
+        this.client = Client({ game: { ...Game, seed }});
+        this.client.start();
         this.client.subscribe(state =>
         {
             this.state = state;
@@ -238,7 +220,7 @@ class App {
         }
 
         if (this.gamemode === 'p') {
-            this.client.moves.generatePuzzleBoard(this.random, this.availablePieces, this.size, this.count);
+            this.client.moves.generatePuzzleBoard(this.availablePieces, this.size, this.count);
             const cells = this.rootElement.querySelectorAll('.cell');
             cells.forEach(cell => {
                 const id = parseInt(cell.dataset.id);
@@ -252,7 +234,7 @@ class App {
             });
         }
 
-        console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode${this.seed !== null ? ` with a seed of \"${this.seed}\"` : ""}, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${Object.keys(this.availablePieces).length > 1 ? "s" : ""} allowed: ${Object.keys(this.availablePieces).map(x => `${x} (x${this.availablePieces[x]})`).join(', ')}`)
+        console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${Object.keys(this.availablePieces).length > 1 ? "s" : ""} allowed: ${Object.keys(this.availablePieces).map(x => `${x} (x${this.availablePieces[x]})`).join(', ')}`)
     }
 
     createBoard() {
@@ -316,7 +298,7 @@ class App {
                 const id = parseInt(cell.dataset.id);
 
                 if (this.state.G.cells === null) {
-                    this.client.moves.generateBoard(this.random, id, this.availablePieces, this.size, this.count);
+                    this.client.moves.generateBoard(id, this.availablePieces, this.size, this.count);
                 }
 
                 if (this.currAction !== null) {
