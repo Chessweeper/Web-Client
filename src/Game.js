@@ -63,7 +63,7 @@ export function KnightMoves(data, size, x, y) {
 }
 
 export function KnookMoves(data, size, x, y) {
-    return KnightMoves(data, size, x, y).concat(QueenMoves(data, size, x, y));
+    return KnightMoves(data, size, x, y).concat(RookMoves(data, size, x, y));
 }
 
 export function KingMoves(data, size, x, y) {
