@@ -36,6 +36,7 @@ if (!file_exists("daily.txt") || filesize("daily.txt") === 0) {
     
             flock($fp, LOCK_UN);
         } else {
+            header("HTTP/1.1 409 Conflict");
             echo "Lock error";
         }
     
