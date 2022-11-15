@@ -176,13 +176,15 @@ export function generateBoard(id, pieces, size, count) {
     let data = Array(size * size).fill(0);
     let i = count;
 
-    let kingCount = 0;
-
     while (i > 0) {
         const rand = Math.floor(Math.random() * (size * size));
         if (rand !== id && Number.isInteger(data[rand])) {
-            const value = Math.floor(Math.random() * pieces.length);
-            let piece = pieces[value];
+            const value = Math.floor(Math.random() * Object.keys(pieces).length);
+            let piece = Object.keys(pieces)[value];
+
+            if (pieces[piece] === 0) { // We reached the amount of time we could spawn that piece
+                continue;
+            }
 
             if ((piece === 'P' || piece === '桂' || piece === '歩' || piece === '香') && rand < size) { // Pawns shouldn't be able to spawn on the top line
                 continue;
@@ -190,14 +192,9 @@ export function generateBoard(id, pieces, size, count) {
             if (piece === 'D' && rand >= (size * (size - 1))) { // Pawns shouldn't be able to spawn on the top line
                 continue;
             }
-            if (piece === 'K' && kingCount === 1) { // Can't have 2 kings
-                continue;
-            }
 
-            if (piece === 'K') {
-                kingCount++;
-            }
             data[rand] = piece;
+            pieces[piece]--;
             i--;
         }
     }

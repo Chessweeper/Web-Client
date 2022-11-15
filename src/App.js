@@ -56,13 +56,16 @@ class App {
         this.size = this.size === null ? 8 : parseInt(this.size);
         this.count = this.count === null ? 3 : parseInt(this.count);
         if (this.gamemode !== 'p' && this.gamemode !== 'c') {
+            console.warn(`Parsing error: invalid gamemode ${this.gamemode}, falling back on classic`);
             this.gamemode = 'c';
         }
 
         if (this.size < 3 || this.size > 100) { // Invalid board size
+            console.warn(`Parsing error: invalid board size ${this.size}, falling back on 8`);
             this.size = 8;
         }
         if (this.count < 1 || this.count >= this.size * this.size) { // Board size can't fit all pieces
+            console.warn(`Parsing error: invalid piece count ${this.count}, falling back on 3`);
             this.count = 3;
         }
 
@@ -85,26 +88,57 @@ class App {
             '金': shogiGoldGeneral
         }
         const validLetters = Object.keys(this.piecesImages);
-        this.availablePieces = "";
+        this.availablePieces = {};
         if (pieces !== null) {
+            let target = null;
             for (let letter of pieces) {
-                if (validLetters.includes(letter.toUpperCase())) {
-                    this.availablePieces += letter.toUpperCase();
+                if (!Number.isInteger(letter)) {
+                    if (target !== null) {
+                        this.availablePieces[letter.toUpperCase()] = Infinity;
+                    }
+
+                    if (validLetters.includes(letter.toUpperCase())) {
+                        letter = letter.toUpperCase();
+                    } else {
+                        console.warn(`Parsing error: unknown piece ${letter.toUpperCase()}, value ignored`);
+                    }
+                } else {
+                    if (target === null) {
+                        console.warn(`Parsing error: no piece specified, value ignored`);
+                    } else {
+                        let nb = parseInt(letter);
+                        if (nb > 0) {
+                            this.availablePieces[letter.toUpperCase()] = nb;
+                        } else {
+                            console.warn("Parsing error: piece count must be superior to 0, value ignored");
+                        }
+                    }
                 }
             }
+            if (target !== null) {
+                this.availablePieces[letter.toUpperCase()] = Infinity;
+            }
         }
-        if (this.availablePieces === "") { // No piece found, fallback on default value
-            this.availablePieces = "RBNQ";
+        if (Object.keys(this.availablePieces).length === 0) { // No piece found, fallback on default value
+            this.availablePieces = {
+                'R': Infinity,
+                'B': Infinity,
+                'N': Infinity,
+                'Q': Infinity
+            };
+        }
+
+        let maxPieceCount = Object.values(this.availablePieces).reduce((a, b) => a + b, 0);
+        if (this.count >= maxPieceCount) {
+            console.warn(`Parsing error: piece limits of total ${maxPieceCount} is lower than given piece count of ${this.count}, piece count set to ${(maxPieceCount + 1)}`);
+            this.count = maxPieceCount + 1;
         }
 
         // Since pawns can't spawn on the top line, we need to be careful for boards only containing them
-        const isOnlyPawn = this.availablePieces.split('').some(x => x !== 'P' && x !== 'D' && x !== '桂' && x !== '歩' && x !== '香')
+        const isOnlyPawn = Object.keys(this.availablePieces).some(x => x !== 'P' && x !== 'D' && x !== '桂' && x !== '歩' && x !== '香')
         if (isOnlyPawn && this.count >= this.size * (this.size - 1)) {
+            console.warn(`Parsing error: board size of ${this.size} doesn't give enough space given the piece count of ${this.count} of the given type, falling back piece count on 3`);
             this.count = 3;
-        }
-
-        if (this.availablePieces === 'K' && this.count > 1) { // We can't have more than one king
-            this.count = 1;
         }
         
         this.createBoard();
@@ -133,7 +167,7 @@ class App {
         for (let action of document.getElementsByClassName("action")) {
             // If we are on the shovel action we hide it if we are on puzzle mode
             // Else we hide it if the piece is not in the list of the one available
-            const hidden = action.dataset.id === "" ? this.gamemode === 'p' : !this.availablePieces.includes(action.dataset.id);
+            const hidden = action.dataset.id === "" ? this.gamemode === 'p' : !Object.keys(this.availablePieces).includes(action.dataset.id);
             action.parentNode.hidden = hidden;
             if (!hidden && !selected) {
                 action.classList.add("selected");
@@ -173,7 +207,7 @@ class App {
             });
         }
 
-        console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${this.availablePieces.length > 1 ? "s" : ""} allowed: ${this.availablePieces}`)
+        console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${Object.keys(this.availablePieces).length > 1 ? "s" : ""} allowed: ${Object.keys(this.availablePieces).map(x => `${x} (x${this.availablePieces[x]})`).join(', ')}`)
     }
 
     createBoard() {
