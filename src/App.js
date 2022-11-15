@@ -92,13 +92,13 @@ class App {
         if (pieces !== null) {
             let target = null;
             for (let letter of pieces) {
-                if (!Number.isInteger(letter)) {
+                if (isNaN(letter)) {
                     if (target !== null) {
                         this.availablePieces[letter.toUpperCase()] = Infinity;
                     }
 
                     if (validLetters.includes(letter.toUpperCase())) {
-                        letter = letter.toUpperCase();
+                        target = letter.toUpperCase();
                     } else {
                         console.warn(`Parsing error: unknown piece ${letter.toUpperCase()}, value ignored`);
                     }
@@ -108,7 +108,8 @@ class App {
                     } else {
                         let nb = parseInt(letter);
                         if (nb > 0) {
-                            this.availablePieces[letter.toUpperCase()] = nb;
+                            this.availablePieces[target] = nb;
+                            target = null;
                         } else {
                             console.warn("Parsing error: piece count must be superior to 0, value ignored");
                         }
@@ -116,7 +117,7 @@ class App {
                 }
             }
             if (target !== null) {
-                this.availablePieces[letter.toUpperCase()] = Infinity;
+                this.availablePieces[target.toUpperCase()] = Infinity;
             }
         }
         if (Object.keys(this.availablePieces).length === 0) { // No piece found, fallback on default value
@@ -129,9 +130,9 @@ class App {
         }
 
         let maxPieceCount = Object.values(this.availablePieces).reduce((a, b) => a + b, 0);
-        if (this.count >= maxPieceCount) {
-            console.warn(`Parsing error: piece limits of total ${maxPieceCount} is lower than given piece count of ${this.count}, piece count set to ${(maxPieceCount + 1)}`);
-            this.count = maxPieceCount + 1;
+        if (this.count > maxPieceCount) {
+            console.warn(`Parsing error: piece limits of total ${maxPieceCount} is lower than given piece count of ${this.count}, piece count set to ${(maxPieceCount)}`);
+            this.count = maxPieceCount;
         }
 
         // Since pawns can't spawn on the top line, we need to be careful for boards only containing them

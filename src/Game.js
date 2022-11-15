@@ -175,7 +175,6 @@ export function fillPositions(data) {
 export function generateBoard(id, pieces, size, count) {
     let data = Array(size * size).fill(0);
     let i = count;
-
     while (i > 0) {
         const rand = Math.floor(Math.random() * (size * size));
         if (rand !== id && Number.isInteger(data[rand])) {
@@ -248,7 +247,7 @@ export const Game = {
                         }
 
                         let str = "";
-                        for (let piece of pieces) // Check all pieces
+                        for (let piece of Object.keys(pieces)) // Check all pieces
                         {
                             // List of all moves for the current piece
                             let moves = pieceMovesCheck[piece](thinkData, size, i % size, Math.floor(i / size));
