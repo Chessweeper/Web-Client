@@ -1,5 +1,6 @@
 import { Client } from 'boardgame.io/client';
 import { Game } from './Game';
+import { Random } from './Random';
 import rook from '../img/wR.png';
 import knight from '../img/wN.png';
 import bishop from '../img/wB.png';
@@ -34,6 +35,8 @@ class App {
         this.timer = null;
         this.currTime = 0;
         this.timerDiv = document.getElementById("timer");
+
+        this.random = new Random();
 
         // List of pieces we can spawn
         function findGetParameter(parameterName) { // https://stackoverflow.com/a/5448595
@@ -199,7 +202,7 @@ class App {
         }
 
         if (this.gamemode === 'p') {
-            this.client.moves.generatePuzzleBoard(this.availablePieces, this.size, this.count);
+            this.client.moves.generatePuzzleBoard(this.random, this.availablePieces, this.size, this.count);
             const cells = this.rootElement.querySelectorAll('.cell');
             cells.forEach(cell => {
                 const id = parseInt(cell.dataset.id);
@@ -277,7 +280,7 @@ class App {
                 const id = parseInt(cell.dataset.id);
 
                 if (this.state.G.cells === null) {
-                    this.client.moves.generateBoard(id, this.availablePieces, this.size, this.count);
+                    this.client.moves.generateBoard(this.random, id, this.availablePieces, this.size, this.count);
                 }
 
                 if (this.currAction !== null) {
