@@ -264,7 +264,7 @@ export const Game = {
         generatePuzzleBoard: ({ G, random }, pieces, size, count) => {
             let bestPuzzle = null;
 
-            for (let c = 0; c < 10 || bestPuzzle === null || !bestPuzzle["isSolved"]; c++)
+            for (let c = 0; c < 10 || bestPuzzle === null; c++)
             {
                 let data = fillPositions(generateBoard(random, -1, pieces, size, count));
                 let discovered = Array(size * size).fill(false);
@@ -293,20 +293,21 @@ export const Game = {
                     thinkData = validation["thinkData"];
                 }
 
-                let emptyCases = discovered.filter(x => x === false).length;
-                if (isSolved) {
-                    console.log(`Generated solved puzzle with ${emptyCases} empty cases`);
-                } else {
+                if (!isSolved) {
                     console.log("Skipping unsolvabled puzzle");
-                }
+                } else {
+                    let emptyCases = discovered.filter(x => x === false).length;
 
-                let isBetter = bestPuzzle === null || (isSolved && !bestPuzzle["isSolved"]) || emptyCases > bestPuzzle["emptyCases"];
-                if (isBetter) {
-                    bestPuzzle = {
-                        "emptyCases": emptyCases,
-                        "data": data,
-                        "discovered": discovered,
-                        "isSolved": isSolved
+                    let emptyCasesAfter = discovered.filter(x => x === false).length;
+                    console.log(`Generated solved puzzle with ${emptyCases} empty cases, improved to ${emptyCasesAfter}`);
+
+                    let isBetter = bestPuzzle === null || emptyCases > bestPuzzle["emptyCases"];
+                    if (isBetter) {
+                        bestPuzzle = {
+                            "emptyCases": emptyCases,
+                            "data": data,
+                            "discovered": discovered
+                        }
                     }
                 }
             }
