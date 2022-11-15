@@ -205,6 +205,53 @@ export function generateBoard(random, id, pieces, size, count) {
     return data;
 }
 
+function validateBoard(data, discovered, pieces, size) {
+    let thinkData = Array(size * size).fill(0);
+
+    // For each tile...
+    for (let i = 0; i < data.length; i++) {
+        if (discovered[i]) { // We only want the ones we don't know about
+            continue;
+        }
+
+        let str = "";
+        for (let piece of Object.keys(pieces)) // Check all pieces
+        {
+            // List of all moves for the current piece
+            let moves = pieceMovesCheck[piece](thinkData, size, i % size, Math.floor(i / size));
+
+            // If the piece have a move that is impossible, it means it can't be this one
+            let isValid = true;
+            for (let move of moves) {
+                if (discovered[move] && data[move] === 0) {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) {
+                str += piece;
+            }
+        }
+        thinkData[i] = str;
+    }
+
+    // Check if we are sure that only one position is possible
+    let isSolved = true;
+    for (let i = 0; i < data.length; i++) {
+        if (!discovered[i] &&
+            ((Number.isInteger(data[i]) && thinkData[i] !== "") ||
+                (!Number.isInteger(data[i]) && thinkData[i] !== data[i]))) {
+            isSolved = false;
+            break;
+        }
+    }
+
+    return {
+        isSolved: isSolved,
+        thinkData: thinkData
+    };
+}
+
 export const Game = {
     setup: () => {
         return {
@@ -241,45 +288,9 @@ export const Game = {
                         continue;
                     }
 
-                    thinkData = Array(size * size).fill(0);
-
-                    // For each tile...
-                    for (let i = 0; i < data.length; i++) {
-                        if (discovered[i]) { // We only want the ones we don't know about
-                            continue;
-                        }
-
-                        let str = "";
-                        for (let piece of Object.keys(pieces)) // Check all pieces
-                        {
-                            // List of all moves for the current piece
-                            let moves = pieceMovesCheck[piece](thinkData, size, i % size, Math.floor(i / size));
-
-                            // If the piece have a move that is impossible, it means it can't be this one
-                            let isValid = true;
-                            for (let move of moves) {
-                                if (discovered[move] && data[move] === 0) {
-                                    isValid = false;
-                                    break;
-                                }
-                            }
-                            if (isValid) {
-                                str += piece;
-                            }
-                        }
-                        thinkData[i] = str;
-                    }
-
-                    // Check if we are sure that only one position is possible
-                    isSolved = true;
-                    for (let i = 0; i < data.length; i++) {
-                        if (!discovered[i] &&
-                            ((Number.isInteger(data[i]) && thinkData[i] !== "") ||
-                                (!Number.isInteger(data[i]) && thinkData[i] !== data[i]))) {
-                            isSolved = false;
-                            break;
-                        }
-                    }
+                    let validation = validateBoard(data, discovered, pieces, size);
+                    isSolved = validation["isSolved"];
+                    thinkData = validation["thinkData"];
                 }
 
                 let emptyCases = discovered.filter(x => x === false).length;
