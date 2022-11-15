@@ -261,14 +261,16 @@ export const Game = {
     },
   
     moves: {
-        generatePuzzleBoard: ({ G, random }, pieces, size, count) => {
-            let bestPuzzle = null;
+        generatePuzzleBoard: ({ G, random }, pieces, size, count, difficulty) => {
+            let data;
+            let discovered;
 
-            const maxIt = 20;
-            for (let c = 0; c < maxIt && bestPuzzle === null; c++)
+            let c = 0;
+            const maxIt = 200;
+            for (; c < maxIt; c++)
             {
-                let data = fillPositions(generateBoard(random, -1, pieces, size, count));
-                let discovered = Array(size * size).fill(false);
+                data = fillPositions(generateBoard(random, -1, pieces, size, count));
+                discovered = Array(size * size).fill(false);
 
                 let thinkData = null;
                 let isSolved = false;
@@ -297,8 +299,6 @@ export const Game = {
                 if (!isSolved) {
                     console.log("Skipping unsolvabled puzzle");
                 } else {
-                    let emptyCases = discovered.filter(x => x === false).length;
-
                     for (let i = 0; i < data.length; i++) {
                         if (!discovered[i]) {
                             continue;
@@ -312,28 +312,40 @@ export const Game = {
                     }
 
                     let emptyCasesAfter = discovered.filter(x => x === false).length;
-                    console.log(`Generated solved puzzle with ${emptyCases} empty cases, improved to ${emptyCasesAfter}`);
 
-                    let isBetter = bestPuzzle === null || emptyCases > bestPuzzle["emptyCases"];
-                    if (isBetter) {
-                        bestPuzzle = {
-                            "emptyCases": emptyCases,
-                            "data": data,
-                            "discovered": discovered
+                    if (difficulty !== -1 && difficulty > emptyCasesAfter) {
+                        console.log(`Skipping puzzle with ${emptyCasesAfter} empty tiles`);
+                    } else {
+                        if (difficulty !== -1) {
+                            // Set tiles to adjust difficulty
+
+                            let possibleTarget = [];
+                            for (let i = 0; i < data.length; i++) {
+                                if (!discovered[i] && Number.isInteger(data[i])) {
+                                    possibleTarget.push(i);
+                                }
+                            }
+                            for (let i = emptyCasesAfter; i > difficulty; i--) {
+                                const rand = Math.floor(random.Number() * possibleTarget.length);
+                                discovered[possibleTarget[rand]] = true;
+                                possibleTarget.splice(rand, 1).indexOf(rand);
+                            }
                         }
+                        console.log(`Generated solved puzzle with ${discovered.filter(x => x === false).length} empty tiles`);
+                        break;
                     }
                 }
             }
 
-            if (bestPuzzle === null) {
+            if (c === maxIt) {
                 document.getElementById("popup").hidden = false;
                 document.getElementById("popup-content").innerHTML = "Failed to generate a board";
             } else {
-                G.cells = bestPuzzle["data"];
+                G.cells = data;
                 G.knownCells = Array(size * size).fill(false);
 
-                for (let i in bestPuzzle["discovered"]) {
-                    if (bestPuzzle["discovered"][i]) {
+                for (let i in discovered) {
+                    if (discovered[i]) {
                         G.knownCells[i] = true;
                     }
                 }

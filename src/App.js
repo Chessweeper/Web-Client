@@ -53,9 +53,11 @@ class App {
         this.count = findGetParameter("c");
         this.gamemode = findGetParameter("g");
         const seed = findGetParameter("r") ?? undefined;
+        this.difficulty = findGetParameter("d");
 
         this.size = this.size === null ? 8 : parseInt(this.size);
         this.count = this.count === null ? 3 : parseInt(this.count);
+        this.difficulty = this.difficulty === null ? -1 : parseInt(this.difficulty);
         if (this.gamemode === null) {
             this.gamemode = 'c';
         }
@@ -65,6 +67,10 @@ class App {
             this.gamemode = 'c';
         }
 
+        if (this.gamemode !== 'p' && this.difficulty !== -1) {
+            console.warn("Difficulty argument is ignored outside of puzzle gamemode");
+        }
+
         if (this.size < 3 || this.size > 100) { // Invalid board size
             console.warn(`Parsing error: invalid board size ${this.size}, falling back on 8`);
             this.size = 8;
@@ -72,6 +78,11 @@ class App {
         if (this.count < 1 || this.count >= this.size * this.size) { // Board size can't fit all pieces
             console.warn(`Parsing error: invalid piece count ${this.count}, falling back on 3`);
             this.count = 3;
+        }
+
+        if (this.difficulty !== -1 && (this.difficulty < 1 || this.difficulty >= (this.size * this.size) - this.count)) {
+            console.warn(`Parsing error: invalid difficulty ${this.difficulty}, unsetting value`);
+            this.difficulty = -1;
         }
 
         this.piecesImages = {
@@ -222,9 +233,10 @@ class App {
             })
         }
 
+        // Generate board for puzzle gamemode
         if (this.gamemode === 'p') {
-            this.client.moves.generatePuzzleBoard(this.availablePieces, this.size, this.count);
-            if (this.state.G.knownCells == null) { // Failed to generate a board
+            this.client.moves.generatePuzzleBoard(this.availablePieces, this.size, this.count, this.difficulty);
+            if (this.state.G.knownCells === null) { // Failed to generate a board
                 this.didLost = true;
             } else {
                 const cells = this.rootElement.querySelectorAll('.cell');
