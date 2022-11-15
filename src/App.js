@@ -58,7 +58,17 @@ class App {
             this.count = 3;
         }
 
-        const validLetters = ['R', 'B', 'Q', 'N', 'P', 'K', 'A', 'D', 'O'];
+        this.piecesImages = {
+            'R': rook,
+            'B': bishop,
+            'Q': queen,
+            'N': knight,
+            'P': pawn,
+            'K': king,
+            'D': blackPawn,
+            'O': knook
+        }
+        const validLetters = Object.keys(this.piecesImages);
         this.availablePieces = "";
         if (pieces !== null) {
             for (let letter of pieces) {
@@ -261,20 +271,12 @@ class App {
         });
     }
 
-    update(state) {
-        function getPiece(c) {
-            let image = "";
-            if (c === 'R') image = rook;
-            else if (c === 'B') image = bishop;
-            else if (c === 'Q') image = queen;
-            else if (c === 'N') image = knight;
-            else if (c === 'K') image = king;
-            else if (c === 'P') image = pawn;
-            else if (c === 'D') image = blackPawn;
-            else if (c === 'O') image = knook;
-            return `<img src="${image}"/>`;
-        }
+    getPiece(c) {
+        let image = this.piecesImages[c];
+        return `<img src="${image}"/>`;
+    }
 
+    update(state) {
         const cells = this.rootElement.querySelectorAll('.cell');
         cells.forEach(cell => {
             const cellId = parseInt(cell.dataset.id);
@@ -282,13 +284,13 @@ class App {
             if (state.G.cells === null) {
                 cell.innerHTML = "";
             } else if (this.didLost === true && !Number.isInteger(state.G.cells[cellId])) { // Display pieces of gameover
-                cell.innerHTML = getPiece(state.G.cells[cellId]);
+                cell.innerHTML = this.getPiece(state.G.cells[cellId]);
                 cell.classList.add("red");
             } else if (state.G.knownCells[cellId] === true && state.G.cells[cellId] !== 0) {
                 const cellValue = state.G.cells[cellId];
                 cell.innerHTML = cellValue;
             } else if (state.G.knownCells[cellId] !== false && state.G.knownCells[cellId] !== true) {
-                cell.innerHTML = getPiece(state.G.knownCells[cellId]);
+                cell.innerHTML = this.getPiece(state.G.knownCells[cellId]);
             } else {
                 cell.innerHTML = "";
             }
