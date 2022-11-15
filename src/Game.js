@@ -62,6 +62,10 @@ export function KnightMoves(data, size, x, y) {
     return moves;
 }
 
+export function KnookMoves(data, size, x, y) {
+    return KnightMoves(data, size, x, y).concat(QueenMoves(data, size, x, y));
+}
+
 export function KingMoves(data, size, x, y) {
     let moves = [];
     for (let yi = -1; yi <= 1; yi++) {
@@ -95,7 +99,8 @@ const pieceMovesCheck = {
     'N': KnightMoves,
     'K': KingMoves,
     'P': PawnMoves,
-    'D': BlackPawnMoves
+    'D': BlackPawnMoves,
+    'O': KnookMoves
 }
 
 export function fillPositions(data) {

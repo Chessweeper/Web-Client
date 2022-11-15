@@ -7,6 +7,7 @@ import queen from '../img/wQ.png';
 import king from '../img/wK.png';
 import pawn from '../img/wP.png';
 import blackPawn from '../img/bP.png';
+import knook from '../img/knook.png';
 
 class App {
     constructor(rootElement) {
@@ -57,7 +58,7 @@ class App {
             this.count = 3;
         }
 
-        const validLetters = ['R', 'B', 'Q', 'N', 'P', 'K', 'A', 'D'];
+        const validLetters = ['R', 'B', 'Q', 'N', 'P', 'K', 'A', 'D', 'O'];
         this.availablePieces = "";
         if (pieces !== null) {
             for (let letter of pieces) {
@@ -270,6 +271,7 @@ class App {
             else if (c === 'K') image = king;
             else if (c === 'P') image = pawn;
             else if (c === 'D') image = blackPawn;
+            else if (c === 'O') image = knook;
             return `<img src="${image}"/>`;
         }
 

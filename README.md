@@ -3,6 +3,10 @@ Chess X Minesweeper
 
 ![Preview](.github/preview.png)
 
+## Other links
+
+- [Discord](https://discord.gg/VjJ95N2mV9)
+
 ## Credits
  - Chess icons and favicon from https://github.com/oakmac/chessboardjs
  - Shovel icon from Vectors Market, Flaticon, https://www.flaticon.com/free-icons/shovel
