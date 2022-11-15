@@ -3,6 +3,14 @@ Chess X Minesweeper
 
 ![Preview](.github/preview.png)
 
+## Development
+
+To run the game locally with debug tools, run `npm install` to install dependencies, then run `npm run start`. (Dependencies only need to be installed after they've been changed, or before running the game for the first time.)
+
+To do unit tests, run `npm run test`.
+
+To build a release version of the game, run `npm run build`. The output is placed in the `build` directory.
+
 ## Other links
 
 - [Discord](https://discord.gg/VjJ95N2mV9)
