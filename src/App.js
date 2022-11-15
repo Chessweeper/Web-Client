@@ -187,16 +187,36 @@ class App {
         }
 
         // Display/hide action button and select the first one
+        let actionButtons = [];
+
         let selected = false;
         for (let action of document.getElementsByClassName("action")) {
             // If we are on the shovel action we hide it if we are on puzzle mode
             // Else we hide it if the piece is not in the list of the one available
             const hidden = action.dataset.id === "" ? this.gamemode === 'p' : !Object.keys(this.availablePieces).includes(action.dataset.id);
             action.parentNode.hidden = hidden;
-            if (!hidden && !selected) {
-                action.classList.add("selected");
-                this.currAction = action.dataset.id === "" ? null : action.dataset.id;
-                selected = true;
+            if (!hidden) {
+                if (!selected) {
+                    action.classList.add("selected");
+                    this.currAction = action.dataset.id === "" ? null : action.dataset.id;
+                    selected = true;
+                }
+                actionButtons.push(action);
+            }
+        }
+
+        let me = this;
+        window.onkeydown = function(e) {
+            if (e.keyCode >= 49 && e.keyCode <= 57) {
+                e.preventDefault();
+                const index = e.keyCode - 49;
+                if (index < actionButtons.length) {
+                    for (const s of document.getElementsByClassName("selected")) {
+                        s.classList.remove("selected");
+                    }
+                    actionButtons[index].classList.add("selected");
+                    me.currAction = actionButtons[index].dataset.id === "" ? null : actionButtons[index].dataset.id;
+                }
             }
         }
 
@@ -208,7 +228,7 @@ class App {
             }
 
             const curr = elem;
-            elem.addEventListener("click", e => {
+            elem.addEventListener("click", _ => {
                 for (const s of document.getElementsByClassName("selected")) {
                     s.classList.remove("selected");
                 }
