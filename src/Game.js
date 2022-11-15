@@ -181,9 +181,9 @@ export function generateBoard(random, id, pieces, size, count) {
     let data = Array(size * size).fill(0);
     let i = count;
     while (i > 0) {
-        const rand = Math.floor(random.next() * (size * size));
+        const rand = Math.floor(random.Number() * (size * size));
         if (rand !== id && Number.isInteger(data[rand])) {
-            const value = Math.floor(random.next() * Object.keys(piecesMdf).length);
+            const value = Math.floor(random.Number() * Object.keys(piecesMdf).length);
             let piece = Object.keys(piecesMdf)[value];
 
             if (piecesMdf[piece] === 0) { // We reached the amount of time we could spawn that piece
@@ -214,7 +214,7 @@ export const Game = {
     },
   
     moves: {
-        generatePuzzleBoard: ({ G }, random, pieces, size, count) => {
+        generatePuzzleBoard: ({ G, random }, pieces, size, count) => {
             let bestPuzzle = null;
 
             for (let c = 0; c < 10; c++)
@@ -236,7 +236,7 @@ export const Game = {
                         }
                     }
                     if (possibilities.length > 0) {
-                        let randPos = Math.floor(random.next() * possibilities.length);
+                        let randPos = Math.floor(random.Number() * possibilities.length);
                         discovered[possibilities[randPos]] = true;
                     } else {
                         it = 1000; // Algorithm failed with this generation, we give up
@@ -308,7 +308,7 @@ export const Game = {
             }
         },
 
-        generateBoard: ({ G }, random, id, pieces, size, count) => {
+        generateBoard: ({ G, random }, id, pieces, size, count) => {
             G.cells = fillPositions(generateBoard(random, id, pieces, size, count));
             G.knownCells = Array(size * size).fill(false)
         },
