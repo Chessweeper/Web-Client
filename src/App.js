@@ -208,6 +208,7 @@ class App {
                     const isWhite = this.isPosWhite(id)
                     cell.classList.add("open");
                     cell.classList.add(isWhite ? "white" : "black");
+                    cell.style = this.getPosColor(this.state.G.cells[id]);
                 }
             });
         }
@@ -235,6 +236,25 @@ class App {
         const y = Math.floor(id / this.size);
         const x = id % this.size;
         return (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1)
+    }
+
+    getPosColor(tileValue) {
+        // Text color
+        const colors = [
+            "#0001FD", // 1
+            "#017E00", // 2
+            "#FE0000", // 3
+            "#010082", // 4
+            "#830003", // 5
+            "#008080", // 6
+            "#000000", // 7
+            "#808080", // 8
+        ];
+        let color = "";
+        if (tileValue === 0) color = "";
+        else if (tileValue > 8) color = colors[7];
+        else color = colors[tileValue - 1];
+        return `color: ${color};`;
     }
 
     attachListeners() {
@@ -298,21 +318,7 @@ class App {
                         cell.classList.add(isWhite ? "white" : "black");
 
                         // Text color
-                        const colors = [
-                            "#0001FD", // 1
-                            "#017E00", // 2
-                            "#FE0000", // 3
-                            "#010082", // 4
-                            "#830003", // 5
-                            "#008080", // 6
-                            "#000000", // 7
-                            "#808080", // 8
-                        ];
-                        let color = "";
-                        if (this.state.G.cells[id] === 0) color = "";
-                        else if (this.state.G.cells[id] > 8) color = colors[7];
-                        else color = colors[this.state.G.cells[id] - 1];
-                        cell.style = "color: " + color + ";";
+                        cell.style = this.getPosColor(this.state.G.cells[id]);
                     } else {
                         clearInterval(this.timer);
                         this.didLost = true;
