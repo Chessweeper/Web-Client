@@ -173,15 +173,20 @@ export function fillPositions(data) {
 }
 
 export function generateBoard(id, pieces, size, count) {
+    let piecesMdf = {};
+    for (let key in pieces) {
+        piecesMdf[key] = pieces[key];
+    }
+
     let data = Array(size * size).fill(0);
     let i = count;
     while (i > 0) {
         const rand = Math.floor(Math.random() * (size * size));
         if (rand !== id && Number.isInteger(data[rand])) {
-            const value = Math.floor(Math.random() * Object.keys(pieces).length);
-            let piece = Object.keys(pieces)[value];
+            const value = Math.floor(Math.random() * Object.keys(piecesMdf).length);
+            let piece = Object.keys(piecesMdf)[value];
 
-            if (pieces[piece] === 0) { // We reached the amount of time we could spawn that piece
+            if (piecesMdf[piece] === 0) { // We reached the amount of time we could spawn that piece
                 continue;
             }
 
@@ -193,7 +198,7 @@ export function generateBoard(id, pieces, size, count) {
             }
 
             data[rand] = piece;
-            pieces[piece]--;
+            piecesMdf[piece]--;
             i--;
         }
     }
