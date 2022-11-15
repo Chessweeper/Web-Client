@@ -8,6 +8,14 @@ import king from '../img/wK.png';
 import pawn from '../img/wP.png';
 import blackPawn from '../img/bP.png';
 import knook from '../img/knook.png';
+import shogiRook from '../img/shogiRook.svg';
+import shogiBishop from '../img/shogiBishop.svg';
+import shogiKnight from '../img/shogiKnight.svg';
+import shogiPawn from '../img/shogiPawn.svg';
+import shogiKing from '../img/shogiKing.svg';
+import shogiLance from '../img/shogiLance.svg';
+import shogiSilverGeneral from '../img/shogiSilverGeneral.svg';
+import shogiGoldGeneral from '../img/shogiGoldGeneral.svg';
 
 class App {
     constructor(rootElement) {
@@ -66,7 +74,15 @@ class App {
             'P': pawn,
             'K': king,
             'D': blackPawn,
-            'O': knook
+            'O': knook,
+            '飛': shogiRook,
+            '角': shogiBishop,
+            '桂': shogiKnight,
+            '歩': shogiPawn,
+            '玉': shogiKing,
+            '香': shogiLance,
+            '銀': shogiSilverGeneral,
+            '金': shogiGoldGeneral
         }
         const validLetters = Object.keys(this.piecesImages);
         this.availablePieces = "";
@@ -82,7 +98,7 @@ class App {
         }
 
         // Since pawns can't spawn on the top line, we need to be careful for boards only containing them
-        const isOnlyPawn = this.availablePieces === 'P' || this.availablePieces === 'D' || (this.availablePieces.length === 2 && this.availablePieces.includes('P') && this.availablePieces.includes('D'))
+        const isOnlyPawn = this.availablePieces.split('').some(x => x !== 'P' && x !== 'D' && x !== '桂' && x !== '歩' && x !== '香')
         if (isOnlyPawn && this.count >= this.size * (this.size - 1)) {
             this.count = 3;
         }

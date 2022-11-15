@@ -66,6 +66,11 @@
     background-color: #D28C45;
 }
 
+.action {
+    width: 100px;
+    height: 100px;
+}
+
 /* Popup displayed on game end */
 
 #popup {

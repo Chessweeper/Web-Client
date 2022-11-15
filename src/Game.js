@@ -49,6 +49,15 @@ export function QueenMoves(data, size, x, y) {
     return RookMoves(data, size, x, y).concat(BishopMoves(data, size, x, y));
 }
 
+export function LanceMoves(data, size, x, y) {
+    let moves = [];
+    for (let yi = y - 1; yi >= 0; yi--) {
+        if (Number.isInteger(data[yi * size + x])) moves.push(yi * size + x);
+        else break;
+    }
+    return moves;
+}
+
 export function KnightMoves(data, size, x, y) {
     let moves = [];
     if (isValid(data, size, x - 2, y - 1)) moves.push((y - 1) * size + (x - 2));
@@ -59,6 +68,13 @@ export function KnightMoves(data, size, x, y) {
     if (isValid(data, size, x - 1, y + 2)) moves.push((y + 2) * size + (x - 1));
     if (isValid(data, size, x + 1, y - 2)) moves.push((y - 2) * size + (x + 1));
     if (isValid(data, size, x + 1, y + 2)) moves.push((y + 2) * size + (x + 1));
+    return moves;
+}
+
+export function ShogiKnightMoves(data, size, x, y) {
+    let moves = [];
+    if (isValid(data, size, x - 1, y - 2)) moves.push((y - 2) * size + (x - 1));
+    if (isValid(data, size, x + 1, y - 2)) moves.push((y - 2) * size + (x + 1));
     return moves;
 }
 
@@ -85,10 +101,37 @@ export function PawnMoves(data, size, x, y) {
     return moves;
 }
 
+export function ShogiPawnMoves(data, size, x, y) {
+    let moves = [];
+    if (isValid(data, size, x, y - 1)) moves.push((y - 1) * size + x);
+    return moves;
+}
+
 export function BlackPawnMoves(data, size, x, y) {
     let moves = [];
     if (isValid(data, size, x + 1, y + 1)) moves.push((y + 1) * size + (x + 1));
     if (isValid(data, size, x - 1, y + 1)) moves.push((y + 1) * size + (x - 1));
+    return moves;
+}
+
+export function SilverGeneralMoves(data, size, x, y) {
+    let moves = [];
+    if (isValid(data, size, x + 1, y - 1)) moves.push((y - 1) * size + (x + 1));
+    if (isValid(data, size, x, y - 1)) moves.push((y - 1) * size + x);
+    if (isValid(data, size, x - 1, y - 1)) moves.push((y - 1) * size + (x - 1));
+    if (isValid(data, size, x - 1, y + 1)) moves.push((y + 1) * size + (x - 1));
+    if (isValid(data, size, x + 1, y + 1)) moves.push((y + 1) * size + (x + 1));
+    return moves;
+}
+
+export function GoldGeneralMoves(data, size, x, y) {
+    let moves = [];
+    if (isValid(data, size, x + 1, y - 1)) moves.push((y - 1) * size + (x + 1));
+    if (isValid(data, size, x, y - 1)) moves.push((y - 1) * size + x);
+    if (isValid(data, size, x - 1, y - 1)) moves.push((y - 1) * size + (x - 1));
+    if (isValid(data, size, x - 1, y)) moves.push(y * size + (x - 1));
+    if (isValid(data, size, x + 1, y)) moves.push(y * size + (x + 1));
+    if (isValid(data, size, x, y + 1)) moves.push((y + 1) * size + x);
     return moves;
 }
 
@@ -100,7 +143,15 @@ const pieceMovesCheck = {
     'K': KingMoves,
     'P': PawnMoves,
     'D': BlackPawnMoves,
-    'O': KnookMoves
+    'O': KnookMoves,
+    '飛': RookMoves,
+    '角': BishopMoves,
+    '桂': ShogiKnightMoves,
+    '歩': ShogiPawnMoves,
+    '玉': KingMoves,
+    '香': LanceMoves,
+    '銀': SilverGeneralMoves,
+    '金': GoldGeneralMoves
 }
 
 export function fillPositions(data) {
@@ -133,7 +184,7 @@ export function generateBoard(id, pieces, size, count) {
             const value = Math.floor(Math.random() * pieces.length);
             let piece = pieces[value];
 
-            if (piece === 'P' && rand < size) { // Pawns shouldn't be able to spawn on the top line
+            if ((piece === 'P' || piece === '桂' || piece === '歩' || piece === '香') && rand < size) { // Pawns shouldn't be able to spawn on the top line
                 continue;
             }
             if (piece === 'D' && rand >= (size * (size - 1))) { // Pawns shouldn't be able to spawn on the top line
