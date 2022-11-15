@@ -43,8 +43,8 @@ class App {
                 .substring(1)
                 .split("&")
                 .forEach(function (item) {
-                  tmp = item.split("=");
-                  if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+                    tmp = item.split("=");
+                    if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
                 });
             return result;
         }
@@ -55,6 +55,10 @@ class App {
 
         this.size = this.size === null ? 8 : parseInt(this.size);
         this.count = this.count === null ? 3 : parseInt(this.count);
+        if (this.gamemode === null) {
+            this.gamemode = 'c';
+        }
+
         if (this.gamemode !== 'p' && this.gamemode !== 'c') {
             console.warn(`Parsing error: invalid gamemode ${this.gamemode}, falling back on classic`);
             this.gamemode = 'c';
