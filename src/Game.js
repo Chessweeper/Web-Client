@@ -264,7 +264,8 @@ export const Game = {
         generatePuzzleBoard: ({ G, random }, pieces, size, count) => {
             let bestPuzzle = null;
 
-            for (let c = 0; c < 1 || bestPuzzle === null; c++)
+            const maxIt = 20;
+            for (let c = 0; c < maxIt && bestPuzzle === null; c++)
             {
                 let data = fillPositions(generateBoard(random, -1, pieces, size, count));
                 let discovered = Array(size * size).fill(false);
@@ -324,12 +325,17 @@ export const Game = {
                 }
             }
 
-            G.cells = bestPuzzle["data"];
-            G.knownCells = Array(size * size).fill(false);
+            if (bestPuzzle === null) {
+                document.getElementById("popup").hidden = false;
+                document.getElementById("popup-content").innerHTML = "Failed to generate a board";
+            } else {
+                G.cells = bestPuzzle["data"];
+                G.knownCells = Array(size * size).fill(false);
 
-            for (let i in bestPuzzle["discovered"]) {
-                if (bestPuzzle["discovered"][i]) {
-                    G.knownCells[i] = true;
+                for (let i in bestPuzzle["discovered"]) {
+                    if (bestPuzzle["discovered"][i]) {
+                        G.knownCells[i] = true;
+                    }
                 }
             }
         },

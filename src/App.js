@@ -46,6 +46,8 @@ class App {
                 });
             return result;
         }
+
+        // Setting everything from URL parameter
         let pieces = findGetParameter("p");
         this.size = findGetParameter("s");
         this.count = findGetParameter("c");
@@ -144,7 +146,8 @@ class App {
             console.warn(`Parsing error: board size of ${this.size} doesn't give enough space given the piece count of ${this.count} of the given type, falling back piece count on 3`);
             this.count = 3;
         }
-        
+
+        // Init boardgame.io stuffs
         this.createBoard();
         this.attachListeners();
 
@@ -221,17 +224,23 @@ class App {
 
         if (this.gamemode === 'p') {
             this.client.moves.generatePuzzleBoard(this.availablePieces, this.size, this.count);
-            const cells = this.rootElement.querySelectorAll('.cell');
-            cells.forEach(cell => {
-                const id = parseInt(cell.dataset.id);
+            if (this.state.G.knownCells == null) { // Failed to generate a board
+                this.didLost = true;
+            } else {
+                const cells = this.rootElement.querySelectorAll('.cell');
+                cells.forEach(cell => {
+                    const id = parseInt(cell.dataset.id);
 
-                if (this.state.G.knownCells[id]) {
-                    const isWhite = this.isPosWhite(id)
-                    cell.classList.add("open");
-                    cell.classList.add(isWhite ? "white" : "black");
-                    cell.style = this.getPosColor(this.state.G.cells[id]);
-                }
-            });
+                    if (this.state.G.knownCells[id]) {
+                        const isWhite = this.isPosWhite(id)
+                        cell.classList.add("open");
+                        cell.classList.add(isWhite ? "white" : "black");
+                        cell.style = this.getPosColor(this.state.G.cells[id]);
+                    }
+                });
+            }
+        } else {
+            this.createBoard();
         }
 
         console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${Object.keys(this.availablePieces).length > 1 ? "s" : ""} allowed: ${Object.keys(this.availablePieces).map(x => `${x} (x${this.availablePieces[x]})`).join(', ')}`)
