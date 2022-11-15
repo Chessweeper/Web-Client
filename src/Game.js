@@ -223,11 +223,9 @@ export const Game = {
                 let discovered = Array(size * size).fill(false);
 
                 let thinkData = null;
-                let it = 0;
                 let isSolved = false;
-                while (!isSolved && it < 1000) {
-                    it++; // After 1000 iterations we just give up
-
+                let giveup = false;
+                while (!isSolved && !giveup) {
                     // Get a random position that is not a piece and wasn't already taken
                     let possibilities = [];
                     for (let i in data) {
@@ -239,7 +237,7 @@ export const Game = {
                         let randPos = Math.floor(random.Number() * possibilities.length);
                         discovered[possibilities[randPos]] = true;
                     } else {
-                        it = 1000; // Algorithm failed with this generation, we give up
+                        giveup = true; // Algorithm failed with this generation, we give up
                         continue;
                     }
 
@@ -285,7 +283,11 @@ export const Game = {
                 }
 
                 let emptyCases = discovered.filter(x => x === false).length;
-                console.log(`Generated ${isSolved ? "" : "un"}solved puzzle with ${emptyCases} empty cases after ${it} iterations`);
+                if (isSolved) {
+                    console.log(`Generated solved puzzle with ${emptyCases} empty cases`);
+                } else {
+                    console.log("Skipping unsolvabled puzzle");
+                }
 
                 let isBetter = bestPuzzle === null || (isSolved && !bestPuzzle["isSolved"]) || emptyCases > bestPuzzle["emptyCases"];
                 if (isBetter) {
