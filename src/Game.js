@@ -217,7 +217,7 @@ export const Game = {
         generatePuzzleBoard: ({ G, random }, pieces, size, count) => {
             let bestPuzzle = null;
 
-            for (let c = 0; c < 10; c++)
+            for (let c = 0; c < 10 || bestPuzzle === null || !bestPuzzle["isSolved"]; c++)
             {
                 let data = fillPositions(generateBoard(random, -1, pieces, size, count));
                 let discovered = Array(size * size).fill(false);
