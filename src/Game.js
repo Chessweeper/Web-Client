@@ -264,7 +264,7 @@ export const Game = {
         generatePuzzleBoard: ({ G, random }, pieces, size, count) => {
             let bestPuzzle = null;
 
-            for (let c = 0; c < 10 || bestPuzzle === null; c++)
+            for (let c = 0; c < 1 || bestPuzzle === null; c++)
             {
                 let data = fillPositions(generateBoard(random, -1, pieces, size, count));
                 let discovered = Array(size * size).fill(false);
@@ -297,6 +297,18 @@ export const Game = {
                     console.log("Skipping unsolvabled puzzle");
                 } else {
                     let emptyCases = discovered.filter(x => x === false).length;
+
+                    for (let i = 0; i < data.length; i++) {
+                        if (!discovered[i]) {
+                            continue;
+                        }
+
+                        discovered[i] = false;
+                        let validation = validateBoard(data, discovered, pieces, size);
+                        if (!validation["isSolved"]) {
+                            discovered[i] = true;
+                        }
+                    }
 
                     let emptyCasesAfter = discovered.filter(x => x === false).length;
                     console.log(`Generated solved puzzle with ${emptyCases} empty cases, improved to ${emptyCasesAfter}`);
