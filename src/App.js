@@ -55,11 +55,27 @@ class App {
         this.size = findGetParameter("s");
         this.count = findGetParameter("c");
         this.gamemode = findGetParameter("g");
+        this.seed = findGetParameter("r");
 
         this.size = this.size === null ? 8 : parseInt(this.size);
         this.count = this.count === null ? 3 : parseInt(this.count);
         if (this.gamemode === null) {
             this.gamemode = 'c';
+        }
+
+        if (this.seed !== null) {
+            function getHashCode(value) { // https://stackoverflow.com/a/7616484
+                var hash = 0,
+                    i, chr;
+                if (value.length === 0) return hash;
+                for (i = 0; i < value.length; i++) {
+                    chr = value.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + chr;
+                    hash |= 0; // Convert to 32bit integer
+                }
+                return hash;
+            }
+            this.random.setSeed(getHashCode(this.seed));
         }
 
         if (this.gamemode !== 'p' && this.gamemode !== 'c') {
@@ -216,7 +232,7 @@ class App {
             });
         }
 
-        console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${Object.keys(this.availablePieces).length > 1 ? "s" : ""} allowed: ${Object.keys(this.availablePieces).map(x => `${x} (x${this.availablePieces[x]})`).join(', ')}`)
+        console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode${this.seed !== null ? ` with a seed of \"${this.seed}\"` : ""}, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${Object.keys(this.availablePieces).length > 1 ? "s" : ""} allowed: ${Object.keys(this.availablePieces).map(x => `${x} (x${this.availablePieces[x]})`).join(', ')}`)
     }
 
     createBoard() {
