@@ -1,3 +1,5 @@
+import { INVALID_MOVE } from "boardgame.io/core";
+
 function isValid(data, size, x, y) {
     return x >= 0 && x < size && y >= 0 && y < size && Number.isInteger(data[y * size + x]);
 }
@@ -254,121 +256,179 @@ function validateBoard(data, discovered, pieces, size) {
     };
 }
 
-export const Game = {
-    setup: () => {
+function generatePuzzleBoard(random, pieces, size, count, difficulty) {
+    let data;
+    let discovered;
+    let error;
+
+    let c = 0;
+    const maxIt = 300;
+    for (; c < maxIt; c++)
+    {
+        console.log('tryna', random, -1, pieces, size, count);
+
+        data = fillPositions(generateBoard(random, -1, pieces, size, count));
+        discovered = Array(size * size).fill(false);
+
+        let thinkData = null;
+        let isSolved = false;
+        let giveup = false;
+        while (!isSolved && !giveup) {
+            // Get a random position that is not a piece and wasn't already taken
+            let possibilities = [];
+            for (let i in data) {
+                if (!discovered[i] && Number.isInteger(data[i]) && (thinkData === null || thinkData[i] !== 0)) {
+                    possibilities.push(i);
+                }
+            }
+            if (possibilities.length > 0) {
+                let randPos = Math.floor(random.Number() * possibilities.length);
+                discovered[possibilities[randPos]] = true;
+            } else {
+                giveup = true; // Algorithm failed with this generation, we give up
+                continue;
+            }
+
+            let validation = validateBoard(data, discovered, pieces, size);
+            isSolved = validation["isSolved"];
+            thinkData = validation["thinkData"];
+        }
+
+        if (!isSolved) {
+            console.log("Skipping unsolvabled puzzle");
+        } else {
+            for (let i = 0; i < data.length; i++) {
+                if (!discovered[i]) {
+                    continue;
+                }
+
+                discovered[i] = false;
+                let validation = validateBoard(data, discovered, pieces, size);
+                if (!validation["isSolved"]) {
+                    discovered[i] = true;
+                }
+            }
+
+            let emptyCasesAfter = discovered.filter(x => x === false).length;
+
+            if (difficulty !== -1 && difficulty > emptyCasesAfter) {
+                console.log(`Skipping puzzle with ${emptyCasesAfter} empty tiles`);
+            } else {
+                if (difficulty !== -1) {
+                    // Set tiles to adjust difficulty
+
+                    let possibleTarget = [];
+                    for (let i = 0; i < data.length; i++) {
+                        if (!discovered[i] && Number.isInteger(data[i])) {
+                            possibleTarget.push(i);
+                        }
+                    }
+                    for (let i = emptyCasesAfter; i > difficulty; i--) {
+                        const rand = Math.floor(random.Number() * possibleTarget.length);
+                        discovered[possibleTarget[rand]] = true;
+                        possibleTarget.splice(rand, 1).indexOf(rand);
+                    }
+                }
+                console.log(`Generated solved puzzle with ${discovered.filter(x => x === false).length} empty tiles`);
+                break;
+            }
+        }
+    }
+
+    if (c === maxIt) {
+        error = "Failed to generate a board";
+    }
+
+    return { data, discovered, error };
+}
+
+function isWinCondition(G) {
+    if (G.cells === null || Number.isInteger(G.cells[id]) || G.cells[id] != G.knownCells[id]) {
+        return false;
+    }
+
+    for (let i = 0; i < G.size * G.size; i++) {
+        if (!Number.isInteger(G.cells[i])) {
+            if (G.cells[i] !== G.knownCells[i] && G.cells[i] !== id) {
+                return false;
+            }
+        }
+        else if (G.knownCells[i] !== true && G.knownCells[i] !== false) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+export const Game = setupData => ({
+    setup: ({ events, random }) => {
+        const { gamemode, pieces, size, count, difficulty } = setupData;
+        let knownCells = null;
+        let cells = null;
+
+        if (gamemode === 'p') {
+            const { data, discovered, error } = generatePuzzleBoard(random, pieces, size, count, difficulty);
+            if (error) {
+                events.endGame({ error });
+            }
+            cells = data;
+            knownCells = Array(size * size).fill(false);
+
+            for (let i in discovered) {
+                if (discovered[i]) {
+                    knownCells[i] = true;
+                }
+            }
+        }
+
         return {
-            knownCells: null,
-            cells: null
+            ...setupData,
+            knownCells,
+            cells
         };
     },
   
     moves: {
-        generatePuzzleBoard: ({ G, random }, pieces, size, count, difficulty) => {
-            let data;
-            let discovered;
-
-            let c = 0;
-            const maxIt = 300;
-            for (; c < maxIt; c++)
-            {
-                data = fillPositions(generateBoard(random, -1, pieces, size, count));
-                discovered = Array(size * size).fill(false);
-
-                let thinkData = null;
-                let isSolved = false;
-                let giveup = false;
-                while (!isSolved && !giveup) {
-                    // Get a random position that is not a piece and wasn't already taken
-                    let possibilities = [];
-                    for (let i in data) {
-                        if (!discovered[i] && Number.isInteger(data[i]) && (thinkData === null || thinkData[i] !== 0)) {
-                            possibilities.push(i);
-                        }
-                    }
-                    if (possibilities.length > 0) {
-                        let randPos = Math.floor(random.Number() * possibilities.length);
-                        discovered[possibilities[randPos]] = true;
-                    } else {
-                        giveup = true; // Algorithm failed with this generation, we give up
-                        continue;
-                    }
-
-                    let validation = validateBoard(data, discovered, pieces, size);
-                    isSolved = validation["isSolved"];
-                    thinkData = validation["thinkData"];
-                }
-
-                if (!isSolved) {
-                    console.log("Skipping unsolvabled puzzle");
-                } else {
-                    for (let i = 0; i < data.length; i++) {
-                        if (!discovered[i]) {
-                            continue;
-                        }
-
-                        discovered[i] = false;
-                        let validation = validateBoard(data, discovered, pieces, size);
-                        if (!validation["isSolved"]) {
-                            discovered[i] = true;
-                        }
-                    }
-
-                    let emptyCasesAfter = discovered.filter(x => x === false).length;
-
-                    if (difficulty !== -1 && difficulty > emptyCasesAfter) {
-                        console.log(`Skipping puzzle with ${emptyCasesAfter} empty tiles`);
-                    } else {
-                        if (difficulty !== -1) {
-                            // Set tiles to adjust difficulty
-
-                            let possibleTarget = [];
-                            for (let i = 0; i < data.length; i++) {
-                                if (!discovered[i] && Number.isInteger(data[i])) {
-                                    possibleTarget.push(i);
-                                }
-                            }
-                            for (let i = emptyCasesAfter; i > difficulty; i--) {
-                                const rand = Math.floor(random.Number() * possibleTarget.length);
-                                discovered[possibleTarget[rand]] = true;
-                                possibleTarget.splice(rand, 1).indexOf(rand);
-                            }
-                        }
-                        console.log(`Generated solved puzzle with ${discovered.filter(x => x === false).length} empty tiles`);
-                        break;
-                    }
-                }
+        discoverPiece: ({ G, random, events }, id) => {
+            if (G.cells === null) {
+                G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
+                G.knownCells = Array(G.size * G.size).fill(false)
             }
 
-            if (c === maxIt) {
-                document.getElementById("popup").hidden = false;
-                document.getElementById("popup-content").innerHTML = "Failed to generate a board";
+            if (G.knownCells[id] !== false || G.gamemode === 'p') {
+                return INVALID_MOVE;
+            }
+
+            if (Number.isInteger(G.cells[id])) {
+                G.knownCells[id] = true;
             } else {
-                G.cells = data;
-                G.knownCells = Array(size * size).fill(false);
-
-                for (let i in discovered) {
-                    if (discovered[i]) {
-                        G.knownCells[i] = true;
-                    }
-                }
+                events.endGame({ isWin: false });
             }
         },
 
-        generateBoard: ({ G, random }, id, pieces, size, count) => {
-            G.cells = fillPositions(generateBoard(random, id, pieces, size, count));
-            G.knownCells = Array(size * size).fill(false)
-        },
+        placeHint: ({ G, events }, id, action) => {
+            if (G.knownCells[id] !== true) {
+                return INVALID_MOVE;
+            }
 
-        discoverPiece: ({ G }, id) => {
-            G.knownCells[id] = true;
-        },
-
-        placeHint: ({ G }, id, action) => {
             G.knownCells[id] = action;
+
+            if (isWinCondition(G)) {
+                events.endGame({ isWin: true });
+            }
         },
 
         removeHint: ({ G }, id) => {
+            if (G.knownCells[id] !== true) {
+                return INVALID_MOVE;
+            }
+
             G.knownCells[id] = false;
+
+            if (isWinCondition(G)) {
+                events.endGame({ isWin: true });
+            }
         }
     },
 
@@ -376,4 +436,4 @@ export const Game = {
         minMoves: 1,
         maxMoves: 1,
     }
-};
+});
