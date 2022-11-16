@@ -20,7 +20,9 @@ import shogiGoldGeneral from '../img/shogiGoldGeneral.svg';
 class App {
     constructor(rootElement) {
         this.rootElement = rootElement;
-
+        this.reload = this.reload.bind(this);
+        this.onActionChange = this.onActionChange.bind(this);
+        
         // Current action selected under the board
         this.currAction = null;
 
@@ -160,18 +162,12 @@ class App {
 
         this.client = Client({ game: { ...Game, seed }});
         this.client.start();
-        this.client.subscribe(state =>
+        this.unsubscribe = this.client.subscribe(state =>
         {
             this.state = state;
             this.update(state);
         });
 
-        // When we click "Restart" on the end of the game popup
-        document.getElementById("popup-reload").addEventListener("click", _ => {
-            this.timerDiv.innerHTML = "0:00";
-            app = new App(document.getElementById('app'));
-            document.getElementById("popup").hidden = true;
-        });
 
         // Remove selected buttons from a previous game
         for (const s of document.getElementsByClassName("selected")) {
@@ -210,23 +206,6 @@ class App {
                     me.currAction = actionButtons[index].dataset.id === "" ? null : actionButtons[index].dataset.id;
                 }
             }
-        }
-
-        // For each action we assign the callback
-        for (const elem of document.getElementsByClassName("action")) {
-            // No point setting the callback of a button we won't be able to click
-            if (elem.parentNode.hidden) {
-                continue;
-            }
-
-            const curr = elem;
-            elem.addEventListener("click", _ => {
-                for (const s of document.getElementsByClassName("selected")) {
-                    s.classList.remove("selected");
-                }
-                curr.classList.add("selected");
-                this.currAction = curr.dataset.id === "" ? null : curr.dataset.id;
-            })
         }
 
         // Generate board for puzzle gamemode
@@ -293,7 +272,46 @@ class App {
         return `color: ${color};`;
     }
 
+    reload() {
+        this.unsubscribe();
+        this.detachListeners();
+        this.timerDiv.innerHTML = "0:00";
+        app = new App(document.getElementById('app'));
+        document.getElementById("popup").hidden = true;
+    }
+
+    onActionChange(e) {
+        for (const s of document.getElementsByClassName("selected")) {
+            s.classList.remove("selected");
+        }
+        e.currentTarget.classList.add("selected");
+        this.currAction = e.currentTarget.dataset.id === "" ? null : e.currentTarget.dataset.id;
+    }
+
+    detachListeners() {
+        document.getElementById("popup-reload").removeEventListener("click", this.reload);
+
+        for (const elem of document.getElementsByClassName("action")) {
+            if (elem.parentNode.hidden) {
+                continue;
+            }
+            elem.removeEventListener("click", this.onActionChange);
+        }
+    }
+
     attachListeners() {
+        // When we click "Restart" on the end of the game popup
+        document.getElementById("popup-reload").addEventListener("click", this.reload);
+
+        // For each action we assign the callback
+        for (const elem of document.getElementsByClassName("action")) {
+            // No point setting the callback of a button we won't be able to click
+            if (elem.parentNode.hidden) {
+                continue;
+            }
+            elem.addEventListener("click", this.onActionChange);
+        }
+                
         const cells = this.rootElement.querySelectorAll('.cell');
         cells.forEach(cell => {
             cell.onclick = (_) =>
