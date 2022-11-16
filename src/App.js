@@ -19,14 +19,10 @@ import shogiGoldGeneral from '../img/shogiGoldGeneral.svg';
 
 class App {
     constructor(rootElement) {
-        // Boardgame.io stuffs
         this.rootElement = rootElement;
 
         // Current action selected under the board
         this.currAction = null;
-
-        // Is the game over yet?
-        this.didLost = false;
 
         // Method used for the timer
         this.timer = null;
@@ -237,7 +233,7 @@ class App {
         if (this.gamemode === 'p') {
             this.client.moves.generatePuzzleBoard(this.availablePieces, this.size, this.count, this.difficulty);
             if (this.state.G.knownCells === null) { // Failed to generate a board
-                this.didLost = true;
+                this.client.events.endGame();
             } else {
                 const cells = this.rootElement.querySelectorAll('.cell');
                 cells.forEach(cell => {
@@ -302,7 +298,7 @@ class App {
         cells.forEach(cell => {
             cell.onclick = (_) =>
             {
-                if (this.didLost) {
+                if (this.state.ctx.gameover) {
                     return;
                 }
 
@@ -344,9 +340,7 @@ class App {
                             }
                         }
                         clearInterval(this.timer);
-                        this.didLost = true;
-                        document.getElementById("popup").hidden = false;
-                        document.getElementById("popup-content").innerHTML = "You won";
+                        this.client.events.endGame({ isWin: true });
                     }
                 } else if (this.state.G.knownCells[id] === false) {
                     if (Number.isInteger(this.state.G.cells[id])) {
@@ -361,11 +355,7 @@ class App {
                         cell.style = this.getPosColor(this.state.G.cells[id]);
                     } else {
                         clearInterval(this.timer);
-                        this.didLost = true;
-                        document.getElementById("popup").hidden = false;
-                        document.getElementById("popup-content").innerHTML = "You lost";
-                        cell.classList.add("red");
-                        this.update(this.state);
+                        this.client.events.endGame({ isWin: false });
                     }
                 }
             };
@@ -384,7 +374,7 @@ class App {
 
             if (state.G.cells === null) {
                 cell.innerHTML = "";
-            } else if (this.didLost === true && !Number.isInteger(state.G.cells[cellId])) { // Display pieces of gameover
+            } else if (state.ctx.gameover?.isWin === false && !Number.isInteger(state.G.cells[cellId])) { // Display pieces of gameover
                 cell.innerHTML = this.getPiece(state.G.cells[cellId]);
                 cell.classList.add("red");
             } else if (state.G.knownCells[cellId] === true && state.G.cells[cellId] !== 0) {
@@ -396,6 +386,12 @@ class App {
                 cell.innerHTML = "";
             }
         });
+
+        if (state.ctx.gameover?.isWin != null && document.getElementById("popup").hidden) {
+            const message = state.ctx.gameover.isWin ? 'You won' : 'You lost';
+            document.getElementById("popup").hidden = false;
+            document.getElementById("popup-content").innerHTML = message;
+        }
     }
 }
 
