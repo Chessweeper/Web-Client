@@ -341,7 +341,7 @@ function generatePuzzleBoard(random, pieces, size, count, difficulty) {
 }
 
 function isWinCondition(G, id) {
-    if (G.cells === null || Number.isInteger(G.cells[id]) || G.cells[id] != G.knownCells[id]) {
+    if (G.cells === null) {
         return false;
     }
 
