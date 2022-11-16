@@ -417,7 +417,7 @@ export const Game = setupData => ({
             }
         },
 
-        removeHint: ({ G }, id) => {
+        removeHint: ({ G, events }, id) => {
             if (G.knownCells[id] === true) {
                 return INVALID_MOVE;
             }
