@@ -15,3 +15,5 @@ async function updateDailyPuzzle() {
         console.error("Failed to fetch daily puzzle");
     }
 }
+
+updateDailyPuzzle();
