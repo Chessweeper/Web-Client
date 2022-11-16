@@ -72,17 +72,21 @@ class App {
 
         // Generate board for puzzle gamemode
         if (setupData.gamemode === 'p') {
-            const cells = this.rootElement.querySelectorAll('.cell');
-            cells.forEach(cell => {
-                const id = parseInt(cell.dataset.id);
-
-                if (this.state.G.knownCells[id]) {
-                    const isWhite = this.isPosWhite(id)
-                    cell.classList.add("open");
-                    cell.classList.add(isWhite ? "white" : "black");
-                    cell.style = this.getPosColor(this.state.G.cells[id]);
-                }
-            });
+            if (this.state.G.knownCells === null) { // Failed to generate a board
+                this.client.events.endGame({ error: "Failed to generate a board" });
+            } else {
+                const cells = this.rootElement.querySelectorAll('.cell');
+                cells.forEach(cell => {
+                    const id = parseInt(cell.dataset.id);
+    
+                    if (this.state.G.knownCells[id]) {
+                        const isWhite = this.isPosWhite(id)
+                        cell.classList.add("open");
+                        cell.classList.add(isWhite ? "white" : "black");
+                        cell.style = this.getPosColor(this.state.G.cells[id]);
+                    }
+                });
+            }
         }
 
         console.log(`Game loaded: ${setupData.gamemode === 'c' ? "classic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map(x => `${x} (x${setupData.pieces[x]})`).join(', ')}`)

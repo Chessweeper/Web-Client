@@ -259,7 +259,7 @@ function validateBoard(data, discovered, pieces, size) {
 function generatePuzzleBoard(random, pieces, size, count, difficulty) {
     let data;
     let discovered;
-    let error;
+    let hasError = false;
 
     let c = 0;
     const maxIt = 300;
@@ -334,10 +334,10 @@ function generatePuzzleBoard(random, pieces, size, count, difficulty) {
     }
 
     if (c === maxIt) {
-        error = "Failed to generate a board";
+        hasError = true;
     }
 
-    return { data, discovered, error };
+    return { data, discovered, hasError };
 }
 
 function isWinCondition(G, id) {
@@ -366,16 +366,15 @@ export const Game = setupData => ({
         let cells = null;
 
         if (gamemode === 'p') {
-            const { data, discovered, error } = generatePuzzleBoard(random, pieces, size, count, difficulty);
-            if (error) {
-                events.endGame({ error });
-            }
-            cells = data;
-            knownCells = Array(size * size).fill(false);
+            const { data, discovered, hasError } = generatePuzzleBoard(random, pieces, size, count, difficulty);
+            if (!hasError) {
+                cells = data;
+                knownCells = Array(size * size).fill(false);
 
-            for (let i in discovered) {
-                if (discovered[i]) {
-                    knownCells[i] = true;
+                for (let i in discovered) {
+                    if (discovered[i]) {
+                        knownCells[i] = true;
+                    }
                 }
             }
         }
@@ -386,7 +385,7 @@ export const Game = setupData => ({
             cells
         };
     },
-  
+
     moves: {
         discoverPiece: ({ G, random, events }, id) => {
             if (G.cells === null) {
