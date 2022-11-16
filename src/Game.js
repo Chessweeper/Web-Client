@@ -209,7 +209,7 @@ function validateBoard(data, discovered, pieces, size) {
 
     // For each tile...
     for (let i = 0; i < data.length; i++) {
-        if (discovered[i]) { // We only want the ones we don't know about
+        if (discovered[i] || thinkData[i] !== 0) { // We only want the ones we don't know about and the one we didn't validate yet
             continue;
         }
 
@@ -231,14 +231,17 @@ function validateBoard(data, discovered, pieces, size) {
                 str += piece;
             }
         }
-        thinkData[i] = str;
+        if (str !== "") { // We added a piece, need to revalidate the whole board
+            thinkData[i] = str;
+            i = -1;
+        }
     }
 
     // Check if we are sure that only one position is possible
     let isSolved = true;
     for (let i = 0; i < data.length; i++) {
         if (!discovered[i] &&
-            ((Number.isInteger(data[i]) && thinkData[i] !== "") ||
+            ((Number.isInteger(data[i]) && thinkData[i] !== 0) ||
                 (!Number.isInteger(data[i]) && thinkData[i] !== data[i]))) {
             isSolved = false;
             break;
