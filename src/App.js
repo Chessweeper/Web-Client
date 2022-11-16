@@ -71,7 +71,7 @@ class App {
         });
 
         // Generate board for puzzle gamemode
-        if (setupData.gamemode === 'p' && this.state.G.knownCells !== null) {
+        if (setupData.gamemode === 'p') {
             const cells = this.rootElement.querySelectorAll('.cell');
             cells.forEach(cell => {
                 const id = parseInt(cell.dataset.id);

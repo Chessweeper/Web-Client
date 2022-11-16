@@ -265,8 +265,6 @@ function generatePuzzleBoard(random, pieces, size, count, difficulty) {
     const maxIt = 300;
     for (; c < maxIt; c++)
     {
-        console.log('tryna', random, -1, pieces, size, count);
-
         data = fillPositions(generateBoard(random, -1, pieces, size, count));
         discovered = Array(size * size).fill(false);
 
@@ -342,7 +340,7 @@ function generatePuzzleBoard(random, pieces, size, count, difficulty) {
     return { data, discovered, error };
 }
 
-function isWinCondition(G) {
+function isWinCondition(G, id) {
     if (G.cells === null || Number.isInteger(G.cells[id]) || G.cells[id] != G.knownCells[id]) {
         return false;
     }
@@ -408,25 +406,25 @@ export const Game = setupData => ({
         },
 
         placeHint: ({ G, events }, id, action) => {
-            if (G.knownCells[id] !== true) {
+            if (G.knownCells[id] === true) {
                 return INVALID_MOVE;
             }
 
             G.knownCells[id] = action;
 
-            if (isWinCondition(G)) {
+            if (isWinCondition(G, id)) {
                 events.endGame({ isWin: true });
             }
         },
 
         removeHint: ({ G }, id) => {
-            if (G.knownCells[id] !== true) {
+            if (G.knownCells[id] === true) {
                 return INVALID_MOVE;
             }
 
             G.knownCells[id] = false;
 
-            if (isWinCondition(G)) {
+            if (isWinCondition(G, id)) {
                 events.endGame({ isWin: true });
             }
         }
