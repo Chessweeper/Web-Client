@@ -387,12 +387,14 @@ export const Game = setupData => ({
     },
 
     moves: {
-        discoverPiece: ({ G, random, events }, id) => {
+        generateBoard: ({G, random}, id) => {
             if (G.cells === null) {
                 G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
                 G.knownCells = Array(G.size * G.size).fill(false)
             }
+        },
 
+        discoverPiece: ({ G, events }, id) => {
             if (G.knownCells[id] !== false || G.gamemode === 'p') {
                 return INVALID_MOVE;
             }

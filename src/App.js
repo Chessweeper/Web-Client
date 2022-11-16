@@ -192,6 +192,10 @@ class App {
 
                 const id = parseInt(cell.dataset.id);
 
+                if (this.state.G.cells === null) {
+                    this.client.moves.generateBoard(id);
+                }
+
                 if (this.currAction !== null) {
                     if (this.state.G.knownCells[id] === this.currAction) {
                         this.client.moves.removeHint(id);
