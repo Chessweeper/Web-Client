@@ -156,19 +156,6 @@ class App {
             this.count = 3;
         }
 
-        // Init boardgame.io stuffs
-        this.createBoard();
-        this.attachListeners();
-
-        this.client = Client({ game: { ...Game, seed }});
-        this.client.start();
-        this.unsubscribe = this.client.subscribe(state =>
-        {
-            this.state = state;
-            this.update(state);
-        });
-
-
         // Remove selected buttons from a previous game
         for (const s of document.getElementsByClassName("selected")) {
             s.classList.remove("selected");
@@ -207,6 +194,18 @@ class App {
                 }
             }
         }
+
+        // Init boardgame.io stuffs
+        this.createBoard();
+        this.attachListeners();
+
+        this.client = Client({ game: { ...Game, seed }});
+        this.client.start();
+        this.unsubscribe = this.client.subscribe(state =>
+        {
+            this.state = state;
+            this.update(state);
+        });
 
         // Generate board for puzzle gamemode
         if (this.gamemode === 'p') {

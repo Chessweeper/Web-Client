@@ -1,4 +1,3 @@
-
 function isValid(data, size, x, y) {
     return x >= 0 && x < size && y >= 0 && y < size && Number.isInteger(data[y * size + x]);
 }
