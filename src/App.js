@@ -329,7 +329,7 @@ class App {
                             return;
                         }
 
-                        for (let i = 0; i < 64; i++) {
+                        for (let i = 0; i < this.size * this.size; i++) {
                             if (!Number.isInteger(this.state.G.cells[i])) {
                                 if (this.state.G.cells[i] !== this.state.G.knownCells[i] && this.state.G.cells[i] !== id) {
                                     return;
