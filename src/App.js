@@ -251,8 +251,6 @@ class App {
                     }
                 });
             }
-        } else {
-            this.createBoard();
         }
 
         console.log(`Game loaded: ${this.gamemode === 'c' ? "classic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${this.count} piece${this.count > 1 ? "s" : ""}, ${this.size}x${this.size} grid, piece${Object.keys(this.availablePieces).length > 1 ? "s" : ""} allowed: ${Object.keys(this.availablePieces).map(x => `${x} (x${this.availablePieces[x]})`).join(', ')}`)
