@@ -266,7 +266,7 @@ export const Game = {
             let discovered;
 
             let c = 0;
-            const maxIt = 200;
+            const maxIt = 300;
             for (; c < maxIt; c++)
             {
                 data = fillPositions(generateBoard(random, -1, pieces, size, count));
