@@ -1,10 +1,9 @@
-import { useState } from "react";
 import { getPiece } from "../Pieces";
 import { useBoardContext } from "./BoardWrapper";
 
 export const Cell = ({ id }) => {
   const { G, ctx, moves, currAction } = useBoardContext();
-  const [className, setClassName] = useState("cell");
+  let className = "cell";
   let value = "";
 
   const isPosWhite = (id) => {
@@ -12,25 +11,6 @@ export const Cell = ({ id }) => {
     const x = id % G.size;
     return (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1)
   }
-
-  // const getPosColor = (tileValue) => {
-  //   // Text color
-  //   const colors = [
-  //       "#0001FD", // 1
-  //       "#017E00", // 2
-  //       "#FE0000", // 3
-  //       "#010082", // 4
-  //       "#830003", // 5
-  //       "#008080", // 6
-  //       "#000000", // 7
-  //       "#808080", // 8
-  //   ];
-  //   let color = "";
-  //   if (tileValue === 0) color = "";
-  //   else if (tileValue > 8) color = colors[7];
-  //   else color = colors[tileValue - 1];
-  //   return `color: ${color};`;
-  // }
 
   const onCellClick = (id) => {
     if (ctx.gameover) {
@@ -47,23 +27,14 @@ export const Cell = ({ id }) => {
         }
     } else {
         moves.discoverPiece(id);
-
-        if (Number.isInteger(G.cells[id])) {
-          console.log('in dis', id);
-          setClassName(prev => prev + " open");
-
-          // Board color
-          const isWhite = isPosWhite(id)
-          setClassName(prev => {
-            console.log('in set state', prev);
-            return prev + (isWhite ? " white" : " black")
-          });
-
-          // Text color
-          // cell.style = this.getPosColor(this.state.G.cells[id]);
-        }
     }
   };
+
+  if (G.knownCells?.[id] && Number.isInteger(G.cells?.[id])) {
+    className += " open";
+    const isWhite = isPosWhite(id)
+    className += isWhite ? " white" : " black"
+  }
 
   // Text color
   const colors = [
@@ -85,9 +56,7 @@ export const Cell = ({ id }) => {
       value = "";
   } else if (ctx.gameover?.isWin === false && !Number.isInteger(G.cells[id])) { // Display pieces of gameover
       value = <img src={getPiece(G.cells[id])} />;
-      if (!className.includes("red")) {
-        setClassName(prev => prev + " red");
-      }
+      className += " red";
   } else if (G.knownCells[id] === true && G.cells[id] !== 0) {
       value = G.cells[id];
   } else if (G.knownCells[id] !== false && G.knownCells[id] !== true) {

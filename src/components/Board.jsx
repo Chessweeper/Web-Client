@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useBoardContext } from "./BoardWrapper";
 import { Cell } from "./Cell";
 
@@ -21,9 +22,9 @@ export const Board = () => {
       const id = G.size * i + j;
       cells.push(<Cell id={id} />);
     }
-    rows.push(<tr>{cells.map((cell) => cell)}</tr>);
+    rows.push(<tr>{cells.map((cell, index) => <Fragment key={`cell${index}`}>{cell}</Fragment>)}</tr>);
   }
-  const cells = <table>{rows.map((row) => row)}</table>;
+  const cells = <table><tbody>{rows.map((row, index) => <Fragment key={`row${index}`}>{row}</Fragment>)}</tbody></table>;
 
   return (
     <>
