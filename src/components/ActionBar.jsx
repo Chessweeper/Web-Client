@@ -1,11 +1,9 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { getPiece } from '../Pieces';
 import { useBoardContext } from "./BoardWrapper";
 
 export const ActionBar = () => {
   const { G, currAction, setCurrAction } = useBoardContext();
-
-  const availablePieces = Object.keys(G.pieces);
 
   const actions = useMemo(() => [
     { ID: "", name: "Shovel" },
@@ -27,33 +25,49 @@ export const ActionBar = () => {
     { ID: "金", name: "Shogi Gold General" },
   ], []);
 
-  const actionButtons = actions
-    .filter((action) => availablePieces.includes(action.ID) || (action.ID === "" && G.gamemode !== "p"))
-    .map((action) => {
-      let className = "action";
-      if (currAction === action.ID) className += " selected";
-      return (
-        <button
-          key={action.ID}
-          className={className}
-          onClick={() => setCurrAction(action.ID)}
-        >
-          <img src={getPiece(action.ID)} alt={action.name} />
-        </button>
-      );
-    });
+  const availableActions = useMemo(() => {
+    const availablePieces = Object.keys(G.pieces);
+    return actions.filter(
+      (action) =>
+        availablePieces.includes(action.ID) ||
+        (action.ID === "" && G.gamemode !== "p")
+    )}, [actions, G.pieces]
+  );
 
+  useEffect(() => {
+    if (availableActions.length > 0) {
+      setCurrAction(availableActions[0].ID);
+    }
 
-  // todo: useeffect & setCurrAction = actionButtons[0] id
-  window.onkeydown = (e) => {
-    if (e.keyCode >= 49 && e.keyCode <= 57) {
-      e.preventDefault();
-      const index = e.keyCode - 49;
-      if (index < actionButtons?.length) {
-        setCurrAction(actionButtons[index].key);
+    const onKeyDown = (e) => {
+      if (e.keyCode >= 49 && e.keyCode <= 57) {
+        e.preventDefault();
+        const index = e.keyCode - 49;
+        if (index < availableActions.length) {
+          setCurrAction(availableActions[index].ID);
+        }
       }
     }
-  };
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => { 
+      window.removeEventListener('keydown', onKeyDown);
+    }
+  }, [availableActions]);
+
+  const actionButtons = availableActions.map((action) => {
+    let className = "action";
+    if (currAction === action.ID) className += " selected";
+    return (
+      <button
+        key={action.ID}
+        className={className}
+        onClick={() => setCurrAction(action.ID)}
+      >
+        <img src={getPiece(action.ID)} alt={action.name} />
+      </button>
+    );
+  });
 
   return <div>
     <p>Current Action:</p>
