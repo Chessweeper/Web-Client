@@ -5,8 +5,8 @@
   "description": "Chess X Minesweeper",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html --open",
-    "build": "parcel build index.html --out-dir build && cp favicon.ico build || @powershell copy favicon.ico build",
+    "start": "vite",
+    "build": "vite build --out-dir build && cp favicon.ico build || @powershell copy favicon.ico build",
     "test": "mocha"
   },
   "browserslist": "defaults and supports async-functions",
@@ -22,10 +22,13 @@
   },
   "homepage": "https://github.com/Xwilarg/Chessweeper#readme",
   "dependencies": {
-    "boardgame.io": "^0.50.2"
+    "boardgame.io": "^0.50.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^2.2.0",
     "mocha": "^10.1.0",
-    "parcel-bundler": "^1.12.5"
+    "vite": "^3.2.4"
   }
 }

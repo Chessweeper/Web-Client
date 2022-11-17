@@ -1,3 +1,4 @@
+import shovel from '../img/shovel.png';
 import rook from '../img/wR.png';
 import knight from '../img/wN.png';
 import bishop from '../img/wB.png';
@@ -35,6 +36,6 @@ export const piecesImages = {
 }
 
 export function getPiece(c) {
-  let image = piecesImages[c];
-  return `<img src="${image}"/>`;
+  if (c === "") return shovel;
+  return piecesImages[c];
 }
