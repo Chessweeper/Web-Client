@@ -19,7 +19,7 @@ export const Cell = ({ id }) => {
 
     // todo: call start timer if not started
 
-    if (currAction !== null && currAction !== "") {
+    if (currAction !== "") {
         if (G.knownCells[id] === currAction) {
             moves.removeHint(id);
         } else {
