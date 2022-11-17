@@ -387,14 +387,12 @@ export const Game = setupData => ({
     },
 
     moves: {
-        generateBoard: ({G, random}, id) => {
+        discoverPiece: ({ G, events, random }, id) => {
             if (G.cells === null) {
                 G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
                 G.knownCells = Array(G.size * G.size).fill(false)
             }
-        },
 
-        discoverPiece: ({ G, events }, id) => {
             if (G.knownCells[id] !== false || G.gamemode === 'p') {
                 return INVALID_MOVE;
             }
@@ -406,7 +404,12 @@ export const Game = setupData => ({
             }
         },
 
-        placeHint: ({ G, events }, id, action) => {
+        placeHint: ({ G, events, random }, id, action) => {
+            if (G.cells === null) {
+                G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
+                G.knownCells = Array(G.size * G.size).fill(false);
+            }
+
             if (G.knownCells[id] === true) {
                 return INVALID_MOVE;
             }
