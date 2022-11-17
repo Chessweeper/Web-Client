@@ -1,7 +1,7 @@
 import { useBoardContext } from "./BoardWrapper";
 
 export const Popup = () => {
-  const { ctx } = useBoardContext();
+  const { ctx, reload } = useBoardContext();
 
   if (!ctx.gameover) return null;
 
@@ -10,10 +10,6 @@ export const Popup = () => {
     text = ctx.gameover.error;
   } else {
     text = ctx.gameover.isWin ? 'You won' : 'You lost';
-  }
-
-  const reload = () => {
-    console.log('todo: reload');
   }
 
   return (
