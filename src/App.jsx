@@ -5,12 +5,11 @@ import { parseUrl } from './Parsing';
 import { Footer } from './components/Footer';
 import { useState } from 'react';
 
-const gameBoardWrapper = ({ reload, board: RawBoard }) => {
+const wrapBoardWithReload = ({ reload, board: RawBoard }) => {
 	const Board = (props) => {
     const boardProps = { ...props, reload };
     return <RawBoard {...boardProps} />;
   };
-
 	return Board;
 }
 
@@ -24,7 +23,7 @@ export const App = () => {
 
 	const Client = BgioClient({
 		game,
-		board: gameBoardWrapper({ reload, board: BoardWrapper }),
+		board: wrapBoardWithReload({ reload, board: BoardWrapper }),
 		numPlayers: 1
 	});
 
