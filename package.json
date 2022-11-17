@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "start": "vite",
-    "build": "vite build --out-dir build && cp favicon.ico build || @powershell copy favicon.ico build",
+    "preview": "vite preview",
+    "build": "vite build && cp favicon.ico build || @powershell copy favicon.ico build",
     "test": "mocha"
   },
   "browserslist": "defaults and supports async-functions",
