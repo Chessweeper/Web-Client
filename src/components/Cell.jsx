@@ -21,7 +21,7 @@ export const Cell = ({ id }) => {
     startTimer();
 
     if (currAction !== "") {
-        if (G.knownCells[id] === currAction) {
+        if (G.knownCells?.[id] === currAction) {
             moves.removeHint(id);
         } else {
             moves.placeHint(id, currAction);
