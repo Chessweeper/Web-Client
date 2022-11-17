@@ -3,16 +3,6 @@ import { useBoardContext } from "./BoardWrapper";
 import { Cell } from "./Cell";
 
 export const Board = () => {
-//   // Method used for the timer
-//   this.timer = null;
-//   this.currTime = 0;
-//   this.timerDiv = document.getElementById("timer");
-
-//   // Generate board for puzzle gamemode
-
-//   console.log(`Game loaded: ${setupData.gamemode === 'c' ? "classNameic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map(x => `${x} (x${setupData.pieces[x]})`).join(', ')}`)
-// }
-
   const { G } = useBoardContext();
 
   const rows = [];
@@ -24,12 +14,6 @@ export const Board = () => {
     }
     rows.push(<tr>{cells.map((cell, index) => <Fragment key={`cell${index}`}>{cell}</Fragment>)}</tr>);
   }
-  const cells = <table><tbody>{rows.map((row, index) => <Fragment key={`row${index}`}>{row}</Fragment>)}</tbody></table>;
 
-  return (
-    <>
-      <div id="app">Generating board...</div>
-      {cells}
-    </>
-  );
+  return <table><tbody>{rows.map((row, index) => <Fragment key={`row${index}`}>{row}</Fragment>)}</tbody></table>;
 };

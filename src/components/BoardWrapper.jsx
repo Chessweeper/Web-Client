@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { ActionBar } from "./ActionBar";
 import { Board } from "./Board";
 import { Popup } from "./Popup";
@@ -9,14 +9,19 @@ export const useBoardContext = () => useContext(BoardContext);
 
 export const BoardWrapper = (props) => {
   const [currAction, setCurrAction] = useState("");
+  const timerRef = useRef();
 
-  const additionalProps = { currAction, setCurrAction }
+  const additionalProps = { 
+    currAction, 
+    setCurrAction,
+    startTimer: () => timerRef.current?.startTimer(),
+  }
 
   return (
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
       <Popup /> 
       <div className="flex">
-        <Timer />
+        <Timer ref={timerRef} />
         <Board />
         <ActionBar />
       </div>

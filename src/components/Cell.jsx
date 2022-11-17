@@ -2,7 +2,7 @@ import { getPiece } from "../Pieces";
 import { useBoardContext } from "./BoardWrapper";
 
 export const Cell = ({ id }) => {
-  const { G, ctx, moves, currAction } = useBoardContext();
+  const { G, ctx, moves, currAction, startTimer } = useBoardContext();
   let className = "cell";
   let value = "";
 
@@ -17,7 +17,8 @@ export const Cell = ({ id }) => {
         return;
     }
 
-    // todo: call start timer if not started
+    // todo: does the job but shouldn't call every cell click
+    startTimer();
 
     if (currAction !== "") {
         if (G.knownCells[id] === currAction) {
