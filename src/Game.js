@@ -6,13 +6,17 @@ function isValid(data, size, x, y) {
 
 function parseMove(dx, dy, length, data, size, x, y) {
     let moves = [];
-    let orientation = [
-        [dx, dy], [-dx, -dy], [-dy, dx], [dy, -dx]
-    ];
+    let orientation = [];
+    for (let d of [-1, 1]) {
+        for (let rd of [[dx, dy], [-dx, -dy], [-dy, dx], [dy, -dx]]) {
+            const nrd = [rd[0] * d, rd[1]];
+            if (orientation.every(x => x[0] !== nrd[0] || x[1] !== nrd[1])) orientation.push(nrd);
+        }
+    }
     for (let o of orientation) {
         const xi = o[0];
         const yi = o[1];
-        for (let i = 1; i < length; i++) {
+        for (let i = 1; i <= length; i++) {
             if (isValid(data, size, x + (i * xi), y + (i * yi))) moves.push((y + (i * yi)) * size + (x + (i * xi)));
             else break;
         }
@@ -20,8 +24,22 @@ function parseMove(dx, dy, length, data, size, x, y) {
     return moves;
 }
 
+function parseDirection(letter) {
+    switch (letter) {
+        case "W": return [1, 0];
+        case "F": return [1, 1];
+        case "D": return [2, 0];
+        case "N": return [2, 1];
+        case "A": return [2, 2];
+        case "H": return [3, 0];
+        case "C": return [3, 1];
+        case "Z": return [3, 2];
+        case "G": return [3, 3];
+    }
+}
+
 function parseNotation(notation, data, size, x, y) {
-    let dx = 0, dy = 0; // Direction we are going
+    let d = []; // Direction we are going
     let dir = null; // Letter indicating that direction
     let length = 1; // Length we are doing
     let moves = [];
@@ -30,23 +48,23 @@ function parseNotation(notation, data, size, x, y) {
             continue; // Need to handle that later
         }
         if (dir === null) {
-            switch (s) {
-                case "W": dx = 1; dy = 0; break;
-                case "F": dx = 1; dy = 1; break;
-                case "D": dx = 2; dy = 0; break;
-                case "N": dx = 2; dy = 1; break;
-                case "A": dx = 2; dy = 2; break;
-                case "H": dx = 3; dy = 0; break;
-                case "C": dx = 3; dy = 1; break;
-                case "Z": dx = 3; dy = 2; break;
-                case "G": dx = 3; dy = 3; break;
-            }
+            d = parseDirection(s);
             dir = s;
+        } else if (!isNaN(s)) {
+            length = parseInt(s);
         } else if (s === dir) {
-            moves = moves.concat(parseMove(dx, dy, Infinity, data, size, x, y));
+            moves = moves.concat(parseMove(d[0], d[1], Infinity, data, size, x, y));
             dir = null;
             length = 1;
+        } else {
+            moves = moves.concat(parseMove(d[0], d[1], length, data, size, x, y));
+            d = parseDirection(s);
+            dir = s;
+            length = 1;
         }
+    }
+    if (dir !== null) {
+        moves = moves.concat(parseMove(d[0], d[1], length, data, size, x, y));
     }
     return moves;
 }
