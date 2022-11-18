@@ -23,7 +23,7 @@ describe('Popup tests', () => {
       </BoardContext.Provider>
     );
 
-    expect(container.querySelector("#popup")).toBeDefined();
+    expect(container.querySelector("#popup")).toBeNull();
   })
 
   it('should render and display error message if gameover is error', () => {
