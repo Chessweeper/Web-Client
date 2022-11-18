@@ -48,6 +48,19 @@ function parseDirection(letter) {
 }
 
 function parseNotation(notation, data, size, x, y) {
+    let str = "";
+    let keep = true;
+    for (let s of notation) {
+        if (s === 'm') { // For "move" only, we discard them
+            keep = false;
+        } else if (s === 'c') { // For "capture" only, the ones we want to keep for the game
+            keep = true;
+        } else if (keep) {
+            str += s;
+        }
+    }
+    notation = str;
+
     let d = []; // Direction we are going
     let dir = null; // Letter indicating that direction
     let length = 1; // Length we are doing
@@ -102,7 +115,7 @@ const pieceMovesCheck = {
     'N': "N",
     'K': "WF",
     'P': "fmWfcF",
-    'D': "bW",
+    'D': "bmWbcF",
     'O': "WWN",
     '飛': "WW",
     '角': "FF",
