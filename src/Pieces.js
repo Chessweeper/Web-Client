@@ -1,19 +1,20 @@
-import rook from '../img/wR.png';
-import knight from '../img/wN.png';
-import bishop from '../img/wB.png';
-import queen from '../img/wQ.png';
-import king from '../img/wK.png';
-import pawn from '../img/wP.png';
-import blackPawn from '../img/bP.png';
-import knook from '../img/knook.png';
-import shogiRook from '../img/shogiRook.svg';
-import shogiBishop from '../img/shogiBishop.svg';
-import shogiKnight from '../img/shogiKnight.svg';
-import shogiPawn from '../img/shogiPawn.svg';
-import shogiKing from '../img/shogiKing.svg';
-import shogiLance from '../img/shogiLance.svg';
-import shogiSilverGeneral from '../img/shogiSilverGeneral.svg';
-import shogiGoldGeneral from '../img/shogiGoldGeneral.svg';
+import shovel from './assets/shovel.png';
+import rook from './assets/wR.png';
+import knight from './assets/wN.png';
+import bishop from './assets/wB.png';
+import queen from './assets/wQ.png';
+import king from './assets/wK.png';
+import pawn from './assets/wP.png';
+import blackPawn from './assets/bP.png';
+import knook from './assets/knook.png';
+import shogiRook from './assets/shogiRook.svg';
+import shogiBishop from './assets/shogiBishop.svg';
+import shogiKnight from './assets/shogiKnight.svg';
+import shogiPawn from './assets/shogiPawn.svg';
+import shogiKing from './assets/shogiKing.svg';
+import shogiLance from './assets/shogiLance.svg';
+import shogiSilverGeneral from './assets/shogiSilverGeneral.svg';
+import shogiGoldGeneral from './assets/shogiGoldGeneral.svg';
 
 export const piecesImages = {
   'R': rook,
@@ -35,6 +36,6 @@ export const piecesImages = {
 }
 
 export function getPiece(c) {
-  let image = piecesImages[c];
-  return `<img src="${image}"/>`;
+  if (c === "") return shovel;
+  return piecesImages[c];
 }

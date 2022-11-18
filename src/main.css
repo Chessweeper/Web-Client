@@ -1,0 +1,129 @@
+hr {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 96%;               
+  background-color:black;
+  height: 1px;
+}
+
+/* Flex */
+
+.flex {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flex.hor {
+  flex-direction: row;
+  flex-flow: wrap;
+}
+
+.flex.hor img {
+  width: 64px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.flex.hor .selected {
+  background-color: green;
+}
+
+/* Buttons */
+
+.button {
+  border: 1px solid black;
+  color: black;
+  text-decoration: none;
+  padding: 5px;
+  display: inline-block;
+  background-color: rgba(238, 238, 238, 0.418);
+  text-align: center;
+}
+
+.button:hover {
+  background-color: rgba(200, 200, 200, 0.418);
+}
+
+/* Game board */
+
+.cell img {
+  width: 30px;
+}
+
+.cell {
+  border: 1px solid #555;
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  background-color: #555;
+  font-weight: bolder;
+  font-size: 25px;
+}
+
+.red {
+  background-color: red;
+}
+
+.open.white {
+  background-color: #FFCF9F;
+}
+
+.open.black {
+  background-color: #D28C45;
+}
+
+.action {
+  width: 100px;
+  height: 100px;
+}
+
+/* Popup displayed on game end */
+
+#popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.418);
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  font-weight: bolder;
+  font-size: 30px;
+  text-align: center;
+}
+
+#popup h3 {
+  margin: 10px 5px;
+}
+
+#popup button {
+  font-size: 20px;
+}
+
+/* Game timer */
+
+#timer {
+  font-weight: bolder;
+  font-size: 30px;
+}
+
+/* Buttons used for gamemodes */
+
+.gamemode {
+  width: 300px;
+  border-radius: 15px;
+}
+
+.gamemode h2 {
+  margin: 10px 0;
+}
+
+/* Rules */
+
+#rules img {
+  width: 50px;
+}
