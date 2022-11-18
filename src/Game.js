@@ -49,13 +49,12 @@ function parseDirection(letter) {
 
 function parseNotation(notation, data, size, x, y) {
     let str = "";
-    let keep = true;
-    for (let s of notation) {
+    for (let i = 0; i < notation.length; i++) {
+        const s = notation[i];
         if (s === 'm') { // For "move" only, we discard them
-            keep = false;
+            i++;
         } else if (s === 'c') { // For "capture" only, the ones we want to keep for the game
-            keep = true;
-        } else if (keep) {
+        } else {
             str += s;
         }
     }
