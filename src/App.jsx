@@ -24,7 +24,10 @@ export const App = () => {
 	const Client = BgioClient({
 		game,
 		board: wrapBoardWithReload({ reload, board: BoardWrapper }),
-		numPlayers: 1
+		numPlayers: 1,
+		debug: {
+			collapseOnLoad: true,
+		}
 	});
 
 	console.log(`Loading game: ${setupData.gamemode === 'c' ? "classic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map(x => `${x} (x${setupData.pieces[x]})`).join(', ')}`)
