@@ -360,33 +360,30 @@ function isWinCondition(G, id) {
 }
 
 export const Game = setupData => ({
-    setup: ({ events, random }) => {
-        const { gamemode, pieces, size, count, difficulty } = setupData;
-        let knownCells = null;
-        let cells = null;
+    setup: () => ({
+        ...setupData,
+        knownCells: null,
+        cells: null
+    }),
 
-        if (gamemode === 'p') {
+    moves: {
+        generatePuzzleBoard: ({ G, random }) => {
+            // using destructured values from G caused very slow load times?
+            const { pieces, size, count, difficulty } = setupData;
+
             const { data, discovered, hasError } = generatePuzzleBoard(random, pieces, size, count, difficulty);
             if (!hasError) {
-                cells = data;
-                knownCells = Array(size * size).fill(false);
+                G.cells = data;
+                G.knownCells = Array(size * size).fill(false);
 
                 for (let i in discovered) {
                     if (discovered[i]) {
-                        knownCells[i] = true;
+                        G.knownCells[i] = true;
                     }
                 }
             }
-        }
+        },
 
-        return {
-            ...setupData,
-            knownCells,
-            cells
-        };
-    },
-
-    moves: {
         discoverPiece: ({ G, events, random }, id) => {
             if (G.cells === null) {
                 G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
