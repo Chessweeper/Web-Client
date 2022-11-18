@@ -1,0 +1,16 @@
+{
+  "name": "Chessweeper",
+  "short_name": "Chessweeper",
+  "description": "Chess X Minesweeper",
+  "icons": [
+    {
+      "src": "logo128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
