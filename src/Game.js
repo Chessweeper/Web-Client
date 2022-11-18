@@ -78,7 +78,7 @@ const pieceMovesCheck = {
     'K': "WF",
     'P': "fW",
     'D': "bW",
-    'O': "FFN",
+    'O': "WWN",
     '飛': "WW",
     '角': "FF",
     '桂': "ffN",
