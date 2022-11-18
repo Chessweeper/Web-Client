@@ -25,7 +25,7 @@ export const Footer = () => {
   return (
     <div>
       <h1>More boards</h1>
-      <h2>classic</h2>
+      <h2>Classic</h2>
       <p>Dig and try to find where the pieces are</p>
       <div className="flex hor">
         <a className="gamemode button" href="?g=c&p=R2&s=6&c=2">

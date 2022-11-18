@@ -30,9 +30,11 @@ export const App = () => {
 	console.log(`Loading game: ${setupData.gamemode === 'c' ? "classic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map(x => `${x} (x${setupData.pieces[x]})`).join(', ')}`)
 	
 	return (
-		<div className="flex">
-			<Client />
-			<hr />
+		<div>
+			<div className="flex">
+				<Client />
+			</div>
+			<hr/>
 			<Footer />
 		</div>
 	);
