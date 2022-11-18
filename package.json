@@ -3,12 +3,12 @@
   "name": "chessweeper",
   "version": "1.0.0",
   "description": "Chess X Minesweeper",
-  "main": "index.js",
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
     "build": "vite build && cp favicon.ico build || @powershell copy favicon.ico build",
-    "test": "mocha"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "browserslist": "defaults and supports async-functions",
   "repository": {
@@ -28,8 +28,13 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
     "@vitejs/plugin-react": "^2.2.0",
-    "mocha": "^10.1.0",
-    "vite": "^3.2.4"
+    "@vitest/coverage-c8": "^0.25.2",
+    "jsdom": "^20.0.2",
+    "vite": "^3.2.4",
+    "vitest": "^0.25.2"
   }
 }
