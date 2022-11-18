@@ -32,9 +32,6 @@ export const Cell = ({ id }) => {
   };
 
   if (G.knownCells?.[id] && Number.isInteger(G.cells?.[id])) {
-    className += " open";
-    const isWhite = isPosWhite(id)
-    className += isWhite ? " white" : " black"
   }
 
   // Text color
@@ -58,8 +55,13 @@ export const Cell = ({ id }) => {
   } else if (ctx.gameover?.isWin === false && !Number.isInteger(G.cells[id])) { // Display pieces of gameover
       value = <img src={getPiece(G.cells[id])} />;
       className += " red";
-  } else if (G.knownCells[id] === true && G.cells[id] !== 0) {
+  } else if (G.knownCells[id] === true) {
+    if (G.cells[id] !== 0) {
       value = G.cells[id];
+    }
+    className += " open";
+    const isWhite = isPosWhite(id)
+    className += isWhite ? " white" : " black"
   } else if (G.knownCells[id] !== false && G.knownCells[id] !== true) {
       value = <img src={getPiece(G.knownCells[id])} />;
   }
