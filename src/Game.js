@@ -22,9 +22,7 @@ function parseMove(dx, dy, length, constraints, data, size, x, y) {
             if (orientation.every(x => x[0] !== nrd[0] || x[1] !== nrd[1])) orientation.push(nrd);
         }
     }
-    for (let o of orientation) {
-        const xi = o[1];
-        const yi = o[0];
+    for (let [yi, xi] of orientation) {
         for (let i = 1; i <= length; i++) {
             if (isValid(data, size, x + (i * xi), y + (i * yi))) moves.push((y + (i * yi)) * size + (x + (i * xi)));
             else break;
