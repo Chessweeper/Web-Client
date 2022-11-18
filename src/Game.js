@@ -4,18 +4,27 @@ function isValid(data, size, x, y) {
     return x >= 0 && x < size && y >= 0 && y < size && Number.isInteger(data[y * size + x]);
 }
 
-function parseMove(dx, dy, length, data, size, x, y) {
+function parseMove(dx, dy, length, constraints, data, size, x, y) {
     let moves = [];
     let orientation = [];
-    for (let d of [-1, 1]) {
-        for (let rd of [[dx, dy], [-dx, -dy], [-dy, dx], [dy, -dx]]) {
-            const nrd = [rd[0] * d, rd[1]];
+    const directions = [
+        [-dx, -dy], // Forward
+        [dx, dy], // Backward
+        [-dy, dx], // Right
+        [dy, -dx] // Left
+    ];
+    for (let d of [-1, 1]) { // For pieces like knights, we need to reverse the X for each direction
+        for (let rd in directions) {
+            if ((constraints & (2 ** rd)) === 0) {
+                continue;
+            }
+            const nrd = [directions[rd][0], directions[rd][1] * d];
             if (orientation.every(x => x[0] !== nrd[0] || x[1] !== nrd[1])) orientation.push(nrd);
         }
     }
     for (let o of orientation) {
-        const xi = o[0];
-        const yi = o[1];
+        const xi = o[1];
+        const yi = o[0];
         for (let i = 1; i <= length; i++) {
             if (isValid(data, size, x + (i * xi), y + (i * yi))) moves.push((y + (i * yi)) * size + (x + (i * xi)));
             else break;
@@ -43,28 +52,44 @@ function parseNotation(notation, data, size, x, y) {
     let dir = null; // Letter indicating that direction
     let length = 1; // Length we are doing
     let moves = [];
+    let constraints = 15;
     for (let s of notation) {
         if (s === s.toLowerCase()) {
-            continue; // Need to handle that later
+            if (dir !== null) {
+                moves = moves.concat(parseMove(d[0], d[1], length, constraints, data, size, x, y));
+                dir = null;
+                length = 1;
+                constraints = 15;
+            }
+            switch (s) {
+                case "f": constraints = 1; break;
+                case "b": constraints = 2; break;
+                case "l": constraints = 8; break;
+                case "r": constraints = 4; break;
+                case "v": constraints = 3; break;
+                case "s": constraints = 12; break;
+            }
         }
-        if (dir === null) {
+        else if (dir === null) {
             d = parseDirection(s);
             dir = s;
         } else if (!isNaN(s)) {
             length = parseInt(s);
         } else if (s === dir) {
-            moves = moves.concat(parseMove(d[0], d[1], Infinity, data, size, x, y));
+            moves = moves.concat(parseMove(d[0], d[1], Infinity, constraints, data, size, x, y));
             dir = null;
             length = 1;
+            constraints = 15;
         } else {
-            moves = moves.concat(parseMove(d[0], d[1], length, data, size, x, y));
+            moves = moves.concat(parseMove(d[0], d[1], length, constraints, data, size, x, y));
             d = parseDirection(s);
             dir = s;
             length = 1;
+            constraints = 15;
         }
     }
     if (dir !== null) {
-        moves = moves.concat(parseMove(d[0], d[1], length, data, size, x, y));
+        moves = moves.concat(parseMove(d[0], d[1], length, constraints, data, size, x, y));
     }
     return moves;
 }
@@ -76,7 +101,7 @@ const pieceMovesCheck = {
     'Q': "WWFF",
     'N': "N",
     'K': "WF",
-    'P': "fW",
+    'P': "fmWfcF",
     'D': "bW",
     'O': "WWN",
     '飛': "WW",
