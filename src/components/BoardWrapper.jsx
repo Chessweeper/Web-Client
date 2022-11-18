@@ -4,7 +4,7 @@ import { Board } from "./Board";
 import { Popup } from "./Popup";
 import { Timer } from "./Timer";
 
-const BoardContext = createContext({});
+export const BoardContext = createContext({});
 export const useBoardContext = () => useContext(BoardContext);
 
 export const BoardWrapper = (props) => {
