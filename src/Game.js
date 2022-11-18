@@ -4,155 +4,124 @@ function isValid(data, size, x, y) {
     return x >= 0 && x < size && y >= 0 && y < size && Number.isInteger(data[y * size + x]);
 }
 
-export function RookMoves(data, size, x, y) {
+function parseMove(dx, dy, length, constraints, data, size, x, y) {
     let moves = [];
-    for (let yi = y - 1; yi >= 0; yi--) {
-        if (Number.isInteger(data[yi * size + x])) moves.push(yi * size + x);
-        else break;
-    }
-    for (let yi = y + 1; yi < size; yi++) {
-        if (Number.isInteger(data[yi * size + x])) moves.push(yi * size + x);
-        else break;
-    }
-    for (let xi = x - 1; xi >= 0; xi--) {
-        if (Number.isInteger(data[y * size + xi])) moves.push(y * size + xi);
-        else break;
-    }
-    for (let xi = x + 1; xi < size; xi++) {
-        if (Number.isInteger(data[y * size + xi])) moves.push(y * size + xi);
-        else break;
-    }
-    return moves;
-}
-
-export function BishopMoves(data, size, x, y) {
-    let moves = [];
-    for (let i = 1; y - i >= 0 && x - i >= 0; i++) {
-        if (Number.isInteger(data[(y - i) * size + (x - i)])) moves.push((y - i) * size + (x - i));
-        else break;
-    }
-    for (let i = 1; y + i < size && x + i < size; i++) {
-        if (Number.isInteger(data[(y + i) * size + (x + i)])) moves.push((y + i) * size + (x + i));
-        else break;
-    }
-    for (let i = 1; y - i >= 0 && x + i < size; i++) {
-        if (Number.isInteger(data[(y - i) * size + (x + i)])) moves.push((y - i) * size + (x + i));
-        else break;
-    }
-    for (let i = 1; y - i < size && x - i >= 0; i++) {
-        if (Number.isInteger(data[(y + i) * size + (x - i)])) moves.push((y + i) * size + (x - i));
-        else break;
-    }
-    return moves;
-}
-
-export function QueenMoves(data, size, x, y) {
-    return RookMoves(data, size, x, y).concat(BishopMoves(data, size, x, y));
-}
-
-export function LanceMoves(data, size, x, y) {
-    let moves = [];
-    for (let yi = y - 1; yi >= 0; yi--) {
-        if (Number.isInteger(data[yi * size + x])) moves.push(yi * size + x);
-        else break;
-    }
-    return moves;
-}
-
-export function KnightMoves(data, size, x, y) {
-    let moves = [];
-    if (isValid(data, size, x - 2, y - 1)) moves.push((y - 1) * size + (x - 2));
-    if (isValid(data, size, x - 2, y + 1)) moves.push((y + 1) * size + (x - 2));
-    if (isValid(data, size, x + 2, y - 1)) moves.push((y - 1) * size + (x + 2));
-    if (isValid(data, size, x + 2, y + 1)) moves.push((y + 1) * size + (x + 2));
-    if (isValid(data, size, x - 1, y - 2)) moves.push((y - 2) * size + (x - 1));
-    if (isValid(data, size, x - 1, y + 2)) moves.push((y + 2) * size + (x - 1));
-    if (isValid(data, size, x + 1, y - 2)) moves.push((y - 2) * size + (x + 1));
-    if (isValid(data, size, x + 1, y + 2)) moves.push((y + 2) * size + (x + 1));
-    return moves;
-}
-
-export function ShogiKnightMoves(data, size, x, y) {
-    let moves = [];
-    if (isValid(data, size, x - 1, y - 2)) moves.push((y - 2) * size + (x - 1));
-    if (isValid(data, size, x + 1, y - 2)) moves.push((y - 2) * size + (x + 1));
-    return moves;
-}
-
-export function KnookMoves(data, size, x, y) {
-    return KnightMoves(data, size, x, y).concat(RookMoves(data, size, x, y));
-}
-
-export function KingMoves(data, size, x, y) {
-    let moves = [];
-    for (let yi = -1; yi <= 1; yi++) {
-        for (let xi = -1; xi <= 1; xi++) {
-            if (xi !== 0 || yi !== 0) {
-                if (isValid(data, size, x + xi, y + yi)) moves.push((y + yi) * size + (x + xi));
+    let orientation = [];
+    const directions = [
+        [-dx, -dy], // Forward
+        [dx, dy], // Backward
+        [-dy, dx], // Right
+        [dy, -dx] // Left
+    ];
+    for (let d of [-1, 1]) { // For pieces like knights, we need to reverse the X for each direction
+        for (let rd in directions) {
+            if ((constraints & (2 ** rd)) === 0) {
+                continue;
             }
+            const nrd = [directions[rd][0], directions[rd][1] * d];
+            if (orientation.every(x => x[0] !== nrd[0] || x[1] !== nrd[1])) orientation.push(nrd);
+        }
+    }
+    for (let [yi, xi] of orientation) {
+        for (let i = 1; i <= length; i++) {
+            if (isValid(data, size, x + (i * xi), y + (i * yi))) moves.push((y + (i * yi)) * size + (x + (i * xi)));
+            else break;
         }
     }
     return moves;
 }
 
-export function PawnMoves(data, size, x, y) {
+function parseDirection(letter) {
+    switch (letter) {
+        case "W": return [1, 0];
+        case "F": return [1, 1];
+        case "D": return [2, 0];
+        case "N": return [2, 1];
+        case "A": return [2, 2];
+        case "H": return [3, 0];
+        case "C": return [3, 1];
+        case "Z": return [3, 2];
+        case "G": return [3, 3];
+    }
+}
+
+function parseNotation(notation, data, size, x, y) {
+    let str = "";
+    for (let i = 0; i < notation.length; i++) {
+        const s = notation[i];
+        if (s === 'm') { // For "move" only, we discard them
+            i++;
+        } else if (s === 'c') { // For "capture" only, the ones we want to keep for the game
+        } else {
+            str += s;
+        }
+    }
+    notation = str;
+
+    let d = []; // Direction we are going
+    let dir = null; // Letter indicating that direction
+    let length = 1; // Length we are doing
     let moves = [];
-    if (isValid(data, size, x + 1, y - 1)) moves.push((y - 1) * size + (x + 1));
-    if (isValid(data, size, x - 1, y - 1)) moves.push((y - 1) * size + (x - 1));
+    let constraints = 15;
+    for (let s of notation) {
+        if (s === s.toLowerCase()) {
+            if (dir !== null) {
+                moves = moves.concat(parseMove(d[0], d[1], length, constraints, data, size, x, y));
+                dir = null;
+                length = 1;
+                constraints = 15;
+            }
+            switch (s) {
+                case "f": constraints = 1; break;
+                case "b": constraints = 2; break;
+                case "l": constraints = 8; break;
+                case "r": constraints = 4; break;
+                case "v": constraints = 3; break;
+                case "s": constraints = 12; break;
+            }
+        }
+        else if (dir === null) {
+            d = parseDirection(s);
+            dir = s;
+        } else if (!isNaN(s)) {
+            length = parseInt(s);
+        } else if (s === dir) {
+            moves = moves.concat(parseMove(d[0], d[1], Infinity, constraints, data, size, x, y));
+            dir = null;
+            length = 1;
+            constraints = 15;
+        } else {
+            moves = moves.concat(parseMove(d[0], d[1], length, constraints, data, size, x, y));
+            d = parseDirection(s);
+            dir = s;
+            length = 1;
+            constraints = 15;
+        }
+    }
+    if (dir !== null) {
+        moves = moves.concat(parseMove(d[0], d[1], length, constraints, data, size, x, y));
+    }
     return moves;
 }
 
-export function ShogiPawnMoves(data, size, x, y) {
-    let moves = [];
-    if (isValid(data, size, x, y - 1)) moves.push((y - 1) * size + x);
-    return moves;
-}
-
-export function BlackPawnMoves(data, size, x, y) {
-    let moves = [];
-    if (isValid(data, size, x + 1, y + 1)) moves.push((y + 1) * size + (x + 1));
-    if (isValid(data, size, x - 1, y + 1)) moves.push((y + 1) * size + (x - 1));
-    return moves;
-}
-
-export function SilverGeneralMoves(data, size, x, y) {
-    let moves = [];
-    if (isValid(data, size, x + 1, y - 1)) moves.push((y - 1) * size + (x + 1));
-    if (isValid(data, size, x, y - 1)) moves.push((y - 1) * size + x);
-    if (isValid(data, size, x - 1, y - 1)) moves.push((y - 1) * size + (x - 1));
-    if (isValid(data, size, x - 1, y + 1)) moves.push((y + 1) * size + (x - 1));
-    if (isValid(data, size, x + 1, y + 1)) moves.push((y + 1) * size + (x + 1));
-    return moves;
-}
-
-export function GoldGeneralMoves(data, size, x, y) {
-    let moves = [];
-    if (isValid(data, size, x + 1, y - 1)) moves.push((y - 1) * size + (x + 1));
-    if (isValid(data, size, x, y - 1)) moves.push((y - 1) * size + x);
-    if (isValid(data, size, x - 1, y - 1)) moves.push((y - 1) * size + (x - 1));
-    if (isValid(data, size, x - 1, y)) moves.push(y * size + (x - 1));
-    if (isValid(data, size, x + 1, y)) moves.push(y * size + (x + 1));
-    if (isValid(data, size, x, y + 1)) moves.push((y + 1) * size + x);
-    return moves;
-}
-
+// https://en.wikipedia.org/wiki/Betza%27s_funny_notation
 const pieceMovesCheck = {
-    'R': RookMoves,
-    'B': BishopMoves,
-    'Q': QueenMoves,
-    'N': KnightMoves,
-    'K': KingMoves,
-    'P': PawnMoves,
-    'D': BlackPawnMoves,
-    'O': KnookMoves,
-    '飛': RookMoves,
-    '角': BishopMoves,
-    '桂': ShogiKnightMoves,
-    '歩': ShogiPawnMoves,
-    '玉': KingMoves,
-    '香': LanceMoves,
-    '銀': SilverGeneralMoves,
-    '金': GoldGeneralMoves
+    'R': "WW",
+    'B': "FF",
+    'Q': "WWFF",
+    'N': "N",
+    'K': "WF",
+    'P': "fmWfcF",
+    'D': "bmWbcF",
+    'O': "WWN",
+    '飛': "WW",
+    '角': "FF",
+    '桂': "ffN",
+    '歩': "fW",
+    '玉': "WF",
+    '香': "fWW",
+    '銀': "FfW",
+    '金': "WfF"
 }
 
 export function fillPositions(data) {
@@ -162,7 +131,7 @@ export function fillPositions(data) {
         for (let x = 0; x < size; x++) {
             const value = data[y * size + x];
             if (!Number.isInteger(value)) {
-                let moves = pieceMovesCheck[value](data, size, x, y);
+                let moves = parseNotation(pieceMovesCheck[value], data, size, x, y);
                 for (let move of moves) {
                     data[move]++;
                 }
@@ -219,7 +188,7 @@ function validateBoard(data, discovered, pieces, size) {
         for (let piece of Object.keys(pieces)) // Check all pieces
         {
             // List of all moves for the current piece
-            let moves = pieceMovesCheck[piece](thinkData, size, i % size, Math.floor(i / size));
+            let moves = parseNotation(pieceMovesCheck[piece], thinkData, size, i % size, Math.floor(i / size));
 
             // If the piece have a move that is impossible, it means it can't be this one
             let isValid = true;
