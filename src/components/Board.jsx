@@ -15,5 +15,11 @@ export const Board = () => {
     rows.push(<tr>{cells.map((cell, index) => <Fragment key={`cell${index}`}>{cell}</Fragment>)}</tr>);
   }
 
-  return <table id="board" className={G.size >= 10 ? "small" : ""}><tbody>{rows.map((row, index) => <Fragment key={`row${index}`}>{row}</Fragment>)}</tbody></table>;
+  return (
+    <table id="board" className={G.size >= 10 ? "small" : ""}>
+      <tbody>
+        {rows.map((row, index) => <Fragment key={`row${index}`}>{row}</Fragment>)}
+      </tbody>
+    </table>
+  );
 };
