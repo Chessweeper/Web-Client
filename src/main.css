@@ -63,13 +63,16 @@ hr {
   font-size: 25px;
 }
 
-#board.small .cell {
-  width: 30px;
-  height: 30px;
-}
+@media (max-width: 750px) {
+  #board.small .cell {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
 
-#board.small .cell img {
-  width: 20px;
+  #board.small .cell img {
+    width: 20px;
+  }
 }
 
 .red {
