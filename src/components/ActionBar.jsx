@@ -71,7 +71,7 @@ export const ActionBar = () => {
 
   return <div>
     <p>Current Action:</p>
-    <div className="flex hor">
+    <div id="action-buttons" className="flex hor">
       {actionButtons}
     </div>
   </div>
