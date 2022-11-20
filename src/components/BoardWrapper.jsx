@@ -17,26 +17,6 @@ export const BoardWrapper = (props) => {
     startTimer: () => timerRef.current?.startTimer(),
   }
 
-  const needsPuzzleGeneration = props.G.gamemode === 'p' && props.G.cells === null;
-
-  const generatePuzzleBoard = () => {
-    if (needsPuzzleGeneration) {
-      props.moves.generatePuzzleBoard();
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('load', generatePuzzleBoard);
-
-    return () => {
-      window.removeEventListener('load', generatePuzzleBoard);
-    }
-  }, []);
-
-  if (needsPuzzleGeneration) {
-    return <div>Generating Board...</div>;
-  }
-
   return (
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
       <Popup /> 
