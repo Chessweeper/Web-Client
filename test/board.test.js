@@ -1,4 +1,3 @@
-import { describe, it } from "vitest";
 import { fillPositions } from "../src/Game.js";
 import { strict as assert } from "assert";
 

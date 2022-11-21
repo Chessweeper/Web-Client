@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 import userEvent from "@testing-library/user-event";
 import { render } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
 import { BoardContext } from "../../src/components/BoardWrapper";
 import { Popup } from "../../src/components/Popup";
 import matchers from "@testing-library/jest-dom/matchers";
