@@ -92,6 +92,21 @@ hr {
   height: 100px;
 }
 
+#board-container {
+  position: relative;
+}
+
+#board-cover {
+  z-index: 1;
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
 /* Popup displayed on game end */
 
 #popup {

@@ -37,12 +37,25 @@ export const BoardWrapper = (props) => {
     return <div>Generating Board...</div>;
   }
 
+  // For puzzle mode, is first covered by a black cover that we must click to reveal it
+  const hideCover = () => {
+    document.getElementById("board-cover").hidden = true;
+    timerRef.current?.startTimer();
+  }
+
   return (
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
       <Popup /> 
       <div className="flex">
         <Timer ref={timerRef} />
-        <Board />
+        <div id="board-container">
+          <Board />
+          {props.G.gamemode === 'p' ?
+            <div id="board-cover" onClick={hideCover}>
+              Click to start puzzle!
+            </div>
+            : null}
+        </div>
         <ActionBar />
       </div>
     </BoardContext.Provider>
