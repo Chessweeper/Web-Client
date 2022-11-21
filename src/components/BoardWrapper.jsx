@@ -52,7 +52,9 @@ export const BoardWrapper = (props) => {
           <Board />
           {props.G.gamemode === 'p' ?
             <div id="board-cover" onClick={hideCover}>
-              Click to start puzzle!
+              <p>
+                Click to start puzzle!
+              </p>
             </div>
             : null}
         </div>
