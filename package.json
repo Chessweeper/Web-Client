@@ -3,12 +3,16 @@
   "name": "chessweeper",
   "version": "1.0.0",
   "description": "Chess X Minesweeper",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
     "build": "vite build",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "format": "npx prettier --write ."
   },
   "browserslist": "defaults and supports async-functions",
   "repository": {
@@ -34,6 +38,7 @@
     "@vitejs/plugin-react": "^2.2.0",
     "@vitest/coverage-c8": "^0.25.2",
     "jsdom": "^20.0.2",
+    "prettier": "2.7.1",
     "vite": "^3.2.4",
     "vitest": "^0.25.2"
   }

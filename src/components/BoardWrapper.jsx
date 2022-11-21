@@ -11,26 +11,27 @@ export const BoardWrapper = (props) => {
   const [currAction, setCurrAction] = useState("");
   const timerRef = useRef();
 
-  const additionalProps = { 
-    currAction, 
+  const additionalProps = {
+    currAction,
     setCurrAction,
     startTimer: () => timerRef.current?.startTimer(),
-  }
+  };
 
-  const needsPuzzleGeneration = props.G.gamemode === 'p' && props.G.cells === null;
+  const needsPuzzleGeneration =
+    props.G.gamemode === "p" && props.G.cells === null;
 
   const generatePuzzleBoard = () => {
     if (needsPuzzleGeneration) {
       props.moves.generatePuzzleBoard();
     }
-  }
+  };
 
   useEffect(() => {
-    window.addEventListener('load', generatePuzzleBoard);
+    window.addEventListener("load", generatePuzzleBoard);
 
     return () => {
-      window.removeEventListener('load', generatePuzzleBoard);
-    }
+      window.removeEventListener("load", generatePuzzleBoard);
+    };
   }, []);
 
   if (needsPuzzleGeneration) {
@@ -45,7 +46,7 @@ export const BoardWrapper = (props) => {
 
   return (
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
-      <Popup /> 
+      <Popup />
       <div className="flex">
         <Timer ref={timerRef} />
         <div id="board-container">

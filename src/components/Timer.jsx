@@ -9,18 +9,20 @@ export const Timer = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     startTimer() {
       if (!timer) {
-        setTimer(setInterval(() => {
-          setTime(prev => prev + 1);
-        }, 10));
+        setTimer(
+          setInterval(() => {
+            setTime((prev) => prev + 1);
+          }, 10)
+        );
       }
-    }
-  }))
+    },
+  }));
 
   useEffect(() => {
     if (ctx.gameover) {
       if (timer) {
         clearInterval(timer);
-        setTimer(null); 
+        setTimer(null);
       }
     }
   }, [ctx.gameover]);
@@ -29,7 +31,7 @@ export const Timer = forwardRef((props, ref) => {
 
   return (
     <div id="timer">
-      {`${Math.floor(time / 100)}:${secs < 10 ? ("0" + secs) : secs}`}
+      {`${Math.floor(time / 100)}:${secs < 10 ? "0" + secs : secs}`}
     </div>
   );
 });

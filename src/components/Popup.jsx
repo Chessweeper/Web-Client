@@ -9,7 +9,7 @@ export const Popup = () => {
   if (ctx.gameover.error) {
     text = ctx.gameover.error;
   } else {
-    text = ctx.gameover.isWin ? 'You won' : 'You lost';
+    text = ctx.gameover.isWin ? "You won" : "You lost";
   }
 
   return (

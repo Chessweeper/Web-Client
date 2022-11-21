@@ -1,9 +1,9 @@
 hr {
   border: 0;
-  clear:both;
-  display:block;
-  width: 96%;               
-  background-color:black;
+  clear: both;
+  display: block;
+  width: 96%;
+  background-color: black;
   height: 1px;
 }
 
@@ -80,11 +80,11 @@ hr {
 }
 
 .open.white {
-  background-color: #FFCF9F;
+  background-color: #ffcf9f;
 }
 
 .open.black {
-  background-color: #D28C45;
+  background-color: #d28c45;
 }
 
 .action {
