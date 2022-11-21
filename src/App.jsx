@@ -30,7 +30,7 @@ export const App = () => {
 
 	// Setup web worker
 	useEffect(() => {
-		const w = new Worker("src/PuzzleGenWebWorker.js", { type: 'module' });
+		const w = new Worker(new URL("./PuzzleGenWebWorker.js", import.meta.url), { type: 'module' });
 		w.onmessage = (e) => {
 			if (typeof e.data === 'string') {
 				console.error(e.data);
