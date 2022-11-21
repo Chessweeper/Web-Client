@@ -112,6 +112,10 @@ hr {
   justify-content: center;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 /* Popup displayed on game end */
 
 #popup {

@@ -39,7 +39,7 @@ export const BoardWrapper = (props) => {
 
   // For puzzle mode, is first covered by a black cover that we must click to reveal it
   const hideCover = () => {
-    document.getElementById("board-cover").hidden = true;
+    document.getElementById("board-cover").classList.add("hidden");
     timerRef.current?.startTimer();
   }
 
