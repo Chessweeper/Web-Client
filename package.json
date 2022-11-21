@@ -3,6 +3,9 @@
   "name": "chessweeper",
   "version": "1.0.0",
   "description": "Chess X Minesweeper",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "vite",
     "preview": "vite preview",
