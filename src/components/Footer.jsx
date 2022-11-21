@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 
 export const Footer = () => {
-  const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState();  
+  const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState();
 
   useEffect(() => {
     async function updateDailyPuzzle() {
       const resp = await fetch("../../api/daily.php");
       if (resp.ok) {
         const text = await resp.text();
-        if (text.length > 20) { // Somehow launching this in local environment returns index.html?
+        if (text.length > 20) {
+          // Somehow launching this in local environment returns index.html?
           console.error("Failed to fetch daily puzzle");
         } else {
           setDailyPuzzleSeed(text);
         }
-      }
-      else {
+      } else {
         console.error("Failed to fetch daily puzzle");
       }
     }
-  
+
     updateDailyPuzzle();
   }, [setDailyPuzzleSeed]);
 
@@ -98,11 +98,11 @@ export const Footer = () => {
       <h2>Puzzle</h2>
       <p>You must find where the pieces are without being allowed to dig</p>
       <div className="flex hor">
-        { dailyPuzzleSeed && 
+        {dailyPuzzleSeed && (
           <a
-          className="gamemode button"
-          href={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
-          id="daily"
+            className="gamemode button"
+            href={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
+            id="daily"
           >
             <h2>Daily</h2>
             8 pieces
@@ -111,7 +111,7 @@ export const Footer = () => {
             <br />
             10x10
           </a>
-        }
+        )}
         <a className="gamemode button" href="?g=p&p=R2&s=6&c=2&d=20">
           <h2>Easy</h2>
           2 pieces

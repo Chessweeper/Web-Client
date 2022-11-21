@@ -9,25 +9,25 @@ export const Cell = ({ id }) => {
   const isPosWhite = (id) => {
     const y = Math.floor(id / G.size);
     const x = id % G.size;
-    return (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1)
-  }
+    return (y % 2 == 0 && x % 2 == 0) || (y % 2 == 1 && x % 2 == 1);
+  };
 
   const onCellClick = (id) => {
     if (ctx.gameover) {
-        return;
+      return;
     }
 
     // todo: does the job but shouldn't call every cell click
     startTimer();
 
     if (currAction !== "") {
-        if (G.knownCells?.[id] === currAction) {
-            moves.removeHint(id);
-        } else {
-            moves.placeHint(id, currAction);
-        }
+      if (G.knownCells?.[id] === currAction) {
+        moves.removeHint(id);
+      } else {
+        moves.placeHint(id, currAction);
+      }
     } else {
-        moves.discoverPiece(id);
+      moves.discoverPiece(id);
     }
   };
 
@@ -51,19 +51,20 @@ export const Cell = ({ id }) => {
   else color = colors[G.cells[id] - 1];
 
   if (G.cells === null) {
-      value = "";
-  } else if (ctx.gameover?.isWin === false && !Number.isInteger(G.cells[id])) { // Display pieces of gameover
-      value = <img src={getPiece(G.cells[id])} />;
-      className += " red";
+    value = "";
+  } else if (ctx.gameover?.isWin === false && !Number.isInteger(G.cells[id])) {
+    // Display pieces of gameover
+    value = <img src={getPiece(G.cells[id])} />;
+    className += " red";
   } else if (G.knownCells[id] === true) {
     if (G.cells[id] !== 0) {
       value = G.cells[id];
     }
     className += " open";
-    const isWhite = isPosWhite(id)
-    className += isWhite ? " white" : " black"
+    const isWhite = isPosWhite(id);
+    className += isWhite ? " white" : " black";
   } else if (G.knownCells[id] !== false && G.knownCells[id] !== true) {
-      value = <img src={getPiece(G.knownCells[id])} />;
+    value = <img src={getPiece(G.knownCells[id])} />;
   }
 
   return (
