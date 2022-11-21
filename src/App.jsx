@@ -3,7 +3,7 @@ import { Game } from './Game';
 import { BoardWrapper } from './components/BoardWrapper';
 import { parseUrl } from './Parsing';
 import { Footer } from './components/Footer';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const wrapBoardWithReload = ({ reload, board: RawBoard }) => {
 	const Board = (props) => {

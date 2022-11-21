@@ -229,14 +229,14 @@ export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
     let data;
     let discovered;
     let error;
-  
+
     let c = 0;
     const maxIt = 300;
     for (; c < maxIt; c++)
     {
         data = fillPositions(generateBoard(random, -1, pieces, size, count));
         discovered = Array(size * size).fill(false);
-  
+
         let thinkData = null;
         let isSolved = false;
         let giveup = false;
@@ -255,12 +255,12 @@ export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
                 giveup = true; // Algorithm failed with this generation, we give up
                 continue;
             }
-  
+
             let validation = validateBoard(data, discovered, pieces, size);
             isSolved = validation["isSolved"];
             thinkData = validation["thinkData"];
         }
-  
+
         if (!isSolved) {
             console.log("Skipping unsolvabled puzzle");
         } else {
@@ -268,22 +268,22 @@ export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
                 if (!discovered[i]) {
                     continue;
                 }
-  
+
                 discovered[i] = false;
                 let validation = validateBoard(data, discovered, pieces, size);
                 if (!validation["isSolved"]) {
                     discovered[i] = true;
                 }
             }
-  
+
             let emptyCasesAfter = discovered.filter(x => x === false).length;
-  
+
             if (difficulty !== -1 && difficulty > emptyCasesAfter) {
                 console.log(`Skipping puzzle with ${emptyCasesAfter} empty tiles`);
             } else {
                 if (difficulty !== -1) {
                     // Set tiles to adjust difficulty
-  
+
                     let possibleTarget = [];
                     for (let i = 0; i < data.length; i++) {
                         if (!discovered[i] && Number.isInteger(data[i])) {
@@ -301,11 +301,11 @@ export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
             }
         }
     }
-  
+
     if (c === maxIt) {
         error = "Failed to generate puzzle";
     }
-  
+
     return { data, discovered, error };
 }
   
