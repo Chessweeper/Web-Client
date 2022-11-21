@@ -11,7 +11,7 @@ export const BoardWrapper = (props) => {
   const [currAction, setCurrAction] = useState("");
   const timerRef = useRef();
 
-  const additionalProps = { 
+  const additionalProps = {
     currAction, 
     setCurrAction,
     startTimer: () => timerRef.current?.startTimer(),

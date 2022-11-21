@@ -109,11 +109,11 @@ export function parseUrl() {
   }
 
   return {
-      seed,
-			pieces: availablePieces,
-			size,
-			count,
-			gamemode,
-			difficulty
+    seed,
+    pieces: availablePieces,
+    size,
+    count,
+    gamemode,
+    difficulty
   }
 }
