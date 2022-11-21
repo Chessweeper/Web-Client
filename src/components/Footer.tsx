@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-export const Footer = () => {
-  const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState();
+export const Footer = (): JSX.Element => {
+  const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState<string | undefined>();
 
   useEffect(() => {
     async function updateDailyPuzzle() {
@@ -202,7 +202,7 @@ export const Footer = () => {
             GitHub
           </a>
           <br />A Discord server is available here:{" "}
-          <a href="https://discord.gg/VjJ95N2mV9" targmet="_blank">
+          <a href="https://discord.gg/VjJ95N2mV9" target="_blank">
             https://discord.gg/VjJ95N2mV9
           </a>
         </p>
