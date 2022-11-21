@@ -231,7 +231,8 @@ function validateBoard(data, discovered, pieces, size) {
     }
 
     let str = "";
-    for (let piece of Object.keys(pieces)) { // Check all pieces
+    for (let piece of Object.keys(pieces)) {
+      // Check all pieces
       // List of all moves for the current piece
       let moves = parseNotation(
         pieceMovesCheck[piece],

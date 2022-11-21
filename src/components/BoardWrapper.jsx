@@ -42,7 +42,7 @@ export const BoardWrapper = (props) => {
   const hideCover = () => {
     document.getElementById("board-cover").classList.add("hidden");
     timerRef.current?.startTimer();
-  }
+  };
 
   return (
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
@@ -51,10 +51,11 @@ export const BoardWrapper = (props) => {
         <Timer ref={timerRef} />
         <div id="board-container">
           <Board />
-          {props.G.gamemode === "p" ?
+          {props.G.gamemode === "p" ? (
             <div id="board-cover" onClick={hideCover}>
               <p>Click to start puzzle!</p>
-            </div> : null}
+            </div>
+          ) : null}
         </div>
         <ActionBar />
       </div>
