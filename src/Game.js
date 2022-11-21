@@ -1,5 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import { fillPositions, generateBoard } from "./Algs";
+
 function isWinCondition(G, id) {
     if (G.cells === null) {
         return false;
