@@ -33,7 +33,7 @@ export const App = () => {
   console.log(
     `Loading game: ${
       setupData.gamemode === "c" ? "classic" : "puzzle"
-    } gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${
+    } gamemode${seed != null ? ` with a seed of "${seed}"` : ""}, ${
       setupData.count
     } piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${
       setupData.size

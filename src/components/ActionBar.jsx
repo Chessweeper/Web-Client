@@ -35,7 +35,7 @@ export const ActionBar = () => {
         availablePieces.includes(action.ID) ||
         (action.ID === "" && G.gamemode !== "p")
     );
-  }, [actions, G.pieces]);
+  }, [actions, G.pieces, G.gamemode]);
 
   useEffect(() => {
     if (availableActions.length > 0) {
@@ -56,7 +56,7 @@ export const ActionBar = () => {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [availableActions]);
+  }, [availableActions, setCurrAction]);
 
   const actionButtons = availableActions.map((action) => {
     let className = "action";

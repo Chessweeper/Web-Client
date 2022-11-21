@@ -20,19 +20,11 @@ export const BoardWrapper = (props) => {
   const needsPuzzleGeneration =
     props.G.gamemode === "p" && props.G.cells === null;
 
-  const generatePuzzleBoard = () => {
+  useEffect(() => {
     if (needsPuzzleGeneration) {
       props.moves.generatePuzzleBoard();
     }
-  };
-
-  useEffect(() => {
-    window.addEventListener("load", generatePuzzleBoard);
-
-    return () => {
-      window.removeEventListener("load", generatePuzzleBoard);
-    };
-  }, []);
+  }, [props.moves, needsPuzzleGeneration]);
 
   if (needsPuzzleGeneration) {
     return <div>Generating Board...</div>;
