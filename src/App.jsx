@@ -4,6 +4,7 @@ import { BoardWrapper } from './components/BoardWrapper';
 import { parseUrl } from './Parsing';
 import { Footer } from './components/Footer';
 import { useEffect, useState } from 'react';
+import PuzzleGenWorker from './PuzzleGenWorker?worker';
 
 const wrapBoardWithReload = ({ reload, board: RawBoard }) => {
 	const Board = (props) => {
@@ -30,7 +31,7 @@ export const App = () => {
 
 	// Setup web worker
 	useEffect(() => {
-		const w = new Worker(new URL("./PuzzleGenWebWorker.js", import.meta.url), { type: 'module' });
+		const w = new PuzzleGenWorker();
 		w.onmessage = (e) => {
 			if (typeof e.data === 'string') {
 				console.error(e.data);
