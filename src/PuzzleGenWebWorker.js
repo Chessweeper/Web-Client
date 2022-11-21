@@ -1,4 +1,4 @@
-import { generatePuzzleBoard } from "./Algs";
+import { generatePuzzleBoard } from "./Game";
 import { Random } from "./Random";
 
 onmessage = (e) => {
