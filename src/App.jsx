@@ -22,9 +22,9 @@ export const App = () => {
 		console.log(`Loading game: ${setupData.gamemode === 'c' ? "classic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map(x => `${x} (x${setupData.pieces[x]})`).join(', ')}`)
 
 		if (setupData.gamemode === 'p') {
-			worker.postMessage(setupData);
+			worker.postMessage({...setupData, seed});
 		} else {
-			setGame(Game(setupData));
+			setGame({ ...Game(setupData), seed });
 		}
 	}
 

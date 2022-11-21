@@ -140,7 +140,7 @@ export function fillPositions(data) {
     return data;
 }
 
-export function generateBoard(id, pieces, size, count) {
+export function generateBoard(random, id, pieces, size, count) {
     let piecesMdf = {};
     for (let key in pieces) {
         piecesMdf[key] = pieces[key];
@@ -149,9 +149,9 @@ export function generateBoard(id, pieces, size, count) {
     let data = Array(size * size).fill(0);
     let i = count;
     while (i > 0) {
-        const rand = Math.floor(Math.random() * (size * size));
+        const rand = Math.floor(random.Number() * (size * size));
         if (rand !== id && Number.isInteger(data[rand])) {
-            const value = Math.floor(Math.random() * Object.keys(piecesMdf).length);
+            const value = Math.floor(random.Number() * Object.keys(piecesMdf).length);
             let piece = Object.keys(piecesMdf)[value];
 
             if (piecesMdf[piece] === 0) { // We reached the amount of time we could spawn that piece
@@ -223,7 +223,7 @@ function validateBoard(data, discovered, pieces, size) {
     };
 }
 
-export function generatePuzzleBoard(pieces, size, count, difficulty) {
+export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
     let data;
     let discovered;
     let error;
@@ -232,7 +232,7 @@ export function generatePuzzleBoard(pieces, size, count, difficulty) {
     const maxIt = 300;
     for (; c < maxIt; c++)
     {
-        data = fillPositions(generateBoard(-1, pieces, size, count));
+        data = fillPositions(generateBoard(random, -1, pieces, size, count));
         discovered = Array(size * size).fill(false);
   
         let thinkData = null;
@@ -247,7 +247,7 @@ export function generatePuzzleBoard(pieces, size, count, difficulty) {
                 }
             }
             if (possibilities.length > 0) {
-                let randPos = Math.floor(Math.random() * possibilities.length);
+                let randPos = Math.floor(random.Number() * possibilities.length);
                 discovered[possibilities[randPos]] = true;
             } else {
                 giveup = true; // Algorithm failed with this generation, we give up
@@ -289,7 +289,7 @@ export function generatePuzzleBoard(pieces, size, count, difficulty) {
                         }
                     }
                     for (let i = emptyCasesAfter; i > difficulty; i--) {
-                        const rand = Math.floor(Math.random() * possibleTarget.length);
+                        const rand = Math.floor(random.Number() * possibleTarget.length);
                         discovered[possibleTarget[rand]] = true;
                         possibleTarget.splice(rand, 1).indexOf(rand);
                     }

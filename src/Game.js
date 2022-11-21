@@ -28,9 +28,9 @@ export const Game = setupData => ({
     }),
 
     moves: {
-        discoverPiece: ({ G, events }, id) => {
+        discoverPiece: ({ G, events, random }, id) => {
             if (G.cells === null) {
-                G.cells = fillPositions(generateBoard(id, G.pieces, G.size, G.count));
+                G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
                 G.knownCells = Array(G.size * G.size).fill(false)
             }
 
@@ -45,9 +45,9 @@ export const Game = setupData => ({
             }
         },
 
-        placeHint: ({ G, events }, id, action) => {
+        placeHint: ({ G, events, random }, id, action) => {
             if (G.cells === null) {
-                G.cells = fillPositions(generateBoard(id, G.pieces, G.size, G.count));
+                G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
                 G.knownCells = Array(G.size * G.size).fill(false);
             }
 
