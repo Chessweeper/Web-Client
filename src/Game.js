@@ -1,4 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/core";
+import { Random } from "./Random";
 
 function isValid(data, size, x, y) {
     return x >= 0 && x < size && y >= 0 && y < size && Number.isInteger(data[y * size + x]);
@@ -151,9 +152,9 @@ export function generateBoard(random, id, pieces, size, count) {
     let data = Array(size * size).fill(0);
     let i = count;
     while (i > 0) {
-        const rand = Math.floor(random.Number() * (size * size));
+        const rand = Math.floor(random.next() * (size * size));
         if (rand !== id && Number.isInteger(data[rand])) {
-            const value = Math.floor(random.Number() * Object.keys(piecesMdf).length);
+            const value = Math.floor(random.next() * Object.keys(piecesMdf).length);
             let piece = Object.keys(piecesMdf)[value];
 
             if (piecesMdf[piece] === 0) { // We reached the amount of time we could spawn that piece
@@ -249,7 +250,7 @@ export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
                 }
             }
             if (possibilities.length > 0) {
-                let randPos = Math.floor(random.Number() * possibilities.length);
+                let randPos = Math.floor(random.next() * possibilities.length);
                 discovered[possibilities[randPos]] = true;
             } else {
                 giveup = true; // Algorithm failed with this generation, we give up
@@ -291,7 +292,7 @@ export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
                         }
                     }
                     for (let i = emptyCasesAfter; i > difficulty; i--) {
-                        const rand = Math.floor(random.Number() * possibleTarget.length);
+                        const rand = Math.floor(random.next() * possibleTarget.length);
                         discovered[possibleTarget[rand]] = true;
                         possibleTarget.splice(rand, 1).indexOf(rand);
                     }
@@ -308,7 +309,12 @@ export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
 
     return { data, discovered, error };
 }
-  
+
+function generateClassicBoard(G, id) {
+    const random = new Random(G.seed);
+    G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
+    G.knownCells = Array(G.size * G.size).fill(false)
+}
 
 function isWinCondition(G, id) {
     if (G.cells === null) {
@@ -337,10 +343,9 @@ export const Game = setupData => ({
     }),
 
     moves: {
-        discoverPiece: ({ G, events, random }, id) => {
+        discoverPiece: ({ G, events }, id) => {
             if (G.cells === null) {
-                G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
-                G.knownCells = Array(G.size * G.size).fill(false)
+                generateClassicBoard(G, id);
             }
 
             if (G.knownCells[id] !== false || G.gamemode === 'p') {
@@ -354,10 +359,9 @@ export const Game = setupData => ({
             }
         },
 
-        placeHint: ({ G, events, random }, id, action) => {
+        placeHint: ({ G, events }, id, action) => {
             if (G.cells === null) {
-                G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
-                G.knownCells = Array(G.size * G.size).fill(false);
+                generateClassicBoard(G, id);
             }
 
             if (G.knownCells[id] === true) {

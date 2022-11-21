@@ -14,17 +14,17 @@ const wrapBoardWithReload = ({ reload, board: RawBoard }) => {
 }
 
 export const App = () => {
-	const { seed, setupData } = parseUrl();
+	const setupData = parseUrl();
 	const [game, setGame] = useState(null)
 	const [worker, setWorker] = useState();
 
 	const setupGame = () => {
-		console.log(`Loading game: ${setupData.gamemode === 'c' ? "classic" : "puzzle"} gamemode${seed != null ? ` with a seed of \"${seed}\"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map(x => `${x} (x${setupData.pieces[x]})`).join(', ')}`)
+		console.log(`Loading game: ${setupData.gamemode === 'c' ? "classic" : "puzzle"} gamemode${setupData.seed != null ? ` with a seed of \"${setupData.seed}\"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map(x => `${x} (x${setupData.pieces[x]})`).join(', ')}`)
 
 		if (setupData.gamemode === 'p') {
-			worker.postMessage({...setupData, seed});
+			worker.postMessage(setupData);
 		} else {
-			setGame({ ...Game(setupData), seed });
+			setGame({ ...Game(setupData) });
 		}
 	}
 

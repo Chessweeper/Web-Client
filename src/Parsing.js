@@ -16,7 +16,7 @@ function findGetParameter(parameterName) { // https://stackoverflow.com/a/544859
 
 export function parseUrl() {
   // Setting everything from URL parameter
-  const seed = findGetParameter("r") ?? undefined;
+  const seed = findGetParameter("r");
   let pieces = findGetParameter("p");
   let size = findGetParameter("s");
   let count = findGetParameter("c");
@@ -110,12 +110,10 @@ export function parseUrl() {
 
   return {
       seed,
-      setupData: {
-          pieces: availablePieces,
-          size,
-          count,
-          gamemode,
-          difficulty
-      }
+			pieces: availablePieces,
+			size,
+			count,
+			gamemode,
+			difficulty
   }
 }
