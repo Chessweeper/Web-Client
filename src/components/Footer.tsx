@@ -162,8 +162,8 @@ export const Footer = (): JSX.Element => {
         <p>
           The goal is to find where and what the 3 chess pieces are
           <br />
-          The shovel allow you to dig a tile, you'll see a number representing
-          the number of pieces that have it in check
+          The shovel allow you to dig a tile, you&apos;ll see a number
+          representing the number of pieces that have it in check
           <br />
           Once you identified a piece, click on the related button under the
           board then click on the tile, click again to remove it
@@ -179,6 +179,7 @@ export const Footer = (): JSX.Element => {
           <a
             href="https://en.wikipedia.org/wiki/Chess#Movement"
             target="_blank"
+            rel="noreferrer"
           >
             here
           </a>
@@ -191,6 +192,7 @@ export const Footer = (): JSX.Element => {
           <a
             href="https://en.wikipedia.org/wiki/Shogi#Movement"
             target="_blank"
+            rel="noreferrer"
           >
             Wikipedia
           </a>
@@ -198,11 +200,19 @@ export const Footer = (): JSX.Element => {
         <h2>Other Links</h2>
         <p>
           Source code available under MIT license on{" "}
-          <a href="https://github.com/Xwilarg/Chessweeper" target="_blank">
+          <a
+            href="https://github.com/Xwilarg/Chessweeper"
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub
           </a>
           <br />A Discord server is available here:{" "}
-          <a href="https://discord.gg/VjJ95N2mV9" target="_blank">
+          <a
+            href="https://discord.gg/VjJ95N2mV9"
+            target="_blank"
+            rel="noreferrer"
+          >
             https://discord.gg/VjJ95N2mV9
           </a>
         </p>

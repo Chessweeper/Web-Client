@@ -20,5 +20,5 @@
     "removeComments": true,
     "noUnusedLocals": true
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"] // todo: remove js/jsx when all converted
 }
