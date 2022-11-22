@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { ActionBar } from "./ActionBar";
 import { Board } from "./Board";
 import { Popup } from "./Popup";

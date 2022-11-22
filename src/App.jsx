@@ -3,7 +3,7 @@ import { Game } from "./Game";
 import { BoardWrapper } from "./components/BoardWrapper";
 import { parseUrl } from "./Parsing";
 import { Footer } from "./components/Footer";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PuzzleGenWorker from "./PuzzleGenWorker?worker";
 
 const wrapBoardWithReload = ({ reload, board: RawBoard }) => {
@@ -19,12 +19,12 @@ export const App = () => {
   const [game, setGame] = useState(null);
   const [worker, setWorker] = useState();
 
-  const setupGame = () => {
+  const setupGame = useCallback(() => {
     console.log(
       `Loading game: ${
         setupData.gamemode === "c" ? "classic" : "puzzle"
       } gamemode${
-        setupData.seed != null ? ` with a seed of \"${setupData.seed}\"` : ""
+        setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""
       }, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${
         setupData.size
       }x${setupData.size} grid, piece${
@@ -39,7 +39,7 @@ export const App = () => {
     } else {
       setGame({ ...Game(setupData) });
     }
-  };
+  }, [worker, setGame, setupData]);
 
   // Setup web worker
   useEffect(() => {
@@ -59,14 +59,14 @@ export const App = () => {
       w.terminate();
       setWorker(undefined);
     };
-  }, [setGame]);
+  }, [setGame, setupData]);
 
   // Wait for worker creation to start game
   useEffect(() => {
     if (worker) {
       setupGame();
     }
-  }, [worker]);
+  }, [worker, setupGame]);
 
   const Client = game
     ? BgioClient({
