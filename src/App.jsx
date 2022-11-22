@@ -1,5 +1,5 @@
 import { Client as BgioClient } from "boardgame.io/react";
-import { Game } from "./Game";
+import { Game, generatePuzzleBoard } from "./Game";
 import { BoardWrapper } from "./components/BoardWrapper";
 import { parseUrl } from "./Parsing";
 import { Footer } from "./components/Footer";
@@ -35,7 +35,32 @@ export const App = () => {
     );
 
     if (setupData.gamemode === "p") {
-      worker.postMessage(setupData);
+      if (worker) {
+        worker.postMessage(setupData);
+      } else {
+        const { data, discovered, error } = generatePuzzleBoard(
+          setupData.seed,
+          setupData.pieces,
+          setupData.size,
+          setupData.count,
+          setupData.difficulty
+        );
+
+        if (error) {
+          console.error(error);
+        } else {
+          let cells = data;
+          let knownCells = Array(setupData.size * setupData.size).fill(false);
+
+          for (let i in discovered) {
+            if (discovered[i]) {
+              knownCells[i] = true;
+            }
+          }
+
+          setGame({ ...Game({ ...setupData, cells, knownCells }) });
+        }
+      }
     } else {
       setGame({ ...Game(setupData) });
     }
@@ -43,27 +68,40 @@ export const App = () => {
 
   // Setup web worker
   useEffect(() => {
-    const w = new PuzzleGenWorker();
-    w.onmessage = (e) => {
-      if (typeof e.data === "string") {
-        console.error(e.data);
-      } else {
-        const { cells, knownCells } = e.data;
-        setGame(Game({ ...setupData, cells, knownCells }));
-      }
-    };
+    // Firefox does not allow module workers, but PuzzleGenWorker is compiled
+    // to a non-module type in production - so don't allow worker in dev with Firefox
+    const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+    const isWorkerAvailable =
+      process.env.NODE_ENV === "production" || !isFirefox;
 
-    setWorker(w);
+    let w;
+
+    if (isWorkerAvailable) {
+      w = new PuzzleGenWorker();
+      w.onmessage = (e) => {
+        if (typeof e.data === "string") {
+          console.error(e.data);
+        } else {
+          const { cells, knownCells } = e.data;
+          setGame(Game({ ...setupData, cells, knownCells }));
+        }
+      };
+      setWorker(w);
+    } else {
+      setWorker(null);
+    }
 
     return () => {
-      w.terminate();
-      setWorker(undefined);
+      if (w) {
+        w.terminate();
+        setWorker(undefined);
+      }
     };
   }, [setGame, setupData]);
 
   // Wait for worker creation to start game
   useEffect(() => {
-    if (worker) {
+    if (worker !== undefined) {
       setupGame();
     }
   }, [worker, setupGame]);

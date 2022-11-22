@@ -281,10 +281,12 @@ function validateBoard(data, discovered, pieces, size) {
   };
 }
 
-export function generatePuzzleBoard(random, pieces, size, count, difficulty) {
+export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
   let data;
   let discovered;
   let error;
+
+  const random = new Random(seed);
 
   let c = 0;
   const maxIt = 300;
