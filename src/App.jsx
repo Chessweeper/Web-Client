@@ -3,7 +3,7 @@ import { Game } from "./Game";
 import { BoardWrapper } from "./components/BoardWrapper";
 import { parseUrl } from "./Parsing";
 import { Footer } from "./components/Footer";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import PuzzleGenWorker from "./PuzzleGenWorker?worker";
 
 const wrapBoardWithReload = ({ reload, board: RawBoard }) => {
@@ -15,7 +15,7 @@ const wrapBoardWithReload = ({ reload, board: RawBoard }) => {
 };
 
 export const App = () => {
-  const setupData = parseUrl();
+  const setupData = useMemo(() => parseUrl(), []);
   const [game, setGame] = useState(null);
   const [worker, setWorker] = useState();
 
