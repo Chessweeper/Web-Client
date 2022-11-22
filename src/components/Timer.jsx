@@ -19,13 +19,11 @@ export const Timer = forwardRef((props, ref) => {
   }));
 
   useEffect(() => {
-    if (ctx.gameover) {
-      if (timer) {
-        clearInterval(timer);
-        setTimer(null);
-      }
+    if (ctx.gameover && timer) {
+      clearInterval(timer);
+      setTimer(null);
     }
-  }, [ctx.gameover]);
+  }, [ctx.gameover, timer]);
 
   const secs = time % 100;
 
@@ -35,3 +33,5 @@ export const Timer = forwardRef((props, ref) => {
     </div>
   );
 });
+
+Timer.displayName = "Timer";

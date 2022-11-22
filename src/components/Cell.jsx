@@ -31,9 +31,6 @@ export const Cell = ({ id }) => {
     }
   };
 
-  if (G.knownCells?.[id] && Number.isInteger(G.cells?.[id])) {
-  }
-
   // Text color
   const colors = [
     "#0001FD", // 1
