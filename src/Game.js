@@ -404,35 +404,9 @@ export const Game = (setupData) => ({
   }),
 
   moves: {
-    generatePuzzleBoard: ({ G, random }) => {
-      // using destructured values from G caused very slow load times?
-      const { pieces, size, count, difficulty } = setupData;
-
-      const { data, discovered, hasError } = generatePuzzleBoard(
-        random,
-        pieces,
-        size,
-        count,
-        difficulty
-      );
-      if (!hasError) {
-        G.cells = data;
-        G.knownCells = Array(size * size).fill(false);
-
-        for (let i in discovered) {
-          if (discovered[i]) {
-            G.knownCells[i] = true;
-          }
-        }
-      }
-    },
-
-    discoverPiece: ({ G, events, random }, id) => {
+    discoverPiece: ({ G, events }, id) => {
       if (G.cells === null) {
-        G.cells = fillPositions(
-          generateBoard(random, id, G.pieces, G.size, G.count)
-        );
-        G.knownCells = Array(G.size * G.size).fill(false);
+        generateClassicBoard(G, id);
       }
 
       if (G.knownCells[id] !== false || G.gamemode === "p") {
