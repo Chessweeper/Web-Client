@@ -1,0 +1,31 @@
+{
+  "root": true,
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "vitest-globals/env": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./tsconfig.json"]
+  },
+  "plugins": ["@typescript-eslint", "import", "react", "react-hooks"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:vitest-globals/recommended"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off", // handled by @vitejs/plugin-react
+    "react/prop-types": "off" // todo: readdress this after moving all react files to typescript
+  }
+}

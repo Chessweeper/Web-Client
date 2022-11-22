@@ -12,14 +12,14 @@ export const BoardWrapper = (props) => {
   const timerRef = useRef();
 
   const additionalProps = {
-    currAction, 
+    currAction,
     setCurrAction,
     startTimer: () => timerRef.current?.startTimer(),
-  }
+  };
 
   return (
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
-      <Popup /> 
+      <Popup />
       <div className="flex">
         <Timer ref={timerRef} />
         <Board />

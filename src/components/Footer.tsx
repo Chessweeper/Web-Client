@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 
-export const Footer = () => {
-  const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState();  
+export const Footer = (): JSX.Element => {
+  const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState<string | undefined>();
 
   useEffect(() => {
     async function updateDailyPuzzle() {
       const resp = await fetch("../../api/daily.php");
       if (resp.ok) {
         const text = await resp.text();
-        if (text.length > 20) { // Somehow launching this in local environment returns index.html?
+        if (text.length > 20) {
+          // Somehow launching this in local environment returns index.html?
           console.error("Failed to fetch daily puzzle");
         } else {
           setDailyPuzzleSeed(text);
         }
-      }
-      else {
+      } else {
         console.error("Failed to fetch daily puzzle");
       }
     }
-  
+
     updateDailyPuzzle();
   }, [setDailyPuzzleSeed]);
 
@@ -98,11 +98,11 @@ export const Footer = () => {
       <h2>Puzzle</h2>
       <p>You must find where the pieces are without being allowed to dig</p>
       <div className="flex hor">
-        { dailyPuzzleSeed && 
+        {dailyPuzzleSeed && (
           <a
-          className="gamemode button"
-          href={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
-          id="daily"
+            className="gamemode button"
+            href={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
+            id="daily"
           >
             <h2>Daily</h2>
             8 pieces
@@ -111,7 +111,7 @@ export const Footer = () => {
             <br />
             10x10
           </a>
-        }
+        )}
         <a className="gamemode button" href="?g=p&p=R2&s=6&c=2&d=20">
           <h2>Easy</h2>
           2 pieces
@@ -162,8 +162,8 @@ export const Footer = () => {
         <p>
           The goal is to find where and what the 3 chess pieces are
           <br />
-          The shovel allow you to dig a tile, you'll see a number representing
-          the number of pieces that have it in check
+          The shovel allow you to dig a tile, you&apos;ll see a number
+          representing the number of pieces that have it in check
           <br />
           Once you identified a piece, click on the related button under the
           board then click on the tile, click again to remove it
@@ -179,6 +179,7 @@ export const Footer = () => {
           <a
             href="https://en.wikipedia.org/wiki/Chess#Movement"
             target="_blank"
+            rel="noreferrer"
           >
             here
           </a>
@@ -191,6 +192,7 @@ export const Footer = () => {
           <a
             href="https://en.wikipedia.org/wiki/Shogi#Movement"
             target="_blank"
+            rel="noreferrer"
           >
             Wikipedia
           </a>
@@ -198,11 +200,19 @@ export const Footer = () => {
         <h2>Other Links</h2>
         <p>
           Source code available under MIT license on{" "}
-          <a href="https://github.com/Xwilarg/Chessweeper" target="_blank">
+          <a
+            href="https://github.com/Xwilarg/Chessweeper"
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub
           </a>
           <br />A Discord server is available here:{" "}
-          <a href="https://discord.gg/VjJ95N2mV9" targmet="_blank">
+          <a
+            href="https://discord.gg/VjJ95N2mV9"
+            target="_blank"
+            rel="noreferrer"
+          >
             https://discord.gg/VjJ95N2mV9
           </a>
         </p>

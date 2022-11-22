@@ -1,4 +1,5 @@
 # Chessweeper
+
 Chess X Minesweeper
 
 ![Preview](.github/preview.png)
@@ -16,7 +17,8 @@ To build a release version of the game, run `npm run build`. The output is place
 - [Discord](https://discord.gg/VjJ95N2mV9)
 
 ## Credits
- - Chess icons and favicon from https://github.com/oakmac/chessboardjs
- - Shovel icon from Vectors Market, Flaticon, https://www.flaticon.com/free-icons/shovel
- - Shogi icons from Wikimedia Commons by Hari Seldon under Creative Commons Attribution-Share Alike 3.0 Unported
- - Idea taken from https://www.reddit.com/r/AnarchyChess/comments/ytw69b/new_chess_2_update_just_dropped_numbers_are_based/
+
+- Chess icons and favicon from https://github.com/oakmac/chessboardjs
+- Shovel icon from Vectors Market, Flaticon, https://www.flaticon.com/free-icons/shovel
+- Shogi icons from Wikimedia Commons by Hari Seldon under Creative Commons Attribution-Share Alike 3.0 Unported
+- Idea taken from https://www.reddit.com/r/AnarchyChess/comments/ytw69b/new_chess_2_update_just_dropped_numbers_are_based/
