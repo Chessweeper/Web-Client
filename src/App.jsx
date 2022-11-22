@@ -38,7 +38,7 @@ export const App = () => {
       if (worker) {
         worker.postMessage(setupData);
       } else {
-        const { data, discovered, error } = generatePuzzleBoard(
+        const { cells, knownCells, error } = generatePuzzleBoard(
           setupData.seed,
           setupData.pieces,
           setupData.size,
@@ -49,15 +49,6 @@ export const App = () => {
         if (error) {
           console.error(error);
         } else {
-          let cells = data;
-          let knownCells = Array(setupData.size * setupData.size).fill(false);
-
-          for (let i in discovered) {
-            if (discovered[i]) {
-              knownCells[i] = true;
-            }
-          }
-
           setGame({ ...Game({ ...setupData, cells, knownCells }) });
         }
       }

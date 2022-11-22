@@ -367,11 +367,19 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
     }
   }
 
+  let knownCells;
   if (c === maxIt) {
     error = "Failed to generate puzzle";
+  } else {
+    knownCells = Array(size * size).fill(false);
+    for (let i in discovered) {
+      if (discovered[i]) {
+        knownCells[i] = true;
+      }
+    }
   }
 
-  return { data, discovered, error };
+  return { cells: data, knownCells, error };
 }
 
 function generateClassicBoard(G, id) {
