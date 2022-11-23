@@ -1,28 +1,12 @@
 import { piecesImages } from "./Pieces";
 
-// List of pieces we can spawn
-function findGetParameter(parameterName) {
-  // https://stackoverflow.com/a/5448595
-  var result = null,
-    tmp = [];
-  location.search
-    .substring(1)
-    .split("&")
-    .forEach(function (item) {
-      tmp = item.split("=");
-      if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-    });
-  return result;
-}
-
-export function parseUrl() {
-  // Setting everything from URL parameter
-  const seed = findGetParameter("r");
-  let pieces = findGetParameter("p");
-  let size = findGetParameter("s");
-  let count = findGetParameter("c");
-  let gamemode = findGetParameter("g");
-  let difficulty = findGetParameter("d");
+export function parseUrl(searchParams) {
+  const seed = searchParams.get("r") ?? undefined;
+  let pieces = searchParams.get("p");
+  let size = searchParams.get("s");
+  let count = searchParams.get("c");
+  let gamemode = searchParams.get("g");
+  let difficulty = searchParams.get("d");
 
   size = size === null ? 8 : parseInt(size);
   count = count === null ? 3 : parseInt(count);

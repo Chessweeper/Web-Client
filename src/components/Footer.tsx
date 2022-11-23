@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Footer = (): JSX.Element => {
   const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState<string | undefined>();
@@ -28,56 +29,56 @@ export const Footer = (): JSX.Element => {
       <h2>Classic</h2>
       <p>Dig and try to find where the pieces are</p>
       <div className="flex hor">
-        <a className="gamemode button" href="?g=c&p=R2&s=6&c=2">
+        <Link className="gamemode button" to="?g=c&p=R2&s=6&c=2">
           <h2>Easy</h2>
           2 pieces
           <br />
           Rook only
           <br />
           6x6
-        </a>
+        </Link>
         <br />
-        <a className="gamemode button" href="?g=c&p=R2B2Q1N2&s=8&c=3">
+        <Link className="gamemode button" to="?g=c&p=R2B2Q1N2&s=8&c=3">
           <h2>Normal</h2>
           3 pieces
           <br />
           Rook, Bishop, Queen and Knight
           <br />
           8x8
-        </a>
+        </Link>
         <br />
-        <a className="gamemode button" href="?g=c&p=R2B2Q1N2K1P2&s=10&c=5">
+        <Link className="gamemode button" to="?g=c&p=R2B2Q1N2K1P2&s=10&c=5">
           <h2>Hard</h2>
           5 pieces
           <br />
           All pieces
           <br />
           10x10
-        </a>
+        </Link>
         <br />
-        <a className="gamemode button" href="?g=c&p=R2B2Q1N2K1P2&s=10&c=8">
+        <Link className="gamemode button" to="?g=c&p=R2B2Q1N2K1P2&s=10&c=8">
           <h2>Extreme</h2>
           8 pieces
           <br />
           All pieces
           <br />
           10x10
-        </a>
+        </Link>
       </div>
       <h2>Variant</h2>
       <p>classic mode with pieces that are normally not in chess</p>
       <div className="flex hor">
-        <a className="gamemode button" href="?g=c&p=R3N3O3&s=10&c=5">
+        <Link className="gamemode button" to="?g=c&p=R3N3O3&s=10&c=5">
           <h2>Knook</h2>
           5 pieces
           <br />
           Knight, Rook and Knook
           <br />
           10x10
-        </a>
-        <a
+        </Link>
+        <Link
           className="gamemode button"
-          href="?g=c&p=飛2角2桂2歩2玉2香2銀2金2&s=10&c=5"
+          to="?g=c&p=飛2角2桂2歩2玉2香2銀2金2&s=10&c=5"
         >
           <h2>Shogi</h2>
           5 pieces
@@ -85,23 +86,23 @@ export const Footer = (): JSX.Element => {
           Shogi pieces, facing up
           <br />
           10x10
-        </a>
-        <a className="gamemode button" href="?g=c&p=R2B2Q1N2K1P2D2&s=10&c=8">
+        </Link>
+        <Link className="gamemode button" to="?g=c&p=R2B2Q1N2K1P2D2&s=10&c=8">
           <h2>Black Pawn</h2>
           8 pieces
           <br />
           All pieces + Black Pawn
           <br />
           10x10
-        </a>
+        </Link>
       </div>
       <h2>Puzzle</h2>
       <p>You must find where the pieces are without being allowed to dig</p>
       <div className="flex hor">
         {dailyPuzzleSeed && (
-          <a
+          <Link
             className="gamemode button"
-            href={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
+            to={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
             id="daily"
           >
             <h2>Daily</h2>
@@ -110,50 +111,50 @@ export const Footer = (): JSX.Element => {
             Rook, Bishop, Knight and King
             <br />
             10x10
-          </a>
+          </Link>
         )}
-        <a className="gamemode button" href="?g=p&p=R2&s=6&c=2&d=20">
+        <Link className="gamemode button" to="?g=p&p=R2&s=6&c=2&d=20">
           <h2>Easy</h2>
           2 pieces
           <br />
           Rook only
           <br />
           6x6
-        </a>
+        </Link>
         <br />
-        <a className="gamemode button" href="?g=p&p=R2B2N2&s=8&c=3&d=30">
+        <Link className="gamemode button" to="?g=p&p=R2B2N2&s=8&c=3&d=30">
           <h2>Normal</h2>
           3 pieces
           <br />
           Rook, Bishop and Knight
           <br />
           8x8
-        </a>
+        </Link>
         <br />
-        <a className="gamemode button" href="?g=p&p=R3B3N3K1&s=10&c=8&d=50">
+        <Link className="gamemode button" to="?g=p&p=R3B3N3K1&s=10&c=8&d=50">
           <h2>Hard</h2>
           8 pieces
           <br />
           Rook, Bishop, Knight and King
           <br />
           10x10
-        </a>
-        <a className="gamemode button" href="?g=p&p=R4B4N4K1&s=12&c=12&d=60">
+        </Link>
+        <Link className="gamemode button" to="?g=p&p=R4B4N4K1&s=12&c=12&d=60">
           <h2>Extreme</h2>
           12 pieces
           <br />
           Rook, Bishop, Knight and King
           <br />
           12x12
-        </a>
-        <a className="gamemode button" href="?g=p&p=飛2角2玉2銀2金2&s=8&c=5">
+        </Link>
+        <Link className="gamemode button" to="?g=p&p=飛2角2玉2銀2金2&s=8&c=5">
           <h2>Shogi</h2>
           5 pieces
           <br />
           Most shogi pieces, facing up
           <br />
           8x8
-        </a>
+        </Link>
       </div>
       <hr />
       <div id="rules">

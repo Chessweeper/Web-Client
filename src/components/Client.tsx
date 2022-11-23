@@ -1,23 +1,32 @@
-import { Client as BgioClient } from "boardgame.io/react";
-import { Game, generatePuzzleBoard } from "./Game";
-import { BoardWrapper } from "./components/BoardWrapper";
-import { parseUrl } from "./Parsing";
-import { Footer } from "./components/Footer";
+import { BoardProps, Client as BgioClient } from "boardgame.io/react";
+import { Game as BgioGame } from "boardgame.io";
+import { Game, generatePuzzleBoard } from "../Game";
+import { BoardWrapper } from "./BoardWrapper";
+import { parseUrl } from "../Parsing";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import PuzzleGenWorker from "./PuzzleGenWorker?worker";
+import { useSearchParams } from "react-router-dom";
+import PuzzleGenWorker from "../PuzzleGenWorker?worker";
 
-const wrapBoardWithReload = ({ reload, board: RawBoard }) => {
-  const Board = (props) => {
+// todo: after more components are typed, fix this
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const wrapBoardWithReload = (reload: () => void, RawBoard: any) => {
+  const Board = (props: BoardProps) => {
     const boardProps = { ...props, reload };
     return <RawBoard {...boardProps} />;
   };
   return Board;
 };
 
-export const App = () => {
-  const setupData = useMemo(() => parseUrl(), []);
-  const [game, setGame] = useState(null);
-  const [worker, setWorker] = useState();
+export const Client = (): JSX.Element => {
+  const [searchParams] = useSearchParams();
+
+  const [loading, setLoading] = useState(true);
+  const [game, setGame] = useState<BgioGame | null>(null);
+  const [worker, setWorker] = useState<Worker | null>();
+
+  // todo: define setupdata types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const setupData: any = useMemo(() => parseUrl(searchParams), [searchParams]);
 
   const setupGame = useCallback(() => {
     console.log(
@@ -36,6 +45,7 @@ export const App = () => {
 
     if (setupData.gamemode === "p") {
       if (worker) {
+        setLoading(true);
         worker.postMessage(setupData);
       } else {
         const { cells, knownCells, error } = generatePuzzleBoard(
@@ -50,10 +60,12 @@ export const App = () => {
           console.error(error);
         } else {
           setGame({ ...Game({ ...setupData, cells, knownCells }) });
+          setLoading(false);
         }
       }
     } else {
       setGame({ ...Game(setupData) });
+      setLoading(false);
     }
   }, [worker, setGame, setupData]);
 
@@ -65,7 +77,7 @@ export const App = () => {
     const isWorkerAvailable =
       process.env.NODE_ENV === "production" || !isFirefox;
 
-    let w;
+    let w: Worker;
 
     if (isWorkerAvailable) {
       w = new PuzzleGenWorker();
@@ -75,6 +87,7 @@ export const App = () => {
         } else {
           const { cells, knownCells } = e.data;
           setGame(Game({ ...setupData, cells, knownCells }));
+          setLoading(false);
         }
       };
       setWorker(w);
@@ -94,27 +107,21 @@ export const App = () => {
   useEffect(() => {
     if (worker !== undefined) {
       setupGame();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [worker, setupGame]);
 
-  const Client = game
-    ? BgioClient({
-        game,
-        board: wrapBoardWithReload({ reload: setupGame, board: BoardWrapper }),
-        numPlayers: 1,
-        debug: {
-          collapseOnLoad: true,
-        },
-      })
-    : () => <div>Generating Board...</div>;
+  if (!game || loading) {
+    return <div>Generating Board...</div>;
+  }
+  const Client = BgioClient({
+    game,
+    board: wrapBoardWithReload(setupGame, BoardWrapper),
+    numPlayers: 1,
+    debug: {
+      collapseOnLoad: true,
+    },
+  });
 
-  return (
-    <div>
-      <div className="flex">
-        <Client />
-      </div>
-      <hr />
-      <Footer />
-    </div>
-  );
+  return <Client />;
 };
