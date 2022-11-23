@@ -1,4 +1,5 @@
-import { INVALID_MOVE } from "boardgame.io/dist/cjs/core.js";
+import { INVALID_MOVE } from "boardgame.io/core";
+import { Random } from "./Random";
 
 function isValid(data, size, x, y) {
   return (
@@ -190,9 +191,9 @@ export function generateBoard(random, id, pieces, size, count) {
   let data = Array(size * size).fill(0);
   let i = count;
   while (i > 0) {
-    const rand = Math.floor(random.Number() * (size * size));
+    const rand = Math.floor(random.next() * (size * size));
     if (rand !== id && Number.isInteger(data[rand])) {
-      const value = Math.floor(random.Number() * Object.keys(piecesMdf).length);
+      const value = Math.floor(random.next() * Object.keys(piecesMdf).length);
       let piece = Object.keys(piecesMdf)[value];
 
       if (piecesMdf[piece] === 0) {
@@ -231,7 +232,8 @@ function validateBoard(data, discovered, pieces, size) {
     }
 
     let str = "";
-    for (let piece of Object.keys(pieces)) { // Check all pieces
+    for (let piece of Object.keys(pieces)) {
+      // Check all pieces
       // List of all moves for the current piece
       let moves = parseNotation(
         pieceMovesCheck[piece],
@@ -279,10 +281,12 @@ function validateBoard(data, discovered, pieces, size) {
   };
 }
 
-function generatePuzzleBoard(random, pieces, size, count, difficulty) {
+export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
   let data;
   let discovered;
-  let hasError = false;
+  let error;
+
+  const random = new Random(seed);
 
   let c = 0;
   const maxIt = 300;
@@ -306,7 +310,7 @@ function generatePuzzleBoard(random, pieces, size, count, difficulty) {
         }
       }
       if (possibilities.length > 0) {
-        let randPos = Math.floor(random.Number() * possibilities.length);
+        let randPos = Math.floor(random.next() * possibilities.length);
         discovered[possibilities[randPos]] = true;
       } else {
         giveup = true; // Algorithm failed with this generation, we give up
@@ -348,7 +352,7 @@ function generatePuzzleBoard(random, pieces, size, count, difficulty) {
             }
           }
           for (let i = emptyCasesAfter; i > difficulty; i--) {
-            const rand = Math.floor(random.Number() * possibleTarget.length);
+            const rand = Math.floor(random.next() * possibleTarget.length);
             discovered[possibleTarget[rand]] = true;
             possibleTarget.splice(rand, 1).indexOf(rand);
           }
@@ -363,11 +367,25 @@ function generatePuzzleBoard(random, pieces, size, count, difficulty) {
     }
   }
 
+  let knownCells;
   if (c === maxIt) {
-    hasError = true;
+    error = "Failed to generate puzzle";
+  } else {
+    knownCells = Array(size * size).fill(false);
+    for (let i in discovered) {
+      if (discovered[i]) {
+        knownCells[i] = true;
+      }
+    }
   }
 
-  return { data, discovered, hasError };
+  return { cells: data, knownCells, error };
+}
+
+function generateClassicBoard(G, id) {
+  const random = new Random(G.seed);
+  G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
+  G.knownCells = Array(G.size * G.size).fill(false);
 }
 
 function isWinCondition(G, id) {
@@ -391,40 +409,14 @@ function isWinCondition(G, id) {
 export const Game = (setupData) => ({
   setup: () => ({
     ...setupData,
-    knownCells: null,
-    cells: null,
+    knownCells: setupData.knownCells ?? null,
+    cells: setupData.cells ?? null,
   }),
 
   moves: {
-    generatePuzzleBoard: ({ G, random }) => {
-      // using destructured values from G caused very slow load times?
-      const { pieces, size, count, difficulty } = setupData;
-
-      const { data, discovered, hasError } = generatePuzzleBoard(
-        random,
-        pieces,
-        size,
-        count,
-        difficulty
-      );
-      if (!hasError) {
-        G.cells = data;
-        G.knownCells = Array(size * size).fill(false);
-
-        for (let i in discovered) {
-          if (discovered[i]) {
-            G.knownCells[i] = true;
-          }
-        }
-      }
-    },
-
-    discoverPiece: ({ G, events, random }, id) => {
+    discoverPiece: ({ G, events }, id) => {
       if (G.cells === null) {
-        G.cells = fillPositions(
-          generateBoard(random, id, G.pieces, G.size, G.count)
-        );
-        G.knownCells = Array(G.size * G.size).fill(false);
+        generateClassicBoard(G, id);
       }
 
       if (G.knownCells[id] !== false || G.gamemode === "p") {
@@ -438,12 +430,9 @@ export const Game = (setupData) => ({
       }
     },
 
-    placeHint: ({ G, events, random }, id, action) => {
+    placeHint: ({ G, events }, id, action) => {
       if (G.cells === null) {
-        G.cells = fillPositions(
-          generateBoard(random, id, G.pieces, G.size, G.count)
-        );
-        G.knownCells = Array(G.size * G.size).fill(false);
+        generateClassicBoard(G, id);
       }
 
       if (G.knownCells[id] === true) {
