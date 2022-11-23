@@ -20,7 +20,6 @@ const wrapBoardWithReload = (reload: () => void, RawBoard: any) => {
 export const Client = (): JSX.Element => {
   const [searchParams] = useSearchParams();
 
-  const [loading, setLoading] = useState(true);
   const [game, setGame] = useState<BgioGame | null>(null);
   const [worker, setWorker] = useState<Worker | null>();
 
@@ -45,7 +44,7 @@ export const Client = (): JSX.Element => {
 
     if (setupData.gamemode === "p") {
       if (worker) {
-        setLoading(true);
+        setGame(null);
         worker.postMessage(setupData);
       } else {
         const { cells, knownCells, error } = generatePuzzleBoard(
@@ -60,12 +59,10 @@ export const Client = (): JSX.Element => {
           console.error(error);
         } else {
           setGame({ ...Game({ ...setupData, cells, knownCells }) });
-          setLoading(false);
         }
       }
     } else {
       setGame({ ...Game(setupData) });
-      setLoading(false);
     }
   }, [worker, setGame, setupData]);
 
@@ -87,7 +84,6 @@ export const Client = (): JSX.Element => {
         } else {
           const { cells, knownCells } = e.data;
           setGame(Game({ ...setupData, cells, knownCells }));
-          setLoading(false);
         }
       };
       setWorker(w);
@@ -111,7 +107,7 @@ export const Client = (): JSX.Element => {
     }
   }, [worker, setupGame]);
 
-  if (!game || loading) {
+  if (!game) {
     return <div>Generating Board...</div>;
   }
   const Client = BgioClient({
