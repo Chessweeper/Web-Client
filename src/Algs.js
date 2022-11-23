@@ -1,4 +1,3 @@
-import { INVALID_MOVE } from "boardgame.io/core";
 import { Random } from "./Random";
 
 function isValid(data, size, x, y) {
@@ -12,17 +11,17 @@ function isValid(data, size, x, y) {
 }
 
 function parseMove(dx, dy, length, constraints, data, size, x, y) {
-  let moves = [];
-  let orientation = [];
+  const moves = [];
+  const orientation = [];
   const directions = [
     [-dx, -dy], // Forward
     [dx, dy], // Backward
     [-dy, dx], // Right
     [dy, -dx], // Left
   ];
-  for (let d of [-1, 1]) {
+  for (const d of [-1, 1]) {
     // For pieces like knights, we need to reverse the X for each direction
-    for (let rd in directions) {
+    for (const rd in directions) {
       if ((constraints & (2 ** rd)) === 0) {
         continue;
       }
@@ -31,7 +30,7 @@ function parseMove(dx, dy, length, constraints, data, size, x, y) {
         orientation.push(nrd);
     }
   }
-  for (let [yi, xi] of orientation) {
+  for (const [yi, xi] of orientation) {
     for (let i = 1; i <= length; i++) {
       if (isValid(data, size, x + i * xi, y + i * yi))
         moves.push((y + i * yi) * size + (x + i * xi));
@@ -84,7 +83,7 @@ function parseNotation(notation, data, size, x, y) {
   let length = 1; // Length we are doing
   let moves = [];
   let constraints = 15;
-  for (let s of notation) {
+  for (const s of notation) {
     if (s === s.toLowerCase()) {
       if (dir !== null) {
         moves = moves.concat(
@@ -165,14 +164,14 @@ const pieceMovesCheck = {
 };
 
 export function fillPositions(data) {
-  let size = Math.sqrt(data.length); // Boards are always squared
+  const size = Math.sqrt(data.length); // Boards are always squared
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       const value = data[y * size + x];
       if (!Number.isInteger(value)) {
-        let moves = parseNotation(pieceMovesCheck[value], data, size, x, y);
-        for (let move of moves) {
+        const moves = parseNotation(pieceMovesCheck[value], data, size, x, y);
+        for (const move of moves) {
           data[move]++;
         }
       }
@@ -183,18 +182,18 @@ export function fillPositions(data) {
 }
 
 export function generateBoard(random, id, pieces, size, count) {
-  let piecesMdf = {};
-  for (let key in pieces) {
+  const piecesMdf = {};
+  for (const key in pieces) {
     piecesMdf[key] = pieces[key];
   }
 
-  let data = Array(size * size).fill(0);
+  const data = Array(size * size).fill(0);
   let i = count;
   while (i > 0) {
     const rand = Math.floor(random.next() * (size * size));
     if (rand !== id && Number.isInteger(data[rand])) {
       const value = Math.floor(random.next() * Object.keys(piecesMdf).length);
-      let piece = Object.keys(piecesMdf)[value];
+      const piece = Object.keys(piecesMdf)[value];
 
       if (piecesMdf[piece] === 0) {
         // We reached the amount of time we could spawn that piece
@@ -222,7 +221,7 @@ export function generateBoard(random, id, pieces, size, count) {
 }
 
 function validateBoard(data, discovered, pieces, size) {
-  let thinkData = Array(size * size).fill(0);
+  const thinkData = Array(size * size).fill(0);
 
   // For each tile...
   for (let i = 0; i < data.length; i++) {
@@ -232,10 +231,10 @@ function validateBoard(data, discovered, pieces, size) {
     }
 
     let str = "";
-    for (let piece of Object.keys(pieces)) {
+    for (const piece of Object.keys(pieces)) {
       // Check all pieces
       // List of all moves for the current piece
-      let moves = parseNotation(
+      const moves = parseNotation(
         pieceMovesCheck[piece],
         thinkData,
         size,
@@ -245,7 +244,7 @@ function validateBoard(data, discovered, pieces, size) {
 
       // If the piece have a move that is impossible, it means it can't be this one
       let isValid = true;
-      for (let move of moves) {
+      for (const move of moves) {
         if (discovered[move] && data[move] === 0) {
           isValid = false;
           break;
@@ -299,8 +298,8 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
     let giveup = false;
     while (!isSolved && !giveup) {
       // Get a random position that is not a piece and wasn't already taken
-      let possibilities = [];
-      for (let i in data) {
+      const possibilities = [];
+      for (const i in data) {
         if (
           !discovered[i] &&
           Number.isInteger(data[i]) &&
@@ -310,14 +309,14 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
         }
       }
       if (possibilities.length > 0) {
-        let randPos = Math.floor(random.next() * possibilities.length);
+        const randPos = Math.floor(random.next() * possibilities.length);
         discovered[possibilities[randPos]] = true;
       } else {
         giveup = true; // Algorithm failed with this generation, we give up
         continue;
       }
 
-      let validation = validateBoard(data, discovered, pieces, size);
+      const validation = validateBoard(data, discovered, pieces, size);
       isSolved = validation["isSolved"];
       thinkData = validation["thinkData"];
     }
@@ -331,13 +330,13 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
         }
 
         discovered[i] = false;
-        let validation = validateBoard(data, discovered, pieces, size);
+        const validation = validateBoard(data, discovered, pieces, size);
         if (!validation["isSolved"]) {
           discovered[i] = true;
         }
       }
 
-      let emptyCasesAfter = discovered.filter((x) => x === false).length;
+      const emptyCasesAfter = discovered.filter((x) => x === false).length;
 
       if (difficulty !== -1 && difficulty > emptyCasesAfter) {
         console.log(`Skipping puzzle with ${emptyCasesAfter} empty tiles`);
@@ -345,7 +344,7 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
         if (difficulty !== -1) {
           // Set tiles to adjust difficulty
 
-          let possibleTarget = [];
+          const possibleTarget = [];
           for (let i = 0; i < data.length; i++) {
             if (!discovered[i] && Number.isInteger(data[i])) {
               possibleTarget.push(i);
@@ -372,7 +371,7 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
     error = "Failed to generate puzzle";
   } else {
     knownCells = Array(size * size).fill(false);
-    for (let i in discovered) {
+    for (const i in discovered) {
       if (discovered[i]) {
         knownCells[i] = true;
       }
@@ -381,86 +380,3 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
 
   return { cells: data, knownCells, error };
 }
-
-function generateClassicBoard(G, id) {
-  const random = new Random(G.seed);
-  G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
-  G.knownCells = Array(G.size * G.size).fill(false);
-}
-
-function isWinCondition(G, id) {
-  if (G.cells === null) {
-    return false;
-  }
-
-  for (let i = 0; i < G.size * G.size; i++) {
-    if (!Number.isInteger(G.cells[i])) {
-      if (G.cells[i] !== G.knownCells[i] && G.cells[i] !== id) {
-        return false;
-      }
-    } else if (G.knownCells[i] !== true && G.knownCells[i] !== false) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-export const Game = (setupData) => ({
-  setup: () => ({
-    ...setupData,
-    knownCells: setupData.knownCells ?? null,
-    cells: setupData.cells ?? null,
-  }),
-
-  moves: {
-    discoverPiece: ({ G, events }, id) => {
-      if (G.cells === null) {
-        generateClassicBoard(G, id);
-      }
-
-      if (G.knownCells[id] !== false || G.gamemode === "p") {
-        return INVALID_MOVE;
-      }
-
-      if (Number.isInteger(G.cells[id])) {
-        G.knownCells[id] = true;
-      } else {
-        events.endGame({ isWin: false });
-      }
-    },
-
-    placeHint: ({ G, events }, id, action) => {
-      if (G.cells === null) {
-        generateClassicBoard(G, id);
-      }
-
-      if (G.knownCells[id] === true) {
-        return INVALID_MOVE;
-      }
-
-      G.knownCells[id] = action;
-
-      if (isWinCondition(G, id)) {
-        events.endGame({ isWin: true });
-      }
-    },
-
-    removeHint: ({ G, events }, id) => {
-      if (G.knownCells[id] === true) {
-        return INVALID_MOVE;
-      }
-
-      G.knownCells[id] = false;
-
-      if (isWinCondition(G, id)) {
-        events.endGame({ isWin: true });
-      }
-    },
-  },
-
-  turn: {
-    minMoves: 1,
-    maxMoves: 1,
-  },
-});
