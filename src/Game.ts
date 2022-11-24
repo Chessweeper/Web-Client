@@ -6,7 +6,7 @@ import { Random } from "./Random";
 type Cell = boolean | number | string;
 // todo: replace string with a union type for pieces?
 
-interface SetupData {
+export interface SetupData {
   seed: string | null;
   pieces: Record<string, number>;
   size: number;
