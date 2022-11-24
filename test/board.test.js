@@ -1,4 +1,4 @@
-import { fillPositions } from "../src/Game.js";
+import { fillPositions } from "../src/Algs";
 import { strict as assert } from "assert";
 
 const R = "R";

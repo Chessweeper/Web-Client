@@ -1,5 +1,6 @@
 import { Client as BgioClient } from "boardgame.io/react";
-import { Game, generatePuzzleBoard } from "./Game";
+import { Game } from "./Game";
+import { generatePuzzleBoard } from "./Algs";
 import { BoardWrapper } from "./components/BoardWrapper";
 import { parseUrl } from "./Parsing";
 import { Footer } from "./components/Footer";

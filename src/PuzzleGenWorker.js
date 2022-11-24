@@ -1,4 +1,4 @@
-import { generatePuzzleBoard } from "./Game";
+import { generatePuzzleBoard } from "./Algs";
 
 onmessage = (e) => {
   const { seed, pieces, size, count, difficulty } = e.data;
