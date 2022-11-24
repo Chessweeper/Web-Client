@@ -1,7 +1,7 @@
 import { piecesImages } from "./Pieces";
 
 export function parseUrl(searchParams) {
-  const seed = searchParams.get("r") ?? undefined;
+  const seed = searchParams.get("r");
   let pieces = searchParams.get("p");
   let size = searchParams.get("s");
   let count = searchParams.get("c");
