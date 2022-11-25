@@ -1,9 +1,9 @@
 hr {
   border: 0;
-  clear:both;
-  display:block;
-  width: 96%;               
-  background-color:black;
+  clear: both;
+  display: block;
+  width: 96%;
+  background-color: black;
   height: 1px;
 }
 
@@ -63,13 +63,16 @@ hr {
   font-size: 25px;
 }
 
-#board.small .cell {
-  width: 30px;
-  height: 30px;
-}
+@media (max-width: 750px) {
+  #board.small .cell {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
 
-#board.small .cell img {
-  width: 20px;
+  #board.small .cell img {
+    width: 20px;
+  }
 }
 
 .red {
@@ -77,11 +80,11 @@ hr {
 }
 
 .open.white {
-  background-color: #FFCF9F;
+  background-color: #ffcf9f;
 }
 
 .open.black {
-  background-color: #D28C45;
+  background-color: #d28c45;
 }
 
 .action {

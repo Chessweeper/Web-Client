@@ -12,13 +12,21 @@ export const Board = () => {
       const id = G.size * i + j;
       cells.push(<Cell id={id} />);
     }
-    rows.push(<tr>{cells.map((cell, index) => <Fragment key={`cell${index}`}>{cell}</Fragment>)}</tr>);
+    rows.push(
+      <tr>
+        {cells.map((cell, index) => (
+          <Fragment key={`cell${index}`}>{cell}</Fragment>
+        ))}
+      </tr>
+    );
   }
 
   return (
     <table id="board" className={G.size >= 10 ? "small" : ""}>
       <tbody>
-        {rows.map((row, index) => <Fragment key={`row${index}`}>{row}</Fragment>)}
+        {rows.map((row, index) => (
+          <Fragment key={`row${index}`}>{row}</Fragment>
+        ))}
       </tbody>
     </table>
   );

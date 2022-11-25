@@ -5,12 +5,12 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    open: true
+    open: true,
   },
   build: {
-    outDir: 'build'
+    outDir: "build",
   },
   test: {
-    globals: true
-  }
+    globals: true,
+  },
 });
