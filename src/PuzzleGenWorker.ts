@@ -1,7 +1,8 @@
-import { generatePuzzleBoard } from "./Game";
+import { generatePuzzleBoard } from "./Algs";
+import { SetupData } from "./Game";
 
 onmessage = (e) => {
-  const { seed, pieces, size, count, difficulty } = e.data;
+  const { seed, pieces, size, count, difficulty } = e.data as SetupData;
 
   const { cells, knownCells, error } = generatePuzzleBoard(
     seed,

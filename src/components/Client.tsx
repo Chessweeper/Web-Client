@@ -1,6 +1,7 @@
 import { BoardProps, Client as BgioClient } from "boardgame.io/react";
 import { Game as BgioGame } from "boardgame.io";
-import { Game, generatePuzzleBoard } from "../Game";
+import { Game } from "../Game";
+import { generatePuzzleBoard } from "../Algs";
 import { BoardWrapper } from "./BoardWrapper";
 import { parseUrl } from "../Parsing";
 import { useCallback, useEffect, useMemo, useState } from "react";
