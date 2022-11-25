@@ -14,7 +14,8 @@
     "coverage": "vitest --coverage",
     "format": "npx prettier --write .",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "prepare": "husky install"
   },
   "browserslist": "defaults and supports async-functions",
   "repository": {
@@ -31,7 +32,8 @@
   "dependencies": {
     "boardgame.io": "^0.50.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -46,10 +48,18 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-vitest-globals": "^1.2.0",
+    "husky": "^8.0.0",
     "jsdom": "^20.0.2",
+    "lint-staged": "^13.0.3",
     "prettier": "2.7.1",
     "typescript": "^4.9.3",
     "vite": "^3.2.4",
     "vitest": "^0.25.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ]
   }
 }

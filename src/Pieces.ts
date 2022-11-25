@@ -16,7 +16,8 @@ import shogiLance from "./assets/shogiLance.svg";
 import shogiSilverGeneral from "./assets/shogiSilverGeneral.svg";
 import shogiGoldGeneral from "./assets/shogiGoldGeneral.svg";
 
-export const piecesImages = {
+// todo: union type for pieces?
+export const piecesImages: Record<string, string> = {
   R: rook,
   B: bishop,
   Q: queen,
@@ -35,7 +36,7 @@ export const piecesImages = {
   金: shogiGoldGeneral,
 };
 
-export function getPiece(c) {
+export function getPiece(c: string) {
   if (c === "") return shovel;
   return piecesImages[c];
 }
