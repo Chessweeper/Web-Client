@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useBoardContext } from "./BoardWrapper";
 
-export const Timer = forwardRef((props, ref) => {
+export const Timer = forwardRef((_, ref) => {
   const { ctx } = useBoardContext();
   const [timer, setTimer] = useState(null);
   const [time, setTime] = useState(0);
