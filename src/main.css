@@ -119,6 +119,7 @@ hr {
 /* Popup displayed on game end */
 
 #popup {
+  z-index: 2;
   position: fixed;
   top: 50%;
   left: 50%;
