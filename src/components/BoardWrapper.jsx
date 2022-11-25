@@ -11,6 +11,7 @@ export const BoardWrapper = (props) => {
   const [currAction, setCurrAction] = useState("");
   const timerRef = useRef();
   const boardCover = useRef();
+  let displayCover = props.G.gamemode === "p";
 
   const additionalProps = {
     currAction,
@@ -20,7 +21,7 @@ export const BoardWrapper = (props) => {
 
   // For puzzle mode, is first covered by a black cover that we must click to reveal it
   const hideCover = () => {
-    boardCover.current.classList.add("hidden");
+    displayCover = false;
     timerRef.current?.startTimer();
   };
 
@@ -31,7 +32,7 @@ export const BoardWrapper = (props) => {
         <Timer ref={timerRef} />
         <div id="board-container">
           <Board />
-          {props.G.gamemode === "p" ? (
+          {displayCover ? (
             <div ref={boardCover} id="board-cover" onClick={hideCover}>
               <p>Click to start puzzle!</p>
             </div>
