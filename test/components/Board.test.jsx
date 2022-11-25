@@ -1,36 +1,34 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest';
-import { BoardContext } from "../../src/components/BoardWrapper"
-import { Board } from '../../src/components/Board';
-import matchers from '@testing-library/jest-dom/matchers';
+import { render, screen } from "@testing-library/react";
+import { BoardContext } from "../../src/components/BoardWrapper";
+import { Board } from "../../src/components/Board";
+import matchers from "@testing-library/jest-dom/matchers";
 
 expect.extend(matchers);
 
 let mockBoardContext = {
   G: {
     pieces: {
-      'R': Infinity,
-      'B': Infinity,
-      'N': Infinity,
-      'Q': Infinity
+      R: Infinity,
+      B: Infinity,
+      N: Infinity,
+      Q: Infinity,
     },
     size: 8,
     count: 3,
-    gamemode: 'c',
+    gamemode: "c",
     difficulty: -1,
     cells: null,
-    knownCells: null
-  }
-}
+    knownCells: null,
+  },
+};
 
-
-describe('Board tests', () => {
+describe("Board tests", () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should render a table with size * size cells', () => {
+  it("should render a table with size * size cells", () => {
     render(
       <BoardContext.Provider value={mockBoardContext}>
         <Board />
@@ -45,15 +43,15 @@ describe('Board tests', () => {
     expect(cells).toHaveLength(size * size);
   });
 
-  it('should render small class table when size > 10', () => {
+  it("should render small class table when size > 10", () => {
     mockBoardContext = {
       ...mockBoardContext,
       G: {
         ...mockBoardContext.G,
-        size: 11
-      }
-    }
-    
+        size: 11,
+      },
+    };
+
     render(
       <BoardContext.Provider value={mockBoardContext}>
         <Board />

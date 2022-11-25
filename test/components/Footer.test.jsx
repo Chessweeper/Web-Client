@@ -2,7 +2,6 @@
 // @vitest-environment jsdom
 import { MemoryRouter } from "react-router-dom";
 import { render, waitFor, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
 import { Footer } from "../../src/components/Footer";
 import matchers from "@testing-library/jest-dom/matchers";
 
