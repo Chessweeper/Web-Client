@@ -2,9 +2,6 @@
 import { render, screen } from "@testing-library/react";
 import { BoardContext } from "../../src/components/BoardWrapper";
 import { Board } from "../../src/components/Board";
-import matchers from "@testing-library/jest-dom/matchers";
-
-expect.extend(matchers);
 
 let mockBoardContext = {
   G: {

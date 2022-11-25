@@ -3,9 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { BoardContext } from "../../src/components/BoardWrapper";
 import { ActionBar } from "../../src/components/ActionBar";
-import matchers from "@testing-library/jest-dom/matchers";
-
-expect.extend(matchers);
 
 let mockBoardContext;
 const mockSetCurrAction = vi.fn().mockImplementation((action) => {
