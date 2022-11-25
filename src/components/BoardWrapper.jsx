@@ -10,7 +10,6 @@ export const useBoardContext = () => useContext(BoardContext);
 export const BoardWrapper = (props) => {
   const [currAction, setCurrAction] = useState("");
   const timerRef = useRef();
-  const boardCover = useRef();
   let [displayCover, setDisplayCover] = useState(props.G.gamemode === "p");
 
   const additionalProps = {
@@ -33,7 +32,7 @@ export const BoardWrapper = (props) => {
         <div id="board-container">
           <Board />
           {displayCover && (
-            <div ref={boardCover} id="board-cover" onClick={hideCover}>
+            <div id="board-cover" onClick={hideCover}>
               <p>Click to start puzzle!</p>
             </div>
           )}
