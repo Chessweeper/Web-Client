@@ -17,7 +17,7 @@ export interface SetupData {
   knownCells?: Cell[] | null;
 }
 
-type GameState = Required<SetupData>;
+export type GameState = Required<SetupData>;
 
 function generateClassicBoard(G: GameState, id: number) {
   const random = new Random(G.seed);
