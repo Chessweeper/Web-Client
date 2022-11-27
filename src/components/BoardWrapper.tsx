@@ -46,7 +46,7 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
               <p>Click to start puzzle!</p>
             </div>
           )}
-        </div>{" "}
+        </div>
         <ActionBar />
       </div>
     </BoardContext.Provider>
