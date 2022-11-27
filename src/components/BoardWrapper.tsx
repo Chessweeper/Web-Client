@@ -14,7 +14,7 @@ interface BoardContextState extends BoardPropsWithReload {
 export const BoardContext = createContext({} as BoardContextState);
 export const useBoardContext = () => useContext(BoardContext);
 
-export const BoardWrapper = (props: BoardPropsWithReload) => {
+export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
   const [currAction, setCurrAction] = useState("");
   const [displayCover, setDisplayCover] = useState(props.G.gamemode === "p");
   const timerRef = useRef() as React.MutableRefObject<TimerRefAttributes>;

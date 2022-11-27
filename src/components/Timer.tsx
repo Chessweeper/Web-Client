@@ -12,7 +12,7 @@ export interface TimerRefAttributes {
   isRunning: () => boolean;
 }
 
-export const Timer = forwardRef<TimerRefAttributes>((_, ref) => {
+export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
   const { ctx } = useBoardContext();
   const [time, setTime] = useState(0);
   const intervalRef = useRef<NodeJS.Timer | null>(null);

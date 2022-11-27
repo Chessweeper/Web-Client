@@ -6,7 +6,7 @@ interface CellProps {
   id: number;
 }
 
-export const Cell = ({ id }: CellProps) => {
+export const Cell = ({ id }: CellProps): JSX.Element => {
   const { G, ctx, moves, currAction, timer } = useBoardContext();
   let className = "cell";
   let value: string | JSX.Element = "";
