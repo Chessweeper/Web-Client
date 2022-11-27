@@ -2,12 +2,12 @@ import { Fragment } from "react";
 import { useBoardContext } from "./BoardWrapper";
 import { Cell } from "./Cell";
 
-export const Board = () => {
+export const Board = (): JSX.Element => {
   const { G } = useBoardContext();
 
-  const rows = [];
+  const rows: JSX.Element[] = [];
   for (let i = 0; i < G.size; i++) {
-    const cells = [];
+    const cells: JSX.Element[] = [];
     for (let j = 0; j < G.size; j++) {
       const id = G.size * i + j;
       cells.push(<Cell id={id} />);

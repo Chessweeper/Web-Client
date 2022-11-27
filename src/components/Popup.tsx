@@ -1,11 +1,11 @@
 import { useBoardContext } from "./BoardWrapper";
 
-export const Popup = () => {
+export const Popup = (): JSX.Element | null => {
   const { ctx, reload } = useBoardContext();
 
   if (!ctx.gameover) return null;
 
-  let text;
+  let text: string;
   if (ctx.gameover.error) {
     text = ctx.gameover.error;
   } else {
