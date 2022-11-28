@@ -1,6 +1,7 @@
+import { BoardPropsWithReload } from "../src/components/Client";
 import { BoardContextState } from "../src/components/BoardWrapper";
 
-export const createMockBoardContext = (): BoardContextState => ({
+export const createMockBoardPropsWithReload = (): BoardPropsWithReload => ({
   G: {
     seed: null,
     size: 8,
@@ -44,6 +45,10 @@ export const createMockBoardContext = (): BoardContextState => ({
   _redo: [],
   _undo: [],
   reload: vi.fn(),
+});
+
+export const createMockBoardContext = (): BoardContextState => ({
+  ...createMockBoardPropsWithReload(),
   currAction: "",
   setCurrAction: vi.fn(),
   timer: {
