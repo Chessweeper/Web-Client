@@ -1,16 +1,17 @@
+import { SetupData } from "./Game";
 import { piecesImages } from "./Pieces";
 
-export function parseUrl(searchParams) {
+export function parseUrl(searchParams: URLSearchParams): SetupData {
   const seed = searchParams.get("r");
-  let pieces = searchParams.get("p");
-  let size = searchParams.get("s");
-  let count = searchParams.get("c");
+  const pieces = searchParams.get("p");
+  const sizeParam = searchParams.get("s");
+  const countParam = searchParams.get("c");
   let gamemode = searchParams.get("g");
-  let difficulty = searchParams.get("d");
+  const difficultyParam = searchParams.get("d");
 
-  size = size === null ? 8 : parseInt(size);
-  count = count === null ? 3 : parseInt(count);
-  difficulty = difficulty === null ? -1 : parseInt(difficulty);
+  let size = sizeParam === null ? 8 : parseInt(sizeParam);
+  let count = countParam === null ? 3 : parseInt(countParam);
+  let difficulty = difficultyParam === null ? -1 : parseInt(difficultyParam);
   if (gamemode === null) {
     gamemode = "c";
   }
@@ -52,11 +53,11 @@ export function parseUrl(searchParams) {
   }
 
   const validLetters = Object.keys(piecesImages);
-  let availablePieces = {};
+  let availablePieces = {} as Record<string, number>;
   if (pieces !== null) {
     let target = null;
-    for (let letter of pieces) {
-      if (isNaN(letter)) {
+    for (const letter of pieces) {
+      if (isNaN(Number(letter))) {
         if (target !== null) {
           availablePieces[letter.toUpperCase()] = Infinity;
         }
@@ -72,7 +73,7 @@ export function parseUrl(searchParams) {
         if (target === null) {
           console.warn(`Parsing error: no piece specified, value ignored`);
         } else {
-          let nb = parseInt(letter);
+          const nb = parseInt(letter);
           if (nb > 0) {
             availablePieces[target] = nb;
             target = null;
@@ -98,7 +99,10 @@ export function parseUrl(searchParams) {
     };
   }
 
-  let maxPieceCount = Object.values(availablePieces).reduce((a, b) => a + b, 0);
+  const maxPieceCount = Object.values(availablePieces).reduce(
+    (a, b) => a + b,
+    0
+  );
   if (count > maxPieceCount) {
     console.warn(
       `Parsing error: piece limits of total ${maxPieceCount} is lower than given piece count of ${count}, piece count set to ${maxPieceCount}`
@@ -122,7 +126,7 @@ export function parseUrl(searchParams) {
     pieces: availablePieces,
     size,
     count,
-    gamemode,
+    gamemode: gamemode as SetupData["gamemode"],
     difficulty,
   };
 }

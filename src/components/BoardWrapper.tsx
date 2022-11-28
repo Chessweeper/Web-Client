@@ -1,27 +1,37 @@
-import { createContext, useContext, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import { ActionBar } from "./ActionBar";
 import { Board } from "./Board";
 import { Popup } from "./Popup";
-import { Timer } from "./Timer";
+import { Timer, TimerRefAttributes } from "./Timer";
+import { BoardPropsWithReload } from "./Client";
 
-export const BoardContext = createContext({});
+interface BoardContextState extends BoardPropsWithReload {
+  currAction: string;
+  setCurrAction: (action: string) => void;
+  timer: TimerRefAttributes;
+}
+
+export const BoardContext = createContext({} as BoardContextState);
 export const useBoardContext = () => useContext(BoardContext);
 
-export const BoardWrapper = (props) => {
+export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
   const [currAction, setCurrAction] = useState("");
-  const timerRef = useRef();
-  let [displayCover, setDisplayCover] = useState(props.G.gamemode === "p");
+  const [displayCover, setDisplayCover] = useState(props.G.gamemode === "p");
+  const timerRef = useRef() as React.MutableRefObject<TimerRefAttributes>;
 
-  const additionalProps = {
+  const additionalProps: Pick<
+    BoardContextState,
+    "currAction" | "setCurrAction" | "timer"
+  > = {
     currAction,
     setCurrAction,
-    startTimer: () => timerRef.current?.startTimer(),
+    timer: timerRef.current,
   };
 
   // For puzzle mode, is first covered by a black cover that we must click to reveal it
   const hideCover = () => {
     setDisplayCover(false);
-    timerRef.current?.startTimer();
+    timerRef.current?.start();
   };
 
   return (

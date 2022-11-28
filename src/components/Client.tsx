@@ -1,6 +1,6 @@
 import { BoardProps, Client as BgioClient } from "boardgame.io/react";
 import { Game as BgioGame } from "boardgame.io";
-import { Game } from "../Game";
+import { Game, GameState } from "../Game";
 import { generatePuzzleBoard } from "../Algs";
 import { BoardWrapper } from "./BoardWrapper";
 import { parseUrl } from "../Parsing";
@@ -8,11 +8,16 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
 
-// todo: after more components are typed, fix this
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const wrapBoardWithReload = (reload: () => void, RawBoard: any) => {
-  const Board = (props: BoardProps) => {
-    const boardProps = { ...props, reload };
+export interface BoardPropsWithReload extends BoardProps<GameState> {
+  reload: () => void;
+}
+
+const wrapBoardWithReload = (
+  reload: () => void,
+  RawBoard: (props: BoardPropsWithReload) => JSX.Element
+) => {
+  const Board = (props: BoardProps<GameState>) => {
+    const boardProps: BoardPropsWithReload = { ...props, reload };
     return <RawBoard {...boardProps} />;
   };
   return Board;
@@ -24,9 +29,7 @@ export const Client = (): JSX.Element => {
   const [game, setGame] = useState<BgioGame | null>(null);
   const [worker, setWorker] = useState<Worker | null>();
 
-  // todo: define setupdata types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const setupData: any = useMemo(() => parseUrl(searchParams), [searchParams]);
+  const setupData = useMemo(() => parseUrl(searchParams), [searchParams]);
 
   const setupGame = useCallback(() => {
     console.log(

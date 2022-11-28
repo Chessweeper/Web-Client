@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { getPiece } from "../Pieces";
 import { useBoardContext } from "./BoardWrapper";
 
-export const ActionBar = () => {
+export const ActionBar = (): JSX.Element => {
   const { G, currAction, setCurrAction } = useBoardContext();
 
   const actions = useMemo(
@@ -42,7 +42,7 @@ export const ActionBar = () => {
       setCurrAction(availableActions[0].ID);
     }
 
-    const onKeyDown = (e) => {
+    const onKeyDown = (e: KeyboardEvent) => {
       if (e.keyCode >= 49 && e.keyCode <= 57) {
         e.preventDefault();
         const index = e.keyCode - 49;

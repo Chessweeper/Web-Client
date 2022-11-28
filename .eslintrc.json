@@ -26,7 +26,6 @@
   ],
   "rules": {
     "react/react-in-jsx-scope": "off", // handled by @vitejs/plugin-react
-    "react/prop-types": "off", // todo: readdress this after moving all react files to typescript
     "import/no-unresolved": ["error", { "ignore": ["\\?worker$"] }] // ignore vite worker import
   }
 }
