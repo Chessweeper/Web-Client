@@ -76,7 +76,8 @@ export const Client = (): JSX.Element => {
     // to a non-module type in production - so don't allow worker in dev with Firefox
     const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
     const isWorkerAvailable =
-      process.env.NODE_ENV === "production" || !isFirefox;
+      (process.env.NODE_ENV === "production" || !isFirefox) &&
+      typeof Worker !== "undefined";
 
     let w: Worker;
 

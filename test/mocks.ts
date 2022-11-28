@@ -26,7 +26,11 @@ export const createMockBoardPropsWithReload = (): BoardPropsWithReload => ({
     phase: "",
     currentPlayer: "0",
   },
-  moves: {},
+  moves: {
+    discoverPiece: vi.fn(),
+    placeHint: vi.fn(),
+    removeHint: vi.fn(),
+  },
   events: {},
   plugins: {},
   playerID: "0",
