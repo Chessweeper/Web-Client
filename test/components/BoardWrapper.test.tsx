@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
 import userEvent from "@testing-library/user-event";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import {
-  BoardContext,
   BoardWrapper,
   useBoardContext,
 } from "../../src/components/BoardWrapper";
