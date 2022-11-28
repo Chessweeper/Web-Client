@@ -12,9 +12,9 @@ describe("Footer tests", () => {
   });
 
   it("should render the daily puzzle link on successful daily api call", async () => {
-    fetch = vi.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      text: () => "mockPuzzleSeed",
+      text: vi.fn().mockResolvedValue("mockPuzzleSeed"),
     });
 
     const { container } = render(<Footer />, { wrapper: MemoryRouter });
@@ -26,7 +26,7 @@ describe("Footer tests", () => {
   });
 
   it("should not render the daily puzzle link on unsuccessful daily api call", async () => {
-    fetch = vi.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: false,
     });
 
@@ -42,9 +42,9 @@ describe("Footer tests", () => {
   });
 
   it("should not render the daily puzzle when daily puzzle api returns string greater than length 20", async () => {
-    fetch = vi.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      text: () => "longErrorValueOnFetchReturn",
+      text: vi.fn().mockResolvedValue("longErrorValueOnFetchReturn"),
     });
 
     render(<Footer />, { wrapper: MemoryRouter });
