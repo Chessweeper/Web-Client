@@ -32,6 +32,8 @@ To build a release version of the game, run `npm run build`. The output is place
 
 `prepare`: automatically run by NPM during install to setup husky
 
+`backend`: launch the backend used to serve the daily puzzle
+
 ## Other links
 
 - [Discord](https://discord.gg/VjJ95N2mV9)
