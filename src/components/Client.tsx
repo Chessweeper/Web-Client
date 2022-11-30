@@ -33,7 +33,7 @@ export const Client = (): JSX.Element => {
 
   const setupGame = useCallback(() => {
     /* c8 ignore next 16 */
-    if (!process.env.VITEST) {
+    if (!import.meta.env.VITEST) {
       console.log(
         `Loading game: ${
           setupData.gamemode === "c" ? "classic" : "puzzle"
