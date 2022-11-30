@@ -1,23 +1,24 @@
 // @vitest-environment jsdom
 import userEvent from "@testing-library/user-event";
 import { render } from "@testing-library/react";
-import { BoardContext } from "../../src/components/BoardWrapper";
+import {
+  BoardContext,
+  BoardContextState,
+} from "../../src/components/BoardWrapper";
 import { Popup } from "../../src/components/Popup";
-import matchers from "@testing-library/jest-dom/matchers";
+import { createMockBoardContext } from "../mocks";
 
-expect.extend(matchers);
-
-const mockReload = vi.fn();
-
-let mockBoardContext = {
-  ctx: {},
-  reload: mockReload,
-};
+let boardContext: BoardContextState;
 
 describe("Popup tests", () => {
+  beforeEach(() => {
+    boardContext = createMockBoardContext();
+    vi.clearAllMocks();
+  });
+
   it("should not render if gameover is undefined", () => {
     const { container } = render(
-      <BoardContext.Provider value={mockBoardContext}>
+      <BoardContext.Provider value={boardContext}>
         <Popup />
       </BoardContext.Provider>
     );
@@ -26,13 +27,10 @@ describe("Popup tests", () => {
   });
 
   it("should render and display error message if gameover is error", () => {
-    mockBoardContext = {
-      ...mockBoardContext,
-      ctx: { gameover: { error: "Error Msg" } },
-    };
+    boardContext.ctx.gameover = { error: "Error Msg" };
 
     const { container } = render(
-      <BoardContext.Provider value={mockBoardContext}>
+      <BoardContext.Provider value={boardContext}>
         <Popup />
       </BoardContext.Provider>
     );
@@ -48,13 +46,10 @@ describe("Popup tests", () => {
   ])(
     "should render and display isWin message if gameover is normal result",
     (isWin, expectedText) => {
-      mockBoardContext = {
-        ...mockBoardContext,
-        ctx: { gameover: { isWin } },
-      };
+      boardContext.ctx.gameover = { isWin };
 
       const { container } = render(
-        <BoardContext.Provider value={mockBoardContext}>
+        <BoardContext.Provider value={boardContext}>
           <Popup />
         </BoardContext.Provider>
       );
@@ -66,19 +61,19 @@ describe("Popup tests", () => {
   );
 
   it("should call reload on reload button clicked", async () => {
-    mockBoardContext = {
-      ...mockBoardContext,
-      ctx: { gameover: { isWin: true } },
-    };
+    boardContext.ctx.gameover = { isWin: true };
 
     const { container } = render(
-      <BoardContext.Provider value={mockBoardContext}>
+      <BoardContext.Provider value={boardContext}>
         <Popup />
       </BoardContext.Provider>
     );
 
-    await userEvent.click(container.querySelector("#popup-reload"));
+    const reloadButton = container.querySelector("#popup-reload");
+    if (reloadButton) {
+      await userEvent.click(reloadButton);
+    }
 
-    expect(mockReload).toHaveBeenCalledOnce();
+    expect(boardContext.reload).toHaveBeenCalledOnce();
   });
 });

@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "build": "tsc && vite build",
     "test": "vitest",
-    "coverage": "vitest --coverage",
+    "coverage": "vitest run --coverage",
     "format": "npx prettier --write .",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "tsc": "tsc --noEmit",
