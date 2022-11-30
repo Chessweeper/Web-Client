@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // @vitest-environment jsdom
 import userEvent from "@testing-library/user-event";
-import { render, screen } from "@testing-library/react";
+import { render, within } from "@testing-library/react";
 import {
   BoardContext,
   BoardContextState,
@@ -87,7 +87,7 @@ describe("Cell tests", () => {
     expect(cell).toHaveClass(expectedClass);
   });
 
-  it("should not perform any actions on clicked when the game is over", async () => {
+  it("should not perform any actions on click when the game is over", async () => {
     boardContext.ctx.gameover = { isWin: true };
     const { container } = render(
       <BoardContext.Provider value={boardContext}>
@@ -240,6 +240,24 @@ describe("Cell tests", () => {
   });
 
   describe("value", () => {
+    it("should contain an empty string if cell is not revealed", () => {
+      const { container } = render(
+        <BoardContext.Provider value={boardContext}>
+          <table>
+            <tbody>
+              <tr>
+                <Cell id={0} />
+              </tr>
+            </tbody>
+          </table>
+        </BoardContext.Provider>
+      );
+
+      const cell = container.getElementsByTagName("td")[0];
+
+      expect(cell.textContent).toBe("");
+    });
+
     it("should contain an empty string value if cells is null", () => {
       boardContext.G.cells = null;
 
@@ -280,8 +298,51 @@ describe("Cell tests", () => {
       expect(cell.textContent).toBe("");
     });
 
-    it("should contain an empty string value if knownCells is null", () => {
-      boardContext.G.cells = null;
+    it("should contain the numerical value when known and present", async () => {
+      boardContext.G.knownCells![1] = true;
+
+      const { container } = render(
+        <BoardContext.Provider value={boardContext}>
+          <table>
+            <tbody>
+              <tr>
+                <Cell id={1} />
+              </tr>
+            </tbody>
+          </table>
+        </BoardContext.Provider>
+      );
+
+      const cell = container.getElementsByTagName("td")[0];
+
+      expect(cell.textContent).toBe("1");
+      expect(cell).toHaveStyle("color: #0001FD");
+    });
+
+    it("should fallback to 8's color if numerical value is greater than 8", async () => {
+      boardContext.G.cells![1] = 9;
+      boardContext.G.knownCells![1] = true;
+
+      const { container } = render(
+        <BoardContext.Provider value={boardContext}>
+          <table>
+            <tbody>
+              <tr>
+                <Cell id={1} />
+              </tr>
+            </tbody>
+          </table>
+        </BoardContext.Provider>
+      );
+
+      const cell = container.getElementsByTagName("td")[0];
+
+      expect(cell.textContent).toBe("9");
+      expect(cell).toHaveStyle("color: #808080");
+    });
+
+    it("should contain the piece with red background after losing", async () => {
+      boardContext.ctx.gameover = { isWin: false };
 
       const { container } = render(
         <BoardContext.Provider value={boardContext}>
@@ -296,8 +357,32 @@ describe("Cell tests", () => {
       );
 
       const cell = container.getElementsByTagName("td")[0];
+      const img = await within(cell).findByRole("img");
 
-      expect(cell.textContent).toBe("");
+      expect(cell).toHaveClass("red");
+      expect(img).toBeInTheDocument();
+    });
+
+    it("should contain the piece image after placing a hint", async () => {
+      boardContext.G.knownCells![0] = "B";
+
+      const { container } = render(
+        <BoardContext.Provider value={boardContext}>
+          <table>
+            <tbody>
+              <tr>
+                <Cell id={0} />
+              </tr>
+            </tbody>
+          </table>
+        </BoardContext.Provider>
+      );
+
+      const cell = container.getElementsByTagName("td")[0];
+      const img = await within(cell).findByRole("img");
+
+      expect(cell).not.toHaveClass("red");
+      expect(img).toBeInTheDocument();
     });
   });
 });
