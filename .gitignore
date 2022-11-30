@@ -3,4 +3,4 @@ build/
 coverage/
 .vscode
 .eslintcache
-daily.txt
+api/daily.txt

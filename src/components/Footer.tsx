@@ -8,12 +8,12 @@ export const Footer = (): JSX.Element => {
     async function updateDailyPuzzle() {
       const url =
         window.location.hostname === "localhost"
-          ? "https://localhost:5170/api/daily.php"
+          ? "http://localhost:5170/api/daily.php"
           : "../../api/daily.php";
       const resp = await fetch(url);
       if (resp.ok) {
         const text = await resp.text();
-        if (text.length > 20) {
+        if (text.length > 50) {
           // Somehow launching this in local environment returns index.html?
           console.error("Failed to fetch daily puzzle");
         } else {

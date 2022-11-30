@@ -1,5 +1,7 @@
 <?php
 
+header("Access-Control-Allow-Origin: http://localhost:5173");
+
 function generateRandomString() {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
