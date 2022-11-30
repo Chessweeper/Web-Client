@@ -5,7 +5,7 @@ import { Popup } from "./Popup";
 import { Timer, TimerRefAttributes } from "./Timer";
 import { BoardPropsWithReload } from "./Client";
 
-interface BoardContextState extends BoardPropsWithReload {
+export interface BoardContextState extends BoardPropsWithReload {
   currAction: string;
   setCurrAction: (action: string) => void;
   timer: TimerRefAttributes;

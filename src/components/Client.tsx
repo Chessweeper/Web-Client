@@ -32,19 +32,22 @@ export const Client = (): JSX.Element => {
   const setupData = useMemo(() => parseUrl(searchParams), [searchParams]);
 
   const setupGame = useCallback(() => {
-    console.log(
-      `Loading game: ${
-        setupData.gamemode === "c" ? "classic" : "puzzle"
-      } gamemode${
-        setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""
-      }, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${
-        setupData.size
-      }x${setupData.size} grid, piece${
-        Object.keys(setupData.pieces).length > 1 ? "s" : ""
-      } allowed: ${Object.keys(setupData.pieces)
-        .map((x) => `${x} (x${setupData.pieces[x]})`)
-        .join(", ")}`
-    );
+    /* c8 ignore next 16 */
+    if (!import.meta.env.VITEST) {
+      console.log(
+        `Loading game: ${
+          setupData.gamemode === "c" ? "classic" : "puzzle"
+        } gamemode${
+          setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""
+        }, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${
+          setupData.size
+        }x${setupData.size} grid, piece${
+          Object.keys(setupData.pieces).length > 1 ? "s" : ""
+        } allowed: ${Object.keys(setupData.pieces)
+          .map((x) => `${x} (x${setupData.pieces[x]})`)
+          .join(", ")}`
+      );
+    }
 
     if (setupData.gamemode === "p") {
       if (worker) {
@@ -76,7 +79,8 @@ export const Client = (): JSX.Element => {
     // to a non-module type in production - so don't allow worker in dev with Firefox
     const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
     const isWorkerAvailable =
-      process.env.NODE_ENV === "production" || !isFirefox;
+      (process.env.NODE_ENV === "production" || !isFirefox) &&
+      typeof Worker !== "undefined";
 
     let w: Worker;
 
