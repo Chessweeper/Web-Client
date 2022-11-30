@@ -204,7 +204,7 @@ export const Footer = (): JSX.Element => {
           <a
             href="https://github.com/Xwilarg/Chessweeper"
             target="_blank"
-            rel="noreferrer"
+            rel="referrer noreferrer"
           >
             GitHub
           </a>
