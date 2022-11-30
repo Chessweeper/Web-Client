@@ -1,13 +1,19 @@
 import { useMemo } from "react";
 import { getPiece } from "../Pieces";
-import { useBoardContext } from "./BoardWrapper";
+import { DisconnectedBoardProps } from "./Board";
 
-interface CellProps {
+interface CellProps extends DisconnectedBoardProps {
   id: number;
 }
 
-export const Cell = ({ id }: CellProps): JSX.Element => {
-  const { G, ctx, moves, currAction, timer } = useBoardContext();
+export const Cell = ({
+  id,
+  G,
+  ctx,
+  moves,
+  currAction,
+  timer,
+}: CellProps): JSX.Element => {
   let className = "cell";
   let value: string | JSX.Element = "";
 
@@ -18,22 +24,22 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
   }, [id, G.size]);
 
   const onCellClick = () => {
-    if (ctx.gameover) {
+    if (ctx?.gameover) {
       return;
     }
 
-    if (!timer.isRunning()) {
-      timer.start();
+    if (!timer?.isRunning()) {
+      timer?.start();
     }
 
     if (currAction !== "") {
       if (G.knownCells?.[id] === currAction) {
-        moves.removeHint(id);
+        moves?.removeHint(id);
       } else {
-        moves.placeHint(id, currAction);
+        moves?.placeHint(id, currAction);
       }
     } else {
-      moves.discoverPiece(id);
+      moves?.discoverPiece(id);
     }
   };
 
@@ -55,7 +61,7 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
 
   if (G.cells === null || G.knownCells === null) {
     value = "";
-  } else if (ctx.gameover?.isWin === false && !Number.isInteger(G.cells[id])) {
+  } else if (ctx?.gameover?.isWin === false && !Number.isInteger(G.cells[id])) {
     // Display pieces of gameover
     value = <img src={getPiece(String(G.cells[id]))} />;
     className += " red";

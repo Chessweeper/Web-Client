@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useRef, useState } from "react";
 import { ActionBar } from "./ActionBar";
-import { Board } from "./Board";
+import { Board, ConnectedBoard } from "./Board";
 import { Popup } from "./Popup";
 import { Timer, TimerRefAttributes } from "./Timer";
 import { BoardPropsWithReload } from "./Client";
@@ -40,12 +40,14 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
       <div className="flex">
         <Timer ref={timerRef} />
         <div id="board-container">
-          <Board />
+          <ConnectedBoard />
           {displayCover && (
             <div id="board-cover" onClick={hideCover}>
               <p>Click to start puzzle!</p>
             </div>
           )}
+          example non-connected board
+          <Board G={props.G} />
         </div>
         <ActionBar />
       </div>
