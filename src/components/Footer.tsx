@@ -20,9 +20,20 @@ const formatCountdownDistance = (distance: number): string => {
   return `${hours}:${minutes}:${seconds}`;
 };
 
+function convertDateToUTC(date: Date) {
+  return new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours(),
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
+  );
+}
+
 export const Footer = (): JSX.Element => {
   const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState<string | undefined>();
-  const [now, setNow] = useState<number | null>(null);
+  const [now, setNow] = useState<Date | null>(null);
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
   useEffect(() => {
@@ -45,10 +56,10 @@ export const Footer = (): JSX.Element => {
   }, [setDailyPuzzleSeed]);
 
   useEffect(() => {
-    setNow(Date.now());
+    setNow(new Date());
 
     intervalRef.current = setInterval(() => {
-      setNow(Date.now());
+      setNow(new Date());
     }, 1000);
 
     return () => {
@@ -60,11 +71,13 @@ export const Footer = (): JSX.Element => {
 
   let dailyTimeRemaining = "";
   if (now != null) {
-    const end = new Date();
+    const nowUTC = convertDateToUTC(now);
+
+    const end = new Date(nowUTC);
     end.setDate(end.getDate() + 1);
     end.setHours(0, 0, 0, 0);
 
-    const distance = end.getTime() - now;
+    const distance = end.getTime() - nowUTC.getTime();
 
     dailyTimeRemaining = formatCountdownDistance(distance);
   }
