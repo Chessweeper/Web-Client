@@ -32,19 +32,22 @@ export const Client = (): JSX.Element => {
   const setupData = useMemo(() => parseUrl(searchParams), [searchParams]);
 
   const setupGame = useCallback(() => {
-    console.log(
-      `Loading game: ${
-        setupData.gamemode === "c" ? "classic" : "puzzle"
-      } gamemode${
-        setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""
-      }, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${
-        setupData.size
-      }x${setupData.size} grid, piece${
-        Object.keys(setupData.pieces).length > 1 ? "s" : ""
-      } allowed: ${Object.keys(setupData.pieces)
-        .map((x) => `${x} (x${setupData.pieces[x]})`)
-        .join(", ")}`
-    );
+    /* c8 ignore next 16 */
+    if (!process.env.VITEST) {
+      console.log(
+        `Loading game: ${
+          setupData.gamemode === "c" ? "classic" : "puzzle"
+        } gamemode${
+          setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""
+        }, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${
+          setupData.size
+        }x${setupData.size} grid, piece${
+          Object.keys(setupData.pieces).length > 1 ? "s" : ""
+        } allowed: ${Object.keys(setupData.pieces)
+          .map((x) => `${x} (x${setupData.pieces[x]})`)
+          .join(", ")}`
+      );
+    }
 
     if (setupData.gamemode === "p") {
       if (worker) {
