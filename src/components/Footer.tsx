@@ -201,13 +201,7 @@ export const Footer = (): JSX.Element => {
         <h2>Other Links</h2>
         <p>
           Source code available under MIT license on{" "}
-          <a
-            href="https://github.com/Xwilarg/Chessweeper"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
+          <a href="https://github.com/Xwilarg/Chessweeper">GitHub</a>
           <br />A Discord server is available here:{" "}
           <a
             href="https://discord.gg/VjJ95N2mV9"
