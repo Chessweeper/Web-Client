@@ -165,7 +165,7 @@ function parseNotation(
 }
 
 // https://en.wikipedia.org/wiki/Betza%27s_funny_notation
-const pieceMovesCheck = {
+const pieceMovesCheck: Record<string, string> = {
   R: "WW",
   B: "FF",
   Q: "WWFF",
@@ -258,7 +258,7 @@ export function generateBoard(
 function validateBoard(
   data: Array<string | number>,
   discovered: boolean[],
-  pieces,
+  pieces: string,
   size: number
 ) {
   const thinkData = Array(size * size).fill(0);
@@ -322,7 +322,7 @@ function validateBoard(
 
 export function generatePuzzleBoard(
   seed: string,
-  pieces,
+  pieces: string,
   size: number,
   count: number,
   difficulty: number
@@ -345,7 +345,7 @@ export function generatePuzzleBoard(
     while (!isSolved && !giveup) {
       // Get a random position that is not a piece and wasn't already taken
       const possibilities: number[] = [];
-      for (const i in data) {
+      for (let i = 0; i < data.length; i++) {
         if (
           !discovered[i] &&
           Number.isInteger(data[i]) &&
