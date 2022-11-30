@@ -6,7 +6,11 @@ export const Footer = (): JSX.Element => {
 
   useEffect(() => {
     async function updateDailyPuzzle() {
-      const resp = await fetch("../../api/daily.php");
+      const url =
+        window.location.hostname === "localhost"
+          ? "https://localhost:5170/api/daily.php"
+          : "../../api/daily.php";
+      const resp = await fetch(url);
       if (resp.ok) {
         const text = await resp.text();
         if (text.length > 20) {

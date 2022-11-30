@@ -15,7 +15,8 @@
     "format": "npx prettier --write .",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "tsc": "tsc --noEmit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "backend": "php -f api/daily.php -S localhost:5170"
   },
   "browserslist": "defaults and supports async-functions",
   "repository": {
