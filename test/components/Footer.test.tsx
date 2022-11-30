@@ -19,7 +19,7 @@ describe("Footer tests", () => {
 
     const { container } = render(<Footer />, { wrapper: MemoryRouter });
 
-    await screen.findByText("Daily");
+    await screen.findByText(/^Daily/i);
     const dailyPuzzleLink = container.querySelector("#daily");
 
     expect(dailyPuzzleLink).toBeInTheDocument();

@@ -1,8 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+
+const second = 1000;
+const minute = second * 60;
+const hour = minute * 60;
+const day = hour * 24;
+
+const formatCountdownDistance = (distance: number): string => {
+  const hours = Math.floor((distance % day) / hour)
+    .toString()
+    .padStart(2, "0");
+  const minutes = Math.floor((distance % hour) / minute)
+    .toString()
+    .padStart(2, "0");
+  const seconds = Math.floor((distance % minute) / second)
+    .toString()
+    .padStart(2, "0");
+
+  return `${hours}:${minutes}:${seconds}`;
+};
 
 export const Footer = (): JSX.Element => {
   const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState<string | undefined>();
+  const [now, setNow] = useState<number | null>(null);
+  const intervalRef = useRef<NodeJS.Timer | null>(null);
 
   useEffect(() => {
     async function updateDailyPuzzle() {
@@ -22,6 +43,31 @@ export const Footer = (): JSX.Element => {
 
     updateDailyPuzzle();
   }, [setDailyPuzzleSeed]);
+
+  useEffect(() => {
+    setNow(Date.now());
+
+    intervalRef.current = setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  let dailyTimeRemaining = "";
+  if (now != null) {
+    const end = new Date();
+    end.setDate(end.getDate() + 1);
+    end.setHours(0, 0, 0, 0);
+
+    const distance = end.getTime() - now;
+
+    dailyTimeRemaining = formatCountdownDistance(distance);
+  }
 
   return (
     <div>
@@ -105,7 +151,7 @@ export const Footer = (): JSX.Element => {
             to={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
             id="daily"
           >
-            <h2>Daily</h2>
+            <h2>Daily {dailyTimeRemaining}</h2>
             8 pieces
             <br />
             Rook, Bishop, Knight and King
