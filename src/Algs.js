@@ -1,5 +1,22 @@
 import { Random } from "./Random";
 
+export function getstuff(piece, cells, size, x, y) {
+  // strip hidden pieces from data, so they do not block calculations
+
+  const data = cells.map((cell) => {
+    if (typeof cell.value === "string") {
+      return 0;
+    } else if (typeof cell.known === "string") {
+      return cell.known;
+    }
+
+    return cell.value;
+  });
+
+  const moves = parseNotation(pieceMovesCheck[piece], data, size, x, y);
+  return moves;
+}
+
 function isValid(data, size, x, y) {
   return (
     x >= 0 &&
@@ -63,7 +80,7 @@ function parseDirection(letter) {
   }
 }
 
-function parseNotation(notation, data, size, x, y) {
+export function parseNotation(notation, data, size, x, y) {
   let str = "";
   for (let i = 0; i < notation.length; i++) {
     const s = notation[i];
@@ -366,17 +383,22 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
     }
   }
 
-  let knownCells;
+  let cells;
   if (c === maxIt) {
     error = "Failed to generate puzzle";
   } else {
-    knownCells = Array(size * size).fill(false);
+    cells = data.map((item) => ({
+      value: item,
+      known: false,
+      attackedValue: 0,
+    }));
+
     for (const i in discovered) {
       if (discovered[i]) {
-        knownCells[i] = true;
+        cells[i].known = true;
       }
     }
   }
 
-  return { cells: data, knownCells, error };
+  return { cells, error };
 }

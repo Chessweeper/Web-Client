@@ -17,25 +17,28 @@ const N = "N";
 describe("Cell tests", () => {
   beforeEach(() => {
     const mockBoardContext = createMockBoardContext();
+    // prettier-ignore
+    const cellsSetup = [
+      R, 1, 1, 1, 2, 1, 2, 1,
+      1, 1, 0, 1, 0, 1, 0, 0,
+      1, 0, B, 0, 0, 0, 0, N,
+      1, 1, 0, 1, 0, 1, 0, 0,
+      2, 0, 0, 0, 1, 0, 1, 0,
+      1, 0, 0, 0, 0, 1, 0, 0,
+      1, 0, 0, 0, 0, 0, 1, 0,
+      1, 0, 0, 0, 0, 0, 0, 1,
+    ]
 
     boardContext = {
       ...mockBoardContext,
       G: {
         ...mockBoardContext.G,
         // prettier-ignore
-        cells: [
-          R, 1, 1, 1, 2, 1, 2, 1,
-          1, 1, 0, 1, 0, 1, 0, 0,
-          1, 0, B, 0, 0, 0, 0, N,
-          1, 1, 0, 1, 0, 1, 0, 0,
-          2, 0, 0, 0, 1, 0, 1, 0,
-          1, 0, 0, 0, 0, 1, 0, 0,
-          1, 0, 0, 0, 0, 0, 1, 0,
-          1, 0, 0, 0, 0, 0, 0, 1,
-        ],
-        knownCells: Array(
-          mockBoardContext.G.size * mockBoardContext.G.size
-        ).fill(false),
+        cells: cellsSetup.map(cell => ({
+          value: cell,
+          known: false,
+          attackedValue: 0
+        })),
       },
     };
     vi.clearAllMocks();
@@ -67,7 +70,7 @@ describe("Cell tests", () => {
     [8, "black"],
     [9, "white"],
   ])("should render open cell id %d with %s className", (id, expectedClass) => {
-    boardContext.G.knownCells![id] = true;
+    boardContext.G.cells![id].known = true;
 
     const { container } = render(
       <BoardContext.Provider value={boardContext}>
@@ -153,7 +156,7 @@ describe("Cell tests", () => {
     });
 
     it("should call placeHint move if current action is not shovel and the cell contains a different hint", async () => {
-      boardContext.G.knownCells![0] = "B";
+      boardContext.G.cells![0].known = "B";
       boardContext.currAction = "R";
 
       const { container } = render(
@@ -176,7 +179,7 @@ describe("Cell tests", () => {
     });
 
     it("should call removeHint move if current action is equal to known cell", async () => {
-      boardContext.G.knownCells![0] = "B";
+      boardContext.G.cells![0].known = "B";
       boardContext.currAction = "B";
       const { container } = render(
         <BoardContext.Provider value={boardContext}>
@@ -278,28 +281,8 @@ describe("Cell tests", () => {
       expect(cell.textContent).toBe("");
     });
 
-    it("should contain an empty string value if knownCells is null", () => {
-      boardContext.G.knownCells = null;
-
-      const { container } = render(
-        <BoardContext.Provider value={boardContext}>
-          <table>
-            <tbody>
-              <tr>
-                <Cell id={0} />
-              </tr>
-            </tbody>
-          </table>
-        </BoardContext.Provider>
-      );
-
-      const cell = container.getElementsByTagName("td")[0];
-
-      expect(cell.textContent).toBe("");
-    });
-
     it("should contain the numerical value when known and present", async () => {
-      boardContext.G.knownCells![1] = true;
+      boardContext.G.cells![1].known = true;
 
       const { container } = render(
         <BoardContext.Provider value={boardContext}>
@@ -320,8 +303,11 @@ describe("Cell tests", () => {
     });
 
     it("should fallback to 8's color if numerical value is greater than 8", async () => {
-      boardContext.G.cells![1] = 9;
-      boardContext.G.knownCells![1] = true;
+      boardContext.G.cells![1] = {
+        value: 9,
+        known: true,
+        attackedValue: 0,
+      };
 
       const { container } = render(
         <BoardContext.Provider value={boardContext}>
@@ -364,7 +350,7 @@ describe("Cell tests", () => {
     });
 
     it("should contain the piece image after placing a hint", async () => {
-      boardContext.G.knownCells![0] = "B";
+      boardContext.G.cells![0].known = "B";
 
       const { container } = render(
         <BoardContext.Provider value={boardContext}>

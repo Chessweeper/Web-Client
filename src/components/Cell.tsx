@@ -27,7 +27,7 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     }
 
     if (currAction !== "") {
-      if (G.knownCells?.[id] === currAction) {
+      if (G.cells?.[id].known === currAction) {
         moves.removeHint(id);
       } else {
         moves.placeHint(id, currAction);
@@ -49,24 +49,27 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     "#808080", // 8
   ];
   let color = "";
-  if (G.cells === null || G.cells[id] === 0) color = "";
-  else if (G.cells[id] > 8) color = colors[7];
-  else color = colors[Number(G.cells[id]) - 1];
+  if (G.cells === null || G.cells[id].value === 0) color = "";
+  else if (G.cells[id].value > 8) color = colors[7];
+  else color = colors[Number(G.cells[id].value) - 1];
 
-  if (G.cells === null || G.knownCells === null) {
+  if (G.cells === null) {
     value = "";
-  } else if (ctx.gameover?.isWin === false && !Number.isInteger(G.cells[id])) {
+  } else if (
+    ctx.gameover?.isWin === false &&
+    !Number.isInteger(G.cells[id].value)
+  ) {
     // Display pieces of gameover
-    value = <img src={getPiece(String(G.cells[id]))} />;
+    value = <img src={getPiece(String(G.cells[id].value))} />;
     className += " red";
-  } else if (G.knownCells[id] === true) {
-    if (G.cells[id] !== 0) {
-      value = String(G.cells[id]);
+  } else if (G.cells[id].known === true) {
+    if (G.cells[id].value !== 0) {
+      value = String(G.cells[id].value);
     }
     className += " open";
     className += isWhite ? " white" : " black";
-  } else if (G.knownCells[id] !== false && G.knownCells[id] !== true) {
-    value = <img src={getPiece(String(G.knownCells[id]))} />;
+  } else if (G.cells[id].known !== false && G.cells[id].known !== true) {
+    value = <img src={getPiece(String(G.cells[id].known))} />;
   }
 
   return (
@@ -75,7 +78,10 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       style={{ color: color, cursor: "pointer" }}
       onClick={onCellClick}
     >
-      {value}
+      {value}{" "}
+      <span style={{ color: "purple" }}>
+        {G.cells?.[id].attackedValue ?? "?"}
+      </span>
     </td>
   );
 };
