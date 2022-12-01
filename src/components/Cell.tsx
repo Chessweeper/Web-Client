@@ -82,6 +82,7 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
   if (typeof value === "number") {
     if (value === 0) color = "";
     else if (value > 8) color = colors[7];
+    else if (value < 0) color = "white";
     else color = colors[value - 1];
   }
 

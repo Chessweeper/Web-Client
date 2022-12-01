@@ -7,7 +7,7 @@ export interface SettingsContextState {
 }
 
 export const SettingsContext = createContext<SettingsContextState>({
-  isAttackedCellValuesEnabled: false,
+  isAttackedCellValuesEnabled: true,
 });
 
 export const useSettingsContext = () => useContext(SettingsContext);
