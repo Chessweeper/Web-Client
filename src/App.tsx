@@ -10,18 +10,20 @@ export const App = (): JSX.Element => {
   );
 
   return (
-    <SettingsContext.Provider value={globalSettings}>
-      <div>
-        <SettingsPanel
-          settings={globalSettings}
-          setSettings={setGlobalSettings}
-        />
-        <div className="flex">
-          <Client />
+    <>
+      <SettingsPanel
+        settings={globalSettings}
+        setSettings={setGlobalSettings}
+      />
+      <SettingsContext.Provider value={globalSettings}>
+        <div>
+          <div className="flex">
+            <Client />
+          </div>
+          <hr />
+          <Footer />
         </div>
-        <hr />
-        <Footer />
-      </div>
-    </SettingsContext.Provider>
+      </SettingsContext.Provider>
+    </>
   );
 };

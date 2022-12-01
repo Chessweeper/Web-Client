@@ -1,8 +1,9 @@
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import {
   ATTACKED_CELLS_STORAGE_KEY,
   SettingsContextState,
 } from "../GlobalSettings";
+import settingsImg from "../assets/settings.png";
 
 interface SettingsPanelProps {
   settings: SettingsContextState;
@@ -13,6 +14,8 @@ export const SettingsPanel = ({
   settings,
   setSettings,
 }: SettingsPanelProps): JSX.Element => {
+  const [showPanel, setShowPanel] = useState(false);
+
   const onAttackedCellsCheckboxClicked = (e: ChangeEvent<HTMLInputElement>) => {
     const { checked } = e.target;
     setSettings((prev) => ({
@@ -23,13 +26,26 @@ export const SettingsPanel = ({
   };
 
   return (
-    <div className="settings">
+    <>
       <input
-        className="toggle-checkbox"
-        type="checkbox"
-        checked={settings.isAttackedCellValuesEnabled}
-        onChange={onAttackedCellsCheckboxClicked}
+        id="settings-button"
+        type="image"
+        src={settingsImg}
+        onClick={() => setShowPanel((prev) => !prev)}
       />
-    </div>
+
+      {showPanel && (
+        <div id="settings-panel">
+          <input
+            id="attacked-cells-checkbox"
+            className="toggle-checkbox"
+            type="checkbox"
+            checked={settings.isAttackedCellValuesEnabled}
+            onChange={onAttackedCellsCheckboxClicked}
+          />
+          <label htmlFor="attacked-cells-checkbox">Show Attacked Cells</label>
+        </div>
+      )}
+    </>
   );
 };

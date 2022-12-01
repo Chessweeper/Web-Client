@@ -164,3 +164,24 @@ hr {
 #rules img {
   width: 50px;
 }
+
+/* Settings */
+
+#settings-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 25px;
+  height: 25px;
+}
+
+#settings-panel {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  z-index: 3;
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
