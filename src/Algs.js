@@ -2,11 +2,11 @@ import { Random } from "./Random";
 
 export function getMoves(piece, cells, size, x, y) {
   const data = cells.map((cell) => {
-    if (typeof cell.value === "string") {
+    if (typeof cell.known === "string") {
+      return cell.known;
+    } else if (typeof cell.value === "string") {
       // strip hidden pieces from data, so they do not block calculations
       return 0;
-    } else if (typeof cell.known === "string") {
-      return cell.known;
     }
 
     return cell.value;

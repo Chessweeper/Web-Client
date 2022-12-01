@@ -47,12 +47,16 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     value = <img src={getPiece(String(G.cells[id].value))} />;
     className += " red";
   } else if (G.cells[id].known === true) {
-    if (G.cells[id].value !== 0) {
-      value = Number(G.cells[id].value);
-      value -= G.cells[id].attackedValue;
+    value = Number(G.cells[id].value) - G.cells[id].attackedValue;
+    if (value === 0 && G.cells[id].value === 0) {
+      value = "";
     }
-    className += " open";
-    className += isWhite ? " white" : " black";
+    if (typeof value === "number" && value < 0) {
+      className += " red";
+    } else {
+      className += " open";
+      className += isWhite ? " white" : " black";
+    }
   } else if (G.cells[id].known !== false && G.cells[id].known !== true) {
     value = <img src={getPiece(String(G.cells[id].known))} />;
   }
