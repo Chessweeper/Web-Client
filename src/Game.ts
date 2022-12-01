@@ -1,6 +1,6 @@
 import { Game as BgioGame } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { fillPositions, generateBoard, getstuff } from "./Algs";
+import { fillPositions, generateBoard, getMoves } from "./Algs";
 import { Random } from "./Random";
 
 interface Cell {
@@ -8,7 +8,6 @@ interface Cell {
   attackedValue: number;
   known: boolean | string;
 }
-
 // todo: replace string with a union type for pieces?
 
 export interface SetupData {
@@ -53,6 +52,35 @@ function isWinCondition(G: GameState, id: number) {
   return true;
 }
 
+function calcAttackedCells(G: GameState) {
+  if (G.cells === null) return;
+
+  // Reset all values to zero
+  G.cells.forEach((cell) => {
+    cell.attackedValue = 0;
+  });
+
+  // Recalculate all attacked cells
+  G.cells.forEach((cell, id) => {
+    if (typeof cell.known === "string") {
+      // if setting is turned on for numbers
+      const moves = getMoves(
+        cell.known,
+        G.cells,
+        G.size,
+        id % G.size,
+        Math.floor(id / G.size)
+      );
+
+      moves.forEach((move) => {
+        // for some reason get a possibly null warning even with null check at top of function
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        G.cells![move].attackedValue++;
+      });
+    }
+  });
+}
+
 export const Game = (setupData: SetupData): BgioGame<GameState> => ({
   setup: () => ({
     ...setupData,
@@ -94,19 +122,7 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       G.cells![id].known = action;
 
-      // if setting is turned on for numbers
-      const moves = getstuff(
-        action,
-        G.cells,
-        G.size,
-        id % G.size,
-        Math.floor(id / G.size)
-      );
-
-      moves.forEach((move) => {
-        console.log("incrementing attacked for", move);
-        G.cells![move].attackedValue++;
-      });
+      calcAttackedCells(G);
 
       if (isWinCondition(G, id)) {
         events.endGame({ isWin: true });
@@ -118,21 +134,9 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
         return INVALID_MOVE;
       }
 
-      const piece = G.cells[id].known;
-
       G.cells[id].known = false;
 
-      // if setting is turned on for numbers
-      const moves = getstuff(
-        piece,
-        G.cells,
-        G.size,
-        id % G.size,
-        Math.floor(id / G.size)
-      );
-      moves.forEach((move) => {
-        G.cells![move].attackedValue--;
-      });
+      calcAttackedCells(G);
 
       if (isWinCondition(G, id)) {
         events.endGame({ isWin: true });
