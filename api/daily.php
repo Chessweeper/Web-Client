@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('UTC');
+
 function generateRandomString() {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
