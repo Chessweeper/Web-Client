@@ -115,17 +115,24 @@ export const Client = (): JSX.Element => {
     }
   }, [worker, setupGame]);
 
+  const Client = useMemo(
+    () =>
+      game
+        ? BgioClient({
+            game,
+            board: wrapBoardWithReload(setupGame, BoardWrapper),
+            numPlayers: 1,
+            debug: {
+              collapseOnLoad: true,
+            },
+          })
+        : () => null,
+    [game, setupGame]
+  );
+
   if (!game) {
     return <div>Generating Board...</div>;
   }
-  const Client = BgioClient({
-    game,
-    board: wrapBoardWithReload(setupGame, BoardWrapper),
-    numPlayers: 1,
-    debug: {
-      collapseOnLoad: true,
-    },
-  });
 
   return <Client />;
 };

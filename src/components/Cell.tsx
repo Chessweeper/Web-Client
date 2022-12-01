@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useSettingsContext } from "../GlobalSettings";
 import { getPiece } from "../Pieces";
 import { useBoardContext } from "./BoardWrapper";
 
@@ -8,6 +9,8 @@ interface CellProps {
 
 export const Cell = ({ id }: CellProps): JSX.Element => {
   const { G, ctx, moves, currAction, timer } = useBoardContext();
+  const { isAttackedCellValuesEnabled } = useSettingsContext();
+
   let className = "cell";
   let value: string | number | JSX.Element = "";
 
@@ -47,7 +50,10 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     value = <img src={getPiece(String(G.cells[id].value))} />;
     className += " red";
   } else if (G.cells[id].known === true) {
-    value = Number(G.cells[id].value) - G.cells[id].attackedValue;
+    value = Number(G.cells[id].value);
+    if (isAttackedCellValuesEnabled) {
+      value -= G.cells[id].attackedValue;
+    }
     if (value === 0 && G.cells[id].value === 0) {
       value = "";
     }
