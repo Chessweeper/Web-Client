@@ -34,32 +34,42 @@ function convertDateToUTC(date: Date) {
 export const Footer = (): JSX.Element => {
   const [dailyPuzzleSeed, setDailyPuzzleSeed] = useState<string | undefined>();
   const [now, setNow] = useState<Date | null>(null);
+  const [end, setEnd] = useState<Date | null>(null);
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
-  useEffect(() => {
-    async function updateDailyPuzzle() {
-      const resp = await fetch("../../api/daily.php");
-      if (resp.ok) {
-        const text = await resp.text();
-        if (text.length > 20) {
-          // Somehow launching this in local environment returns index.html?
-          console.error("Failed to fetch daily puzzle");
-        } else {
-          setDailyPuzzleSeed(text);
-        }
-      } else {
+  async function updateDailyPuzzle() {
+    const resp = await fetch("../../api/daily.php");
+    if (resp.ok) {
+      const text = await resp.text();
+      if (text.length > 20) {
+        // Somehow launching this in local environment returns index.html?
         console.error("Failed to fetch daily puzzle");
+      } else {
+        setDailyPuzzleSeed(text);
       }
+    } else {
+      console.error("Failed to fetch daily puzzle");
     }
+  }
 
-    updateDailyPuzzle();
-  }, [setDailyPuzzleSeed]);
+  function updateCountdownEnd() {
+    const nowUTC = convertDateToUTC(new Date());
+    const endUTC = new Date(nowUTC);
+    endUTC.setDate(endUTC.getDate() + 1);
+    endUTC.setHours(0, 0, 0, 0);
+    setEnd(endUTC);
+  }
 
   useEffect(() => {
-    setNow(new Date());
+    updateDailyPuzzle();
+  }, []);
+
+  useEffect(() => {
+    setNow(convertDateToUTC(new Date()));
+    updateCountdownEnd();
 
     intervalRef.current = setInterval(() => {
-      setNow(new Date());
+      setNow(convertDateToUTC(new Date()));
     }, 1000);
 
     return () => {
@@ -69,16 +79,18 @@ export const Footer = (): JSX.Element => {
     };
   }, []);
 
+  useEffect(() => {
+    if (now !== null && end !== null) {
+      if (now > end) {
+        updateCountdownEnd();
+        updateDailyPuzzle();
+      }
+    }
+  }, [now, end]);
+
   let dailyTimeRemaining = "";
-  if (now != null) {
-    const nowUTC = convertDateToUTC(now);
-
-    const end = new Date(nowUTC);
-    end.setDate(end.getDate() + 1);
-    end.setHours(0, 0, 0, 0);
-
-    const distance = end.getTime() - nowUTC.getTime();
-
+  if (now !== null && end !== null) {
+    const distance = end.getTime() - now.getTime();
     dailyTimeRemaining = formatCountdownDistance(distance);
   }
 

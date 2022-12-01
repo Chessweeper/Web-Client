@@ -76,4 +76,20 @@ describe("Footer tests", () => {
 
     expect(dailyTitleWithTime.textContent).toHaveLength(14);
   });
+
+  it("should update daily puzzle when timer resets", async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      text: vi.fn().mockResolvedValue("mockPuzzleSeed"),
+    });
+    vi.useFakeTimers();
+
+    render(<Footer />, { wrapper: MemoryRouter });
+
+    act(() => {
+      vi.advanceTimersByTime(86400001);
+    });
+
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+  });
 });
