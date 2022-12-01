@@ -327,6 +327,106 @@ describe("Cell tests", () => {
       expect(cell).toHaveStyle("color: #808080");
     });
 
+    it("should have no color if value is 0", async () => {
+      boardContext.G.cells![1] = {
+        value: 0,
+        known: true,
+        attackedValue: 0,
+      };
+
+      const { container } = render(
+        <BoardContext.Provider value={boardContext}>
+          <table>
+            <tbody>
+              <tr>
+                <Cell id={1} />
+              </tr>
+            </tbody>
+          </table>
+        </BoardContext.Provider>
+      );
+
+      const cell = container.getElementsByTagName("td")[0];
+
+      expect(cell.textContent).toBe("");
+      expect(cell.style.color).toBe("");
+    });
+
+    it("should display a zero if value was originally non-zero but modified to be zero", async () => {
+      boardContext.G.cells![1] = {
+        value: 1,
+        known: true,
+        attackedValue: 1,
+      };
+
+      const { container } = render(
+        <BoardContext.Provider value={boardContext}>
+          <table>
+            <tbody>
+              <tr>
+                <Cell id={1} />
+              </tr>
+            </tbody>
+          </table>
+        </BoardContext.Provider>
+      );
+
+      const cell = container.getElementsByTagName("td")[0];
+
+      expect(cell.textContent).toBe("0");
+      expect(cell.style.color).toBe("");
+    });
+
+    it("should display a white negative number if value was originally non-zero but modified to be negative", () => {
+      boardContext.G.cells![1] = {
+        value: 1,
+        known: true,
+        attackedValue: 2,
+      };
+
+      const { container } = render(
+        <BoardContext.Provider value={boardContext}>
+          <table>
+            <tbody>
+              <tr>
+                <Cell id={1} />
+              </tr>
+            </tbody>
+          </table>
+        </BoardContext.Provider>
+      );
+
+      const cell = container.getElementsByTagName("td")[0];
+
+      expect(cell.textContent).toBe("-1");
+      expect(cell).toHaveStyle("color: white");
+    });
+
+    it("should display a white negative number if value was originally zero but modified to be negative", () => {
+      boardContext.G.cells![1] = {
+        value: 0,
+        known: true,
+        attackedValue: 1,
+      };
+
+      const { container } = render(
+        <BoardContext.Provider value={boardContext}>
+          <table>
+            <tbody>
+              <tr>
+                <Cell id={1} />
+              </tr>
+            </tbody>
+          </table>
+        </BoardContext.Provider>
+      );
+
+      const cell = container.getElementsByTagName("td")[0];
+
+      expect(cell.textContent).toBe("-1");
+      expect(cell).toHaveStyle("color: white");
+    });
+
     it("should contain the piece with red background after losing", async () => {
       boardContext.ctx.gameover = { isWin: false };
 
