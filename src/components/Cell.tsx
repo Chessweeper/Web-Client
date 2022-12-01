@@ -93,9 +93,6 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       onClick={onCellClick}
     >
       {value}
-      {/* <span style={{ color: "purple" }}>
-        {G.cells?.[id].attackedValue ?? "?"}
-      </span> */}
     </td>
   );
 };
