@@ -6,25 +6,24 @@ export interface SettingsContextState {
   isAttackedCellValuesEnabled: boolean;
 }
 
-export const SettingsContext = createContext<SettingsContextState>({
+const DEFAULT_SETTINGS: SettingsContextState = {
   isAttackedCellValuesEnabled: true,
-});
+};
+
+export const SettingsContext =
+  createContext<SettingsContextState>(DEFAULT_SETTINGS);
 
 export const useSettingsContext = () => useContext(SettingsContext);
 
 export const getLocalStorageSettings = (): SettingsContextState => {
+  const settings = DEFAULT_SETTINGS;
+
   const attackedCellsLocalStorage = localStorage.getItem(
     ATTACKED_CELLS_STORAGE_KEY
   );
-
-  // Defaults
-  let isAttackedCellValuesEnabled = true;
-
   if (attackedCellsLocalStorage !== null) {
-    isAttackedCellValuesEnabled = attackedCellsLocalStorage === "true";
+    settings.isAttackedCellValuesEnabled = attackedCellsLocalStorage === "true";
   }
 
-  return {
-    isAttackedCellValuesEnabled,
-  };
+  return settings;
 };
