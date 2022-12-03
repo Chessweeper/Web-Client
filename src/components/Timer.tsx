@@ -41,7 +41,7 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
 
   return (
     <h1 id="timer" className="board-header-item right">
-      {Math.floor(time / 100)}:{secs < 10 ? "0" + secs : secs}
+      {Math.floor(time / 100)}:{secs.toString().padStart(2, "0")}
     </h1>
   );
 });
