@@ -45,6 +45,24 @@ describe("BoardWrapper tests", () => {
     expect(puzzleCover).not.toBeInTheDocument();
   });
 
+  it("should set current action to shovel on initial render in classic mode", () => {
+    const { container } = render(<BoardWrapper {...boardProps} />);
+
+    const firstAction = container.querySelector("#action-buttons")?.firstChild;
+
+    expect(firstAction).toHaveClass("selected");
+  });
+
+  it("should set current action to first piece on initial render in puzzle mode", () => {
+    boardProps.G.gamemode = "p";
+
+    const { container } = render(<BoardWrapper {...boardProps} />);
+
+    const firstAction = container.querySelector("#action-buttons")?.firstChild;
+
+    expect(firstAction).toHaveClass("selected");
+  });
+
   describe("default board context", () => {
     it("should use empty object as default board context", () => {
       let context;

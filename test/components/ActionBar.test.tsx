@@ -125,18 +125,6 @@ describe("ActionBar tests", () => {
       expect(mockSetCurrAction).toHaveBeenLastCalledWith("R");
     });
 
-    it("should set current action to first available action on render", () => {
-      boardContext.G.gamemode = "p";
-
-      render(
-        <BoardContext.Provider value={boardContext}>
-          <ActionBar />
-        </BoardContext.Provider>
-      );
-
-      expect(mockSetCurrAction).toHaveBeenLastCalledWith("R");
-    });
-
     it("should set current action with keyboard shortcuts", () => {
       const { container } = render(
         <BoardContext.Provider value={boardContext}>
@@ -155,8 +143,7 @@ describe("ActionBar tests", () => {
       fireEvent.keyDown(container, { keyCode: 55 });
       fireEvent.keyDown(container, { keyCode: 56 });
 
-      // +1 call from initial render
-      expect(mockSetCurrAction).toHaveBeenCalledTimes(6);
+      expect(mockSetCurrAction).toHaveBeenCalledTimes(5);
     });
   });
 });
