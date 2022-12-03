@@ -3,7 +3,7 @@ import { ActionBar } from "./ActionBar";
 import { Board } from "./Board";
 import { Timer, TimerRefAttributes } from "./Timer";
 import { BoardPropsWithReload } from "./Client";
-import { BoardHeaderButon } from "./BoardHeaderButton";
+import { BoardHeaderButton } from "./BoardHeaderButton";
 
 export interface BoardContextState extends BoardPropsWithReload {
   currAction: string;
@@ -53,7 +53,7 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
         <div>
           <div id="board-header" className="flex hor">
             <h1 className="board-header-item">{numPiecesRemainingDisplay}</h1>
-            <BoardHeaderButon />
+            <BoardHeaderButton />
             <Timer ref={timerRef} />
           </div>
           <div id="board-container">

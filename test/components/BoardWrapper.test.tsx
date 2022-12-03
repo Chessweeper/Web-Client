@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import userEvent from "@testing-library/user-event";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import {
   BoardWrapper,
   useBoardContext,
@@ -43,6 +43,34 @@ describe("BoardWrapper tests", () => {
     }
 
     expect(puzzleCover).not.toBeInTheDocument();
+  });
+
+  describe("pieces counter", () => {
+    it("should show pieces remaining equal to game count if no pieces are placed", async () => {
+      render(<BoardWrapper {...boardProps} />);
+
+      const count = await screen.findByText("003");
+
+      expect(count).toBeInTheDocument();
+    });
+
+    it("should show pieces remaining if pieces have been placed", async () => {
+      boardProps.G.knownCells = ["R", "R"];
+      render(<BoardWrapper {...boardProps} />);
+
+      const count = await screen.findByText("001");
+
+      expect(count).toBeInTheDocument();
+    });
+
+    it("should show negative pieces remaining if more pieces placed than game count", async () => {
+      boardProps.G.knownCells = ["R", "R", "R", "R"];
+      render(<BoardWrapper {...boardProps} />);
+
+      const count = await screen.findByText("-01");
+
+      expect(count).toBeInTheDocument();
+    });
   });
 
   describe("default board context", () => {
