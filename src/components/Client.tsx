@@ -4,7 +4,7 @@ import { Game, GameState } from "../Game";
 import { generatePuzzleBoard } from "../Algs";
 import { BoardWrapper } from "./BoardWrapper";
 import { parseUrl } from "../Parsing";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
 
@@ -27,7 +27,10 @@ export const Client = (): JSX.Element => {
   const [searchParams] = useSearchParams();
 
   const [game, setGame] = useState<BgioGame | null>(null);
+  const [settingNextGame, setSettingNextGame] = useState(false);
   const [worker, setWorker] = useState<Worker | null>();
+
+  const nextGame = useRef<BgioGame | null>(null);
 
   const setupData = useMemo(() => parseUrl(searchParams), [searchParams]);
 
@@ -51,8 +54,8 @@ export const Client = (): JSX.Element => {
 
     if (setupData.gamemode === "p") {
       if (worker) {
-        setGame(null);
-        worker.postMessage(setupData);
+        setGame(nextGame.current);
+        nextGame.current = null;
       } else {
         const { cells, knownCells, error } = generatePuzzleBoard(
           setupData.seed,
@@ -71,7 +74,7 @@ export const Client = (): JSX.Element => {
     } else {
       setGame({ ...Game(setupData) });
     }
-  }, [worker, setGame, setupData]);
+  }, [worker, setupData]);
 
   // Setup web worker
   useEffect(() => {
@@ -91,7 +94,8 @@ export const Client = (): JSX.Element => {
           console.error(e.data);
         } else {
           const { cells, knownCells } = e.data;
-          setGame(Game({ ...setupData, cells, knownCells }));
+          nextGame.current = Game({ ...setupData, cells, knownCells });
+          setSettingNextGame(false);
         }
       };
       setWorker(w);
@@ -105,27 +109,55 @@ export const Client = (): JSX.Element => {
         setWorker(undefined);
       }
     };
-  }, [setGame, setupData]);
+  }, [setupData]);
 
-  // Wait for worker creation to start game
+  // On worker creation, start the game
   useEffect(() => {
     if (worker !== undefined) {
-      setupGame();
       window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [worker, setupGame]);
 
-  if (!game) {
-    return <div>Generating Board...</div>;
-  }
-  const Client = BgioClient({
-    game,
-    board: wrapBoardWithReload(setupGame, BoardWrapper),
-    numPlayers: 1,
-    debug: {
-      collapseOnLoad: true,
-    },
-  });
+      if (worker) {
+        if (setupData.gamemode === "c") {
+          setupGame();
+        } else {
+          setGame(null);
+          setSettingNextGame(false);
+          nextGame.current = null;
+        }
+      } else {
+        setupGame();
+      }
+    }
+  }, [setupData, worker, setupGame]);
+
+  useEffect(() => {
+    if (setupData.gamemode === "c") return;
+
+    if (game === null && nextGame.current) {
+      setGame(nextGame.current);
+      nextGame.current = null;
+    }
+
+    if (worker && !settingNextGame && nextGame.current === null) {
+      setSettingNextGame(true);
+      worker.postMessage(setupData);
+    }
+  }, [game, worker, settingNextGame, setupData]);
+
+  const Client = useMemo(
+    () =>
+      game
+        ? BgioClient({
+            game,
+            board: wrapBoardWithReload(setupGame, BoardWrapper),
+            numPlayers: 1,
+            debug: {
+              collapseOnLoad: true,
+            },
+          })
+        : () => <div>Generating Board...</div>,
+    [game, setupGame]
+  );
 
   return <Client />;
 };
