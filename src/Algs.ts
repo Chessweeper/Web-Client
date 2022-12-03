@@ -185,8 +185,8 @@ const pieceMovesCheck: Record<string, string> = {
 };
 
 export function fillPositions(
-  data: Array<string | number>
-): Array<string | number> {
+  data: Array<number | string>
+): Array<number | string> {
   const size = Math.sqrt(data.length); // Boards are always squared
 
   for (let y = 0; y < size; y++) {
@@ -201,6 +201,7 @@ export function fillPositions(
           y
         );
         for (const move of moves) {
+          // @ts-expect-error: T2322
           data[move]++;
         }
       }
@@ -216,13 +217,15 @@ export function generateBoard(
   pieces: string,
   size: number,
   count: number
-): Array<string | number> {
-  const piecesMdf = {};
-  for (const key in pieces) {
-    piecesMdf[key] = pieces[key];
+): Array<number | string> {
+  const piecesMdf: Record<string | number, number> = {};
+  console.log(pieces);
+  for (let i = 0; i < pieces.length; i++) {
+    // @ts-expect-error: T2322
+    piecesMdf[i] = pieces[i];
   }
 
-  const data = Array(size * size).fill(0);
+  const data: Array<number | string> = Array(size * size).fill(0);
   let i = count;
   while (i > 0) {
     const rand = Math.floor(random.next() * (size * size));
