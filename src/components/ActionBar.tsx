@@ -38,10 +38,6 @@ export const ActionBar = (): JSX.Element => {
   }, [actions, G.pieces, G.gamemode]);
 
   useEffect(() => {
-    if (availableActions.length > 0) {
-      setCurrAction(availableActions[0].ID);
-    }
-
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.keyCode >= 49 && e.keyCode <= 57) {
         e.preventDefault();
