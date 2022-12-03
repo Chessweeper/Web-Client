@@ -21,14 +21,38 @@ hr {
   flex-flow: wrap;
 }
 
-.flex.hor img {
+#action-buttons img {
   width: 64px;
   padding: 5px;
   margin: 5px;
 }
 
-.flex.hor .selected {
+#action-buttons .selected {
   background-color: green;
+}
+
+/* Board Header */
+
+#board-header {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.board-header-item {
+  width: 75px;
+}
+
+.board-header-item.right {
+  text-align: right;
+}
+
+#board-header-button {
+  width: 50px;
+  height: 50px;
+}
+
+#board-header-button img {
+  width: 30px;
 }
 
 /* Buttons */
@@ -139,13 +163,6 @@ hr {
 
 #popup button {
   font-size: 20px;
-}
-
-/* Game timer */
-
-#timer {
-  font-weight: bolder;
-  font-size: 30px;
 }
 
 /* Buttons used for gamemodes */

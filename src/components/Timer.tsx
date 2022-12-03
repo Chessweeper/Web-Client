@@ -40,9 +40,9 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
   const secs = time % 100;
 
   return (
-    <div id="timer">
-      {`${Math.floor(time / 100)}:${secs < 10 ? "0" + secs : secs}`}
-    </div>
+    <h1 id="timer" className="board-header-item right">
+      {Math.floor(time / 100)}:{secs < 10 ? "0" + secs : secs}
+    </h1>
   );
 });
 
