@@ -214,14 +214,13 @@ export function fillPositions(
 export function generateBoard(
   random: Random,
   id: number,
-  pieces: string,
+  pieces: Record<string, number>,
   size: number,
   count: number
 ): Array<number | string> {
   const piecesMdf: Record<string | number, number> = {};
   console.log(pieces);
   for (let i = 0; i < pieces.length; i++) {
-    // @ts-expect-error: T2322
     piecesMdf[i] = pieces[i];
   }
 
@@ -261,7 +260,7 @@ export function generateBoard(
 function validateBoard(
   data: Array<string | number>,
   discovered: boolean[],
-  pieces: string,
+  pieces: Record<string, number>,
   size: number
 ) {
   const thinkData = Array(size * size).fill(0);
@@ -325,7 +324,7 @@ function validateBoard(
 
 export function generatePuzzleBoard(
   seed: string,
-  pieces: string,
+  pieces: Record<string, number>,
   size: number,
   count: number,
   difficulty: number
