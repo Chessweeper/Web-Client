@@ -35,23 +35,6 @@ export const Client = (): JSX.Element => {
   const setupData = useMemo(() => parseUrl(searchParams), [searchParams]);
 
   const setupGame = useCallback(() => {
-    /* c8 ignore next 16 */
-    if (!import.meta.env.VITEST) {
-      console.log(
-        `Loading game: ${
-          setupData.gamemode === "c" ? "classic" : "puzzle"
-        } gamemode${
-          setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""
-        }, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${
-          setupData.size
-        }x${setupData.size} grid, piece${
-          Object.keys(setupData.pieces).length > 1 ? "s" : ""
-        } allowed: ${Object.keys(setupData.pieces)
-          .map((x) => `${x} (x${setupData.pieces[x]})`)
-          .join(", ")}`
-      );
-    }
-
     if (setupData.gamemode === "p") {
       if (worker) {
         setGame(nextGame.current);
@@ -76,8 +59,14 @@ export const Client = (): JSX.Element => {
     }
   }, [worker, setupData]);
 
-  // Setup web worker
+  // Setup web worker on URL change
   useEffect(() => {
+    /* c8 ignore next 7 */
+    if (!import.meta.env.VITEST) {
+      // prettier-ignore
+      console.log(`Loading game: ${setupData.gamemode === "c" ? "classic" : "puzzle"} gamemode${setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map((x) => `${x} (x${setupData.pieces[x]})`).join(", ")}`);
+    }
+
     // Firefox does not allow module workers, but PuzzleGenWorker is compiled
     // to a non-module type in production - so don't allow worker in dev with Firefox
     const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
@@ -111,33 +100,33 @@ export const Client = (): JSX.Element => {
     };
   }, [setupData]);
 
-  // On worker creation, start the game
+  // On worker creation, create a new game
   useEffect(() => {
     if (worker !== undefined) {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
-      if (worker) {
-        if (setupData.gamemode === "c") {
-          setupGame();
-        } else {
-          setGame(null);
-          setSettingNextGame(false);
-          nextGame.current = null;
-        }
+      // Use next game generation in puzzle mode
+      if (worker && setupData.gamemode === "p") {
+        setGame(null);
+        setSettingNextGame(false);
+        nextGame.current = null;
       } else {
         setupGame();
       }
     }
   }, [setupData, worker, setupGame]);
 
+  // Generate next game in puzzle mode
   useEffect(() => {
     if (setupData.gamemode === "c") return;
 
+    // Set the current game to the next game if the current game is null
     if (game === null && nextGame.current) {
       setGame(nextGame.current);
       nextGame.current = null;
     }
 
+    // When the next game has been consumed, tell the worker to generate a new one
     if (worker && !settingNextGame && nextGame.current === null) {
       setSettingNextGame(true);
       worker.postMessage(setupData);
