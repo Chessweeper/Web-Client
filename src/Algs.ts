@@ -201,8 +201,7 @@ export function fillPositions(
           y
         );
         for (const move of moves) {
-          // @ts-expect-error: T2322
-          data[move]++;
+          (data as number[])[move]++;
         }
       }
     }
