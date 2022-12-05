@@ -219,9 +219,9 @@ export function generateBoard(
   count: number
 ): Array<number | string> {
   const piecesMdf: Record<string | number, number> = {};
-  console.log(pieces);
-  for (let i = 0; i < pieces.length; i++) {
-    piecesMdf[i] = pieces[i];
+  for (let i = 0; i < Object.keys(pieces).length; i++) {
+    const key = Object.keys(pieces)[i];
+    piecesMdf[key] = pieces[key];
   }
 
   const data: Array<number | string> = Array(size * size).fill(0);
@@ -323,7 +323,7 @@ function validateBoard(
 }
 
 export function generatePuzzleBoard(
-  seed: string,
+  seed: string | null,
   pieces: Record<string, number>,
   size: number,
   count: number,

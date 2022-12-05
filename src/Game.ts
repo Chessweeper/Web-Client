@@ -19,9 +19,13 @@ export interface SetupData {
 
 export type GameState = Required<SetupData>;
 
-function generateClassicBoard(G: GameState, id: number) {
+function generateClassicBoard(
+  G: GameState,
+  id: number,
+  pieces: Record<string, number>
+) {
   const random = new Random(G.seed);
-  G.cells = fillPositions(generateBoard(random, id, G.pieces, G.size, G.count));
+  G.cells = fillPositions(generateBoard(random, id, pieces, G.size, G.count));
   G.knownCells = Array(G.size * G.size).fill(false);
 }
 
@@ -53,7 +57,7 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
   moves: {
     discoverPiece: ({ G, events }, id: number) => {
       if (G.cells === null) {
-        generateClassicBoard(G, id);
+        generateClassicBoard(G, id, setupData.pieces);
       }
 
       // cells and knownCells will be already set or set in generateClassicBoard
@@ -73,7 +77,7 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
 
     placeHint: ({ G, events }, id: number, action: string) => {
       if (G.cells === null) {
-        generateClassicBoard(G, id);
+        generateClassicBoard(G, id, setupData.pieces);
       }
 
       // cells and knownCells will be already set or set in generateClassicBoard
