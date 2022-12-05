@@ -40,7 +40,7 @@ class MockErrorWorker extends MockWorker {
 vi.stubGlobal("scrollTo", vi.fn());
 
 vi.spyOn(Algs, "generatePuzzleBoard").mockImplementation(() => {
-  return { cells: [], knownCells: [], error: undefined };
+  return { cells: [], knownCells: [], error: null };
 });
 
 describe("Client tests", () => {
