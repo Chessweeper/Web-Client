@@ -33,28 +33,28 @@
     "boardgame.io": "^0.50.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.3"
+    "react-router-dom": "^6.4.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
     "@vitejs/plugin-react": "^2.2.0",
-    "@vitest/coverage-c8": "^0.25.2",
-    "eslint": "^8.28.0",
+    "@vitest/coverage-c8": "^0.25.5",
+    "eslint": "^8.29.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-vitest-globals": "^1.2.0",
     "husky": "^8.0.0",
-    "jsdom": "^20.0.2",
-    "lint-staged": "^13.0.3",
-    "prettier": "2.7.1",
+    "jsdom": "^20.0.3",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.0",
     "typescript": "^4.9.3",
-    "vite": "^3.2.4",
-    "vitest": "^0.25.2"
+    "vite": "^3.2.5",
+    "vitest": "^0.25.5"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
