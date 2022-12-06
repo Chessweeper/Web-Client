@@ -78,18 +78,17 @@ hr {
 }
 
 #board-header-button:active {
-  transform: translate(0px, 2px);
+  transform: translateY(2px);
 }
 
 .board-header-item {
-  font-family: "Digital";
+  font-family: "Digital", monospace;
   font-size: 45px;
   letter-spacing: 3px;
   color: red;
   background-color: black;
   text-align: center;
   font-weight: bold;
-  padding: 2px 5px;
   width: 100px;
   border: 4px solid gray;
   border-style: inset;
