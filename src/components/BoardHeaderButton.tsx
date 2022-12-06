@@ -17,8 +17,10 @@ export const BoardHeaderButton = (): JSX.Element => {
   }
 
   return (
-    <button id="board-header-button" onClick={reload}>
-      <img src={image} />
-    </button>
+    <button
+      id="board-header-button"
+      onClick={reload}
+      style={{ backgroundImage: `url(${image})` }}
+    />
   );
 };

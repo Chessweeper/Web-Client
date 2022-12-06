@@ -34,13 +34,10 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
     timerRef.current?.start();
   };
 
-  const numPiecesPlaced = props.G.knownCells?.filter(
-    (cell) => typeof cell === "string"
-  )?.length;
+  const numPiecesPlaced =
+    props.G.knownCells?.filter((cell) => typeof cell === "string")?.length ?? 0;
 
-  const numPiecesRemaining = numPiecesPlaced
-    ? props.G.count - numPiecesPlaced
-    : props.G.count;
+  const numPiecesRemaining = props.G.count - numPiecesPlaced;
 
   const numPiecesRemainingDisplay =
     numPiecesRemaining < 0
@@ -50,7 +47,7 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
   return (
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
       <div className="flex">
-        <div>
+        <div id="board-shell">
           <div id="board-header" className="flex hor">
             <h1 className="board-header-item">{numPiecesRemainingDisplay}</h1>
             <BoardHeaderButton />
