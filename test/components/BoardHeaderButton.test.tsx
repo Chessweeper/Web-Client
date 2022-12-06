@@ -58,9 +58,9 @@ describe("BoardHeaderButton tests", () => {
         </BoardContext.Provider>
       );
 
-      const image = container.querySelector("#board-header-button")?.firstChild;
+      const button = container.querySelector("#board-header-button");
 
-      expect(image).toHaveAttribute("src", expectedSrc);
+      expect(button).toHaveStyle(`background-image: url(${expectedSrc})`);
     }
   );
 

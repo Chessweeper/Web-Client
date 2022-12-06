@@ -68,11 +68,31 @@ describe("Timer tests", () => {
     timerRef.current.start();
 
     act(() => {
-      vi.advanceTimersByTime(150);
+      vi.advanceTimersByTime(5000);
     });
 
     const timerDiv = container.querySelector("#timer");
 
-    expect(timerDiv?.textContent).toBe("0:15");
+    expect(timerDiv?.textContent).toBe("005");
+  });
+
+  it("should return the correct time with getTime", async () => {
+    const timerRef = createRef() as MutableRefObject<TimerRefAttributes>;
+
+    render(
+      <BoardContext.Provider value={boardContext}>
+        <Timer ref={timerRef} />
+      </BoardContext.Provider>
+    );
+
+    timerRef.current.start();
+
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    const time = timerRef.current.getTime();
+
+    expect(time).toBe(500);
   });
 });
