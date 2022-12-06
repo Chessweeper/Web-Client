@@ -4,6 +4,7 @@ import { Board } from "./Board";
 import { Timer, TimerRefAttributes } from "./Timer";
 import { BoardPropsWithReload } from "./Client";
 import { BoardHeaderButton } from "./BoardHeaderButton";
+import { BoardReport } from "./BoardReport";
 
 export interface BoardContextState extends BoardPropsWithReload {
   currAction: string;
@@ -13,25 +14,6 @@ export interface BoardContextState extends BoardPropsWithReload {
 
 export const BoardContext = createContext({} as BoardContextState);
 export const useBoardContext = () => useContext(BoardContext);
-
-const BoardReport = (): JSX.Element | null => {
-  const { ctx, timer } = useBoardContext();
-
-  if (ctx.gameover?.isWin == null) return null;
-
-  const message = ctx.gameover.isWin ? "You won!" : "You lost.";
-  const time = timer.getTime().toString().padStart(3, "0");
-  const timeDisplay =
-    time.slice(0, time.length - 2) + ":" + time.slice(time.length - 2);
-
-  return (
-    <div id="board-report">
-      <h3>
-        {message} {timeDisplay}
-      </h3>
-    </div>
-  );
-};
 
 export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
   const [currAction, setCurrAction] = useState("");
