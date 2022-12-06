@@ -14,6 +14,25 @@ export interface BoardContextState extends BoardPropsWithReload {
 export const BoardContext = createContext({} as BoardContextState);
 export const useBoardContext = () => useContext(BoardContext);
 
+const BoardReport = (): JSX.Element | null => {
+  const { ctx, timer } = useBoardContext();
+
+  if (ctx.gameover?.isWin == null) return null;
+
+  const message = ctx.gameover.isWin ? "You won!" : "You lost.";
+  const time = timer.getTime().toString().padStart(3, "0");
+  const timeDisplay =
+    time.slice(0, time.length - 2) + ":" + time.slice(time.length - 2);
+
+  return (
+    <div id="board-report">
+      <h3>
+        {message} {timeDisplay}
+      </h3>
+    </div>
+  );
+};
+
 export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
   const [currAction, setCurrAction] = useState("");
   const [displayCover, setDisplayCover] = useState(props.G.gamemode === "p");
@@ -48,10 +67,13 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
       <div className="flex">
         <div id="board-shell">
-          <div id="board-header" className="flex hor">
-            <h1 className="board-header-item">{numPiecesRemainingDisplay}</h1>
-            <BoardHeaderButton />
-            <Timer ref={timerRef} />
+          <div id="board-header" className="flex">
+            <div id="board-header-controls" className="flex hor">
+              <h1 className="board-header-item">{numPiecesRemainingDisplay}</h1>
+              <BoardHeaderButton />
+              <Timer ref={timerRef} />
+            </div>
+            <BoardReport />
           </div>
           <div id="board-container">
             <div>
