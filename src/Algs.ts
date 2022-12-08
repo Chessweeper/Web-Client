@@ -1,22 +1,22 @@
 import { Random } from "./Random";
 
-export function getMoves(piece, cells, size, x, y) {
-  const data = cells.map((cell) => {
-    if (typeof cell.known === "string") {
-      return cell.known;
-    } else if (typeof cell.value === "string") {
-      // strip hidden pieces from data, so they do not block calculations
-      return 0;
-    }
-
-    return cell.value;
-  });
-
+export function getMoves(
+  piece: string,
+  data: Array<string | number>,
+  size: number,
+  x: number,
+  y: number
+) {
   const moves = parseNotation(pieceMovesCheck[piece], data, size, x, y);
   return moves;
 }
 
-function isValid(data, size, x, y) {
+function isValid(
+  data: Array<string | number>,
+  size: number,
+  x: number,
+  y: number
+): boolean {
   return (
     x >= 0 &&
     x < size &&
@@ -26,9 +26,18 @@ function isValid(data, size, x, y) {
   );
 }
 
-function parseMove(dx, dy, length, constraints, data, size, x, y) {
-  const moves = [];
-  const orientation = [];
+function parseMove(
+  dx: number,
+  dy: number,
+  length: number,
+  constraints: number,
+  data: Array<string | number>,
+  size: number,
+  x: number,
+  y: number
+): number[] {
+  const moves: number[] = [];
+  const orientation: number[][] = [];
   const directions = [
     [-dx, -dy], // Forward
     [dx, dy], // Backward
@@ -37,14 +46,14 @@ function parseMove(dx, dy, length, constraints, data, size, x, y) {
   ];
   for (const d of [-1, 1]) {
     // For pieces like knights, we need to reverse the X for each direction
-    for (const rd in directions) {
-      if ((constraints & (2 ** rd)) === 0) {
-        continue;
+    directions.forEach((dir, i) => {
+      if ((constraints & (2 ** i)) === 0) {
+        return;
       }
-      const nrd = [directions[rd][0], directions[rd][1] * d];
+      const nrd = [dir[0], dir[1] * d];
       if (orientation.every((x) => x[0] !== nrd[0] || x[1] !== nrd[1]))
         orientation.push(nrd);
-    }
+    });
   }
   for (const [yi, xi] of orientation) {
     for (let i = 1; i <= length; i++) {
@@ -56,7 +65,7 @@ function parseMove(dx, dy, length, constraints, data, size, x, y) {
   return moves;
 }
 
-function parseDirection(letter) {
+function parseDirection(letter: string): number[] {
   switch (letter) {
     case "W":
       return [1, 0];
@@ -77,9 +86,16 @@ function parseDirection(letter) {
     case "G":
       return [3, 3];
   }
+  return [];
 }
 
-export function parseNotation(notation, data, size, x, y) {
+function parseNotation(
+  notation: string,
+  data: Array<string | number>,
+  size: number,
+  x: number,
+  y: number
+) {
   let str = "";
   for (let i = 0; i < notation.length; i++) {
     const s = notation[i];
@@ -94,10 +110,10 @@ export function parseNotation(notation, data, size, x, y) {
   }
   notation = str;
 
-  let d = []; // Direction we are going
+  let d: number[] = []; // Direction we are going
   let dir = null; // Letter indicating that direction
   let length = 1; // Length we are doing
-  let moves = [];
+  let moves: number[] = [];
   let constraints = 15;
   for (const s of notation) {
     if (s === s.toLowerCase()) {
@@ -132,7 +148,7 @@ export function parseNotation(notation, data, size, x, y) {
     } else if (dir === null) {
       d = parseDirection(s);
       dir = s;
-    } else if (!isNaN(s)) {
+    } else if (!isNaN(Number(s))) {
       length = parseInt(s);
     } else if (s === dir) {
       moves = moves.concat(
@@ -160,7 +176,7 @@ export function parseNotation(notation, data, size, x, y) {
 }
 
 // https://en.wikipedia.org/wiki/Betza%27s_funny_notation
-const pieceMovesCheck = {
+const pieceMovesCheck: Record<string, string> = {
   R: "WW",
   B: "FF",
   Q: "WWFF",
@@ -179,16 +195,24 @@ const pieceMovesCheck = {
   金: "WfF",
 };
 
-export function fillPositions(data) {
+export function fillPositions(
+  data: Array<number | string>
+): Array<number | string> {
   const size = Math.sqrt(data.length); // Boards are always squared
 
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       const value = data[y * size + x];
       if (!Number.isInteger(value)) {
-        const moves = parseNotation(pieceMovesCheck[value], data, size, x, y);
+        const moves = parseNotation(
+          pieceMovesCheck[String(value)],
+          data,
+          size,
+          x,
+          y
+        );
         for (const move of moves) {
-          data[move]++;
+          (data as number[])[move]++;
         }
       }
     }
@@ -197,13 +221,20 @@ export function fillPositions(data) {
   return data;
 }
 
-export function generateBoard(random, id, pieces, size, count) {
-  const piecesMdf = {};
-  for (const key in pieces) {
+export function generateBoard(
+  random: Random,
+  id: number,
+  pieces: Record<string, number>,
+  size: number,
+  count: number
+): Array<number | string> {
+  const piecesMdf: Record<string | number, number> = {};
+  for (let i = 0; i < Object.keys(pieces).length; i++) {
+    const key = Object.keys(pieces)[i];
     piecesMdf[key] = pieces[key];
   }
 
-  const data = Array(size * size).fill(0);
+  const data: Array<number | string> = Array(size * size).fill(0);
   let i = count;
   while (i > 0) {
     const rand = Math.floor(random.next() * (size * size));
@@ -236,7 +267,12 @@ export function generateBoard(random, id, pieces, size, count) {
   return data;
 }
 
-function validateBoard(data, discovered, pieces, size) {
+function validateBoard(
+  data: Array<string | number>,
+  discovered: boolean[],
+  pieces: Record<string, number>,
+  size: number
+) {
   const thinkData = Array(size * size).fill(0);
 
   // For each tile...
@@ -296,10 +332,16 @@ function validateBoard(data, discovered, pieces, size) {
   };
 }
 
-export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
-  let data;
-  let discovered;
-  let error;
+export function generatePuzzleBoard(
+  seed: string | null,
+  pieces: Record<string, number>,
+  size: number,
+  count: number,
+  difficulty: number
+) {
+  let data: Array<number | string> = [];
+  let discovered: boolean[] = [];
+  let error: string | null = null;
 
   const random = new Random(seed);
 
@@ -314,8 +356,8 @@ export function generatePuzzleBoard(seed, pieces, size, count, difficulty) {
     let giveup = false;
     while (!isSolved && !giveup) {
       // Get a random position that is not a piece and wasn't already taken
-      const possibilities = [];
-      for (const i in data) {
+      const possibilities: number[] = [];
+      for (let i = 0; i < data.length; i++) {
         if (
           !discovered[i] &&
           Number.isInteger(data[i]) &&

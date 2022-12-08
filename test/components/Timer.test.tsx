@@ -56,7 +56,7 @@ describe("Timer tests", () => {
     expect(timerRef.current.isRunning()).toBe(false);
   });
 
-  it("should render time with trailing zero if ms is less than 10", async () => {
+  it("should advance time correctly", async () => {
     const timerRef = createRef() as MutableRefObject<TimerRefAttributes>;
 
     const { container } = render(
@@ -68,18 +68,18 @@ describe("Timer tests", () => {
     timerRef.current.start();
 
     act(() => {
-      vi.advanceTimersByTime(50);
+      vi.advanceTimersByTime(5000);
     });
 
     const timerDiv = container.querySelector("#timer");
 
-    expect(timerDiv?.textContent).toBe("0:05");
+    expect(timerDiv?.textContent).toBe("005");
   });
 
-  it("should not render time with trailing zero if ms is at least 10", async () => {
+  it("should return the correct time with getTime", async () => {
     const timerRef = createRef() as MutableRefObject<TimerRefAttributes>;
 
-    const { container } = render(
+    render(
       <BoardContext.Provider value={boardContext}>
         <Timer ref={timerRef} />
       </BoardContext.Provider>
@@ -88,11 +88,11 @@ describe("Timer tests", () => {
     timerRef.current.start();
 
     act(() => {
-      vi.advanceTimersByTime(100);
+      vi.advanceTimersByTime(5000);
     });
 
-    const timerDiv = container.querySelector("#timer");
+    const time = timerRef.current.getTime();
 
-    expect(timerDiv?.textContent).toBe("0:10");
+    expect(time).toBe(500);
   });
 });

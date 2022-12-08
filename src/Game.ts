@@ -53,7 +53,8 @@ function isWinCondition(G: GameState, id: number) {
 }
 
 function calcAttackedCells(G: GameState) {
-  if (G.cells === null) return;
+  if (G.cells == null) return;
+  // for some reason get a possibly null warning in some places even with null check at top of function
 
   // Reset all values to zero
   G.cells.forEach((cell) => {
@@ -63,17 +64,27 @@ function calcAttackedCells(G: GameState) {
   // Recalculate all attacked cells
   G.cells.forEach((cell, id) => {
     if (typeof cell.known === "string") {
-      // if setting is turned on for numbers
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const data = G.cells!.map((cell) => {
+        if (typeof cell.known === "string") {
+          return cell.known;
+        } else if (typeof cell.value === "string") {
+          // strip hidden pieces from data, so they do not block calculations
+          return 0;
+        }
+
+        return cell.value;
+      });
+
       const moves = getMoves(
         cell.known,
-        G.cells,
+        data,
         G.size,
         id % G.size,
         Math.floor(id / G.size)
       );
 
       moves.forEach((move) => {
-        // for some reason get a possibly null warning even with null check at top of function
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         G.cells![move].attackedValue++;
       });
