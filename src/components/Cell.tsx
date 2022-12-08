@@ -92,7 +92,7 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       style={{ color: color, cursor: "pointer" }}
       onClick={onCellClick}
     >
-      {value}
+      {typeof value === "number" ? value.toString() : value}
     </td>
   );
 };
