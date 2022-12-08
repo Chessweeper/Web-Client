@@ -7,6 +7,7 @@ import {
 } from "../../src/components/BoardWrapper";
 import { createMockBoardPropsWithReload } from "../mocks";
 import { BoardPropsWithReload } from "../../src/components/Client";
+import { Cell } from "../../src/Game";
 
 let boardProps: BoardPropsWithReload;
 
@@ -55,7 +56,16 @@ describe("BoardWrapper tests", () => {
     });
 
     it("should show pieces remaining if pieces have been placed", async () => {
-      boardProps.G.knownCells = ["R", "R"];
+      boardProps.G.cells = Array<Cell>(
+        boardProps.G.size * boardProps.G.size
+      ).fill({
+        value: 0,
+        known: false,
+        attackedValue: 0,
+      });
+      boardProps.G.cells[0] = { value: 0, known: "R", attackedValue: 0 };
+      boardProps.G.cells[1] = { value: 0, known: "R", attackedValue: 0 };
+
       render(<BoardWrapper {...boardProps} />);
 
       const count = await screen.findByText("001");
@@ -64,7 +74,18 @@ describe("BoardWrapper tests", () => {
     });
 
     it("should show negative pieces remaining if more pieces placed than game count", async () => {
-      boardProps.G.knownCells = ["R", "R", "R", "R"];
+      boardProps.G.cells = Array<Cell>(
+        boardProps.G.size * boardProps.G.size
+      ).fill({
+        value: 0,
+        known: false,
+        attackedValue: 0,
+      });
+      boardProps.G.cells[0] = { value: 0, known: "R", attackedValue: 0 };
+      boardProps.G.cells[1] = { value: 0, known: "R", attackedValue: 0 };
+      boardProps.G.cells[2] = { value: 0, known: "R", attackedValue: 0 };
+      boardProps.G.cells[3] = { value: 0, known: "R", attackedValue: 0 };
+
       render(<BoardWrapper {...boardProps} />);
 
       const count = await screen.findByText("-01");

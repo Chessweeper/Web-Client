@@ -3,7 +3,7 @@ import { INVALID_MOVE } from "boardgame.io/core";
 import { fillPositions, generateBoard, getMoves } from "./Algs";
 import { Random } from "./Random";
 
-interface Cell {
+export interface Cell {
   value: number | string;
   attackedValue: number;
   known: boolean | string;

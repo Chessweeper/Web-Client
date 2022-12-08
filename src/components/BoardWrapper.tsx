@@ -36,7 +36,8 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
   };
 
   const numPiecesPlaced =
-    props.G.knownCells?.filter((cell) => typeof cell === "string")?.length ?? 0;
+    props.G.cells?.filter(({ known }) => typeof known === "string")?.length ??
+    0;
 
   const numPiecesRemaining = props.G.count - numPiecesPlaced;
 
