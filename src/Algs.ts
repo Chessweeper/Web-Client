@@ -238,20 +238,14 @@ export function generateBoard(
   count: number,
   data: Array<number | string>
 ): Array<number | string> {
-  const piecesMdf: Record<string | number, number> = {};
-  for (let i = 0; i < Object.keys(pieces).length; i++) {
-    const key = Object.keys(pieces)[i];
-    piecesMdf[key] = pieces[key];
-  }
-
   let i = count;
   while (i > 0) {
     const rand = Math.floor(random.next() * (size * size));
     if (rand !== id && Number.isInteger(data[rand])) {
-      const value = Math.floor(random.next() * Object.keys(piecesMdf).length);
-      const piece = Object.keys(piecesMdf)[value];
+      const value = Math.floor(random.next() * Object.keys(pieces).length);
+      const piece = Object.keys(pieces)[value];
 
-      if (piecesMdf[piece] === 0) {
+      if (pieces[piece] === 0) {
         // We reached the amount of time we could spawn that piece
         continue;
       }
@@ -269,7 +263,7 @@ export function generateBoard(
       }
 
       data[rand] = piece;
-      piecesMdf[piece]--;
+      pieces[piece]--;
       i--;
     }
   }
@@ -414,6 +408,22 @@ export function generatePuzzleBoard(
   let error: string | null = null;
   let discovered: boolean[] = [];
 
+  // We need to keep track of the pieces that were already placed and be able to roll back on the latest valid state in case of error
+  const piecesCopy: Record<string | number, number> = {};
+  const piecesSaveState: Record<string | number, number> = {};
+  function resetState(refState: Record<string | number, number>) {
+    for (let i = 0; i < Object.keys(refState).length; i++) {
+      const key = Object.keys(refState)[i];
+      piecesCopy[key] = refState[key];
+    }
+  }
+  function saveState() {
+    for (let i = 0; i < Object.keys(piecesCopy).length; i++) {
+      const key = Object.keys(piecesCopy)[i];
+      piecesSaveState[key] = piecesCopy[key];
+    }
+  }
+
   const random = new Random(seed);
 
   const startTime = performance.now();
@@ -423,20 +433,21 @@ export function generatePuzzleBoard(
   const subGenMaxIt = 50; // Max iteration count to attempt to place pieces for the sub generation part
   const firstGenCount = 4; // Number of pieces we place in the first generation
   for (; c < maxIt; c++) {
+    resetState(pieces); // Reset pieces on new loop
     const firstCount = count > firstGenCount ? firstGenCount : count; // Generate a first board with a max of 4 pieces
 
     data = fillPositions(
       generateBoard(
         random,
         -1,
-        pieces,
+        piecesCopy,
         size,
         firstCount,
         Array(size * size).fill(0)
       )
     );
 
-    let digData = digPuzzle(data, size, random, pieces);
+    let digData = digPuzzle(data, size, random, piecesCopy);
     let isSolved = digData["isSolved"];
     discovered = digData["discovered"];
 
@@ -458,6 +469,7 @@ export function generatePuzzleBoard(
     for (let i = firstCount; i < count; i++) {
       const startData = [...data]; // Original data, in case we change the puzzle and it no longer work
       for (let c2 = 0; c2 < subGenMaxIt; c2++) {
+        saveState();
         data = [...startData];
 
         // TODO: Use 2 separate boards for pieces and numbers
@@ -468,9 +480,11 @@ export function generatePuzzleBoard(
           }
         }
         // We update the current data array by just adding one piece
-        data = fillPositions(generateBoard(random, -1, pieces, size, 1, data));
+        data = fillPositions(
+          generateBoard(random, -1, piecesCopy, size, 1, data)
+        );
 
-        digData = digPuzzle(data, size, random, pieces);
+        digData = digPuzzle(data, size, random, piecesCopy);
         isSolved = digData["isSolved"];
         discovered = digData["discovered"];
 
@@ -482,6 +496,7 @@ export function generatePuzzleBoard(
               i + 1
             } pieces construction, sub-iteration n°${c2})`
           );
+          resetState(piecesSaveState);
         }
       }
       if (!isSolved) {
@@ -506,7 +521,7 @@ export function generatePuzzleBoard(
         }
 
         discovered[i] = false;
-        const validation = validateBoard(data, discovered, pieces, size);
+        const validation = validateBoard(data, discovered, piecesCopy, size);
         if (!validation["isSolved"]) {
           discovered[i] = true;
         }

@@ -96,6 +96,7 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
         }
       }
     }
+
     if (target !== null) {
       availablePieces[target.toUpperCase()] = Infinity;
     }
