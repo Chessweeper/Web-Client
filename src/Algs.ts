@@ -331,6 +331,51 @@ function validateBoard(
   };
 }
 
+// Once pieces are placed on a puzzle board, we need to generate empty tiles
+function digPuzzle(
+  data: Array<string | number>,
+  size: number,
+  random: Random,
+  pieces: Record<string, number>
+) {
+  const discovered = Array(size * size).fill(false);
+
+  let thinkData = null;
+  let isSolved = false;
+  let giveup = false;
+
+  // Generate base board
+  while (!isSolved && !giveup) {
+    // Get a random position that is not a piece and wasn't already taken
+    const possibilities: number[] = [];
+    for (let i = 0; i < data.length; i++) {
+      if (
+        !discovered[i] &&
+        Number.isInteger(data[i]) &&
+        (thinkData === null || thinkData[i] !== 0)
+      ) {
+        possibilities.push(i);
+      }
+    }
+    if (possibilities.length > 0) {
+      const randPos = Math.floor(random.next() * possibilities.length);
+      discovered[possibilities[randPos]] = true;
+    } else {
+      giveup = true; // Algorithm failed with this generation, we give up
+      continue;
+    }
+
+    const validation = validateBoard(data, discovered, pieces, size);
+    isSolved = validation["isSolved"];
+    thinkData = validation["thinkData"];
+  }
+
+  return {
+    isSolved: isSolved,
+    discovered: discovered,
+  };
+}
+
 export function generatePuzzleBoard(
   seed: string | null,
   pieces: Record<string, number>,
@@ -339,8 +384,8 @@ export function generatePuzzleBoard(
   difficulty: number
 ) {
   let data: Array<number | string> = [];
-  let discovered: boolean[] = [];
   let error: string | null = null;
+  let discovered: boolean[] = [];
 
   const random = new Random(seed);
 
@@ -359,37 +404,10 @@ export function generatePuzzleBoard(
         Array(size * size).fill(0)
       )
     );
-    discovered = Array(size * size).fill(false);
 
-    let thinkData = null;
-    let isSolved = false;
-    let giveup = false;
-
-    // Generate base board
-    while (!isSolved && !giveup) {
-      // Get a random position that is not a piece and wasn't already taken
-      const possibilities: number[] = [];
-      for (let i = 0; i < data.length; i++) {
-        if (
-          !discovered[i] &&
-          Number.isInteger(data[i]) &&
-          (thinkData === null || thinkData[i] !== 0)
-        ) {
-          possibilities.push(i);
-        }
-      }
-      if (possibilities.length > 0) {
-        const randPos = Math.floor(random.next() * possibilities.length);
-        discovered[possibilities[randPos]] = true;
-      } else {
-        giveup = true; // Algorithm failed with this generation, we give up
-        continue;
-      }
-
-      const validation = validateBoard(data, discovered, pieces, size);
-      isSolved = validation["isSolved"];
-      thinkData = validation["thinkData"];
-    }
+    const digData = digPuzzle(data, size, random, pieces);
+    const isSolved = digData["isSolved"];
+    discovered = digData["discovered"];
 
     // We try to remove tiles to match the difficulty
     if (!isSolved) {
@@ -448,6 +466,9 @@ export function generatePuzzleBoard(
       }
     }
   }
+
+  // DEBUG
+  console.log(data);
 
   return { cells: data, knownCells, error };
 }
