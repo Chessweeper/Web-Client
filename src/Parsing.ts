@@ -27,7 +27,7 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
     console.warn("Difficulty argument is ignored outside of puzzle gamemode");
   }
 
-  if (size < 3 || size > 100) {
+  if (size < 3 || size > 1000) {
     // Invalid board size
     console.warn(
       `Parsing error: invalid board size ${size}, falling back on 8`
