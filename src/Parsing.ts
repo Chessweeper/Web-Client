@@ -56,8 +56,12 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
   let availablePieces = {} as Record<string, number>;
   if (pieces !== null) {
     let target = null;
-    for (const letter of pieces) {
+
+    // Pieces string containing each piece, optionally followed by a number indicating the max value it can have
+    for (let i = 0; i < pieces.length; i++) {
+      let letter = pieces[i];
       if (isNaN(Number(letter))) {
+        // Piece found
         if (target !== null) {
           availablePieces[letter.toUpperCase()] = Infinity;
         }
@@ -70,9 +74,16 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
           );
         }
       } else {
+        // Number indicator found
         if (target === null) {
           console.warn(`Parsing error: no piece specified, value ignored`);
         } else {
+          while (i + 1 < pieces.length && !isNaN(Number(pieces[i + 1]))) {
+            // The next value in the string is also a number!
+            i++;
+            letter += pieces[i];
+          }
+
           const nb = parseInt(letter);
           if (nb > 0) {
             availablePieces[target] = nb;
