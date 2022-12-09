@@ -383,6 +383,16 @@ function digPuzzle(
   };
 }
 
+// https://stackoverflow.com/a/41633001/6663248
+function getTimeElapsed(startTime: number): number {
+  const endTime = performance.now();
+  let timeDiff = endTime - startTime;
+  timeDiff /= 1000;
+
+  const seconds = Math.round(timeDiff);
+  return seconds;
+}
+
 export function generatePuzzleBoard(
   seed: string | null,
   pieces: Record<string, number>,
@@ -396,9 +406,12 @@ export function generatePuzzleBoard(
 
   const random = new Random(seed);
 
+  const startTime = performance.now();
+
   let c = 0;
-  const maxIt = 200;
-  const firstGenCount = 4;
+  const maxIt = 100; // Max iteration count to attempt to generate a puzzle
+  const subGenMaxIt = 50; // Max iteration count to attempt to place pieces for the sub generation part
+  const firstGenCount = 4; // Number of pieces we place in the first generation
   for (; c < maxIt; c++) {
     const firstCount = count > firstGenCount ? firstGenCount : count; // Generate a first board with a max of 4 pieces
 
@@ -419,32 +432,54 @@ export function generatePuzzleBoard(
 
     if (!isSolved) {
       console.log(
-        `Skipping unsolvabled puzzle (${firstGenCount} pieces construction, iteration n°${c})`
+        `[${getTimeElapsed(
+          startTime
+        )}s] - Skipping unsolvabled puzzle (${firstGenCount} pieces construction, iteration n°${c})`
       );
       continue;
     }
 
-    const startData = [...data]; // Original data, in case we change the puzzle and it no longer work
+    console.log(
+      `[${getTimeElapsed(
+        startTime
+      )}s] - ${firstGenCount} pieces puzzle generated`
+    );
+
     for (let i = firstCount; i < count; i++) {
-      // We update the current data array by just adding one piece
-      data = fillPositions(
-        generateBoard(random, -1, pieces, size, 1, startData)
-      );
+      const startData = [...data]; // Original data, in case we change the puzzle and it no longer work
+      for (let c2 = 0; c2 < subGenMaxIt; c2++) {
+        data = [...startData];
 
-      digData = digPuzzle(data, size, random, pieces);
-      isSolved = digData["isSolved"];
-      discovered = digData["discovered"];
+        // We update the current data array by just adding one piece
+        data = fillPositions(generateBoard(random, -1, pieces, size, 1, data));
 
-      if (!isSolved) {
-        console.log(`Failed ${i} pieces construction`);
-        break;
+        digData = digPuzzle(data, size, random, pieces);
+        isSolved = digData["isSolved"];
+        discovered = digData["discovered"];
+
+        if (isSolved) {
+          break;
+        } else {
+          console.log(
+            `[${getTimeElapsed(startTime)}s] - Skipping unsolvabled puzzle (${
+              i + 1
+            } pieces construction, sub-iteration n°${c2})`
+          );
+        }
       }
     }
 
     // We try to remove tiles to match the difficulty
     if (!isSolved) {
-      console.log(`Skipping unsolvabled puzzle (iteration n°${c})`);
+      console.log(
+        `[${getTimeElapsed(
+          startTime
+        )}s] - Skipping unsolvabled puzzle (iteration n°${c})`
+      );
     } else {
+      console.log(
+        `[${getTimeElapsed(startTime)}s] - ${count} pieces puzzle generated`
+      );
       for (let i = 0; i < data.length; i++) {
         if (!discovered[i]) {
           continue;
@@ -460,7 +495,11 @@ export function generatePuzzleBoard(
       const emptyCasesAfter = discovered.filter((x) => x === false).length;
 
       if (difficulty !== -1 && difficulty > emptyCasesAfter) {
-        console.log(`Skipping puzzle with ${emptyCasesAfter} empty tiles`);
+        console.log(
+          `[${getTimeElapsed(
+            startTime
+          )}s] - Skipping puzzle with ${emptyCasesAfter} empty tiles`
+        );
       } else {
         if (difficulty !== -1) {
           // Set tiles to adjust difficulty
@@ -478,7 +517,7 @@ export function generatePuzzleBoard(
           }
         }
         console.log(
-          `Generated solved puzzle with ${
+          `[${getTimeElapsed(startTime)}s] - Generated solved puzzle with ${
             discovered.filter((x) => x === false).length
           } empty tiles`
         );
