@@ -326,12 +326,19 @@ function validateBoard(
   }
 
   return {
-    isSolved: isSolved,
-    thinkData: thinkData,
+    isSolved,
+    thinkData,
   };
 }
 
-// Once pieces are placed on a puzzle board, we need to generate empty tiles
+/**
+ * Once pieces are placed on a puzzle board, we need to generate empty tiles
+ * @param data Data array containing the pieces
+ * @param size Size of the board
+ * @param random Random class
+ * @param pieces List of pieces we can place, used later for validation purpose
+ * @returns Dictionary containing if the puzzle is solvable and the data array of tiles digged
+ */
 function digPuzzle(
   data: Array<string | number>,
   size: number,
@@ -371,8 +378,8 @@ function digPuzzle(
   }
 
   return {
-    isSolved: isSolved,
-    discovered: discovered,
+    isSolved,
+    discovered,
   };
 }
 
@@ -391,8 +398,9 @@ export function generatePuzzleBoard(
 
   let c = 0;
   const maxIt = 200;
+  const firstGenCount = 4;
   for (; c < maxIt; c++) {
-    const firstCount = count > 4 ? 4 : count; // Generate a first board with a max of 4 pieces
+    const firstCount = count > firstGenCount ? firstGenCount : count; // Generate a first board with a max of 4 pieces
 
     data = fillPositions(
       generateBoard(
@@ -405,13 +413,41 @@ export function generatePuzzleBoard(
       )
     );
 
-    const digData = digPuzzle(data, size, random, pieces);
-    const isSolved = digData["isSolved"];
+    let digData = digPuzzle(data, size, random, pieces);
+    let isSolved = digData["isSolved"];
     discovered = digData["discovered"];
+
+    if (!isSolved) {
+      console.log(
+        `Skipping unsolvabled puzzle (${firstGenCount} pieces construction, iteration n°${c})`
+      );
+      continue;
+    }
+
+    const startData = [...data]; // Original data, in case we change the puzzle and it no longer work
+    for (let i = firstCount; i < count; i++) {
+      // We update the current data array by just adding one piece
+      data = fillPositions(
+        generateBoard(random, -1, pieces, size, 1, startData)
+      );
+
+      digData = digPuzzle(data, size, random, pieces);
+      isSolved = digData["isSolved"];
+      discovered = digData["discovered"];
+
+      if (!isSolved) {
+        console.log(
+          `Skipping unsolvabled puzzle (${i} pieces construction, iteration n°${c})`
+        );
+        continue;
+      }
+    }
 
     // We try to remove tiles to match the difficulty
     if (!isSolved) {
-      console.log("Skipping unsolvabled puzzle");
+      console.log(
+        `Skipping unsolvabled puzzle (${count} pieces construction, iteration n°${c})`
+      );
     } else {
       for (let i = 0; i < data.length; i++) {
         if (!discovered[i]) {
@@ -466,9 +502,6 @@ export function generatePuzzleBoard(
       }
     }
   }
-
-  // DEBUG
-  console.log(data);
 
   return { cells: data, knownCells, error };
 }
