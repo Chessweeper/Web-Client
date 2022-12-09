@@ -1,6 +1,8 @@
-# Chessweeper
+# Chessweeper &middot; [![Discord](https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat)](https://discord.gg/VjJ95N2mV9)
 
-Chess X Minesweeper
+Chess X Minesweeper - Numbered tiles represent the number of pieces that have that tile in check.
+
+Play at https://chessweeper.com
 
 ![Preview](.github/preview.png)
 
@@ -12,29 +14,19 @@ To run unit tests, run `npm run test`.
 
 To build a release version of the game, run `npm run build`. The output is placed in the `build` directory.
 
-#### All NPM Commands
+### All NPM Commands
 
-`start`: run dev server
-
-`preview`: run output from local build directory (requires running build first)
-
-`build`: create production build in the `build` directory
-
-`test`: run unit tests
-
-`coverage`: run unit tests and generate a coverage report
-
-`format`: run prettier formatting on all files (husky does this on staged files before a commit)
-
-`lint`: check for eslint warnings/errors in all files
-
-`tsc`: run typescript compiler to check for type errors in all ts/tsx files
-
-`prepare`: automatically run by NPM during install to setup husky
-
-## Other links
-
-- [Discord](https://discord.gg/VjJ95N2mV9)
+| Command    | Description                                                                            |
+| ---------- | -------------------------------------------------------------------------------------- |
+| `start`    | run dev server                                                                         |
+| `preview`  | run output from local build directory (requires running build first)                   |
+| `build`    | create production build in the `build` directory                                       |
+| `test`     | run unit tests                                                                         |
+| `coverage` | run unit tests and generate a coverage report                                          |
+| `format`   | run prettier formatting on all files (husky does this on staged files before a commit) |
+| `lint`     | check for eslint warnings/errors in all files                                          |
+| `tsc`      | run typescript compiler to check for type errors in all ts/tsx files                   |
+| `prepare`  | automatically run by NPM during install to setup husky                                 |
 
 ## Credits
 
