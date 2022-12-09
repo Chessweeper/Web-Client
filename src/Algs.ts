@@ -338,7 +338,7 @@ export function generatePuzzleBoard(
   count: number,
   difficulty: number
 ) {
-  const data: Array<number | string> = [];
+  let data: Array<number | string> = [];
   let discovered: boolean[] = [];
   let error: string | null = null;
 
@@ -347,12 +347,17 @@ export function generatePuzzleBoard(
   let c = 0;
   const maxIt = 200;
   for (; c < maxIt; c++) {
-    let data: Array<number | string> = Array(size * size).fill(0);
-
     const firstCount = count > 4 ? 4 : count; // Generate a first board with a max of 4 pieces
 
     data = fillPositions(
-      generateBoard(random, -1, pieces, size, firstCount, data)
+      generateBoard(
+        random,
+        -1,
+        pieces,
+        size,
+        firstCount,
+        Array(size * size).fill(0)
+      )
     );
     discovered = Array(size * size).fill(false);
 
