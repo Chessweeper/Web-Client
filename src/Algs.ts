@@ -450,6 +450,13 @@ export function generatePuzzleBoard(
       for (let c2 = 0; c2 < subGenMaxIt; c2++) {
         data = [...startData];
 
+        // TODO: Use 2 separate boards for pieces and numbers
+        // This loop is used to remove all numbers and set them back to 0
+        for (let i = 0; i < data.length; i++) {
+          if (!isNaN(Number(data[i]))) {
+            data[i] = 0;
+          }
+        }
         // We update the current data array by just adding one piece
         data = fillPositions(generateBoard(random, -1, pieces, size, 1, data));
 
@@ -466,6 +473,9 @@ export function generatePuzzleBoard(
             } pieces construction, sub-iteration n°${c2})`
           );
         }
+      }
+      if (!isSolved) {
+        break;
       }
     }
 
