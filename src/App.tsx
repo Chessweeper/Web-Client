@@ -1,29 +1,18 @@
-import { useState } from "react";
+import { Provider } from "react-redux";
 import { Client } from "./components/Client";
 import { Footer } from "./components/Footer";
-import { SettingsPanel } from "./components/SettingsPanel";
-import { getLocalStorageSettings, SettingsContext } from "./GlobalSettings";
+import { store } from "./store";
 
 export const App = (): JSX.Element => {
-  const [globalSettings, setGlobalSettings] = useState(
-    getLocalStorageSettings()
-  );
-
   return (
-    <>
-      <SettingsPanel
-        settings={globalSettings}
-        setSettings={setGlobalSettings}
-      />
-      <SettingsContext.Provider value={globalSettings}>
-        <div>
-          <div className="flex">
-            <Client />
-          </div>
-          <hr />
-          <Footer />
+    <Provider store={store}>
+      <div>
+        <div className="flex">
+          <Client />
         </div>
-      </SettingsContext.Provider>
-    </>
+        <hr />
+        <Footer />
+      </div>
+    </Provider>
   );
 };

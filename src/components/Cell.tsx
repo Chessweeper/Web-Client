@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useSettingsContext } from "../GlobalSettings";
 import { getPiece } from "../Pieces";
+import { useAppSelector } from "../store";
 import { useBoardContext } from "./BoardWrapper";
 
 interface CellProps {
@@ -9,7 +9,9 @@ interface CellProps {
 
 export const Cell = ({ id }: CellProps): JSX.Element => {
   const { G, ctx, moves, currAction, timer } = useBoardContext();
-  const { isAttackedCellValuesEnabled } = useSettingsContext();
+  const isAttackedCellValuesEnabled = useAppSelector(
+    (s) => s.settings.isAttackedCellValuesEnabled
+  );
 
   let className = "cell";
   let value: string | number | JSX.Element = "";
