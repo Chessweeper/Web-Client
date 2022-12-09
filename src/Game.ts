@@ -1,6 +1,6 @@
 import { Game as BgioGame } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { fillPositions, generateBoard, parseNotation } from "./Algs";
+import { fillPositions, generateBoard, getMoves } from "./Algs";
 import { Random } from "./Random";
 
 export interface Cell {
@@ -83,7 +83,7 @@ function calcAttackedCells(G: GameState) {
         return cell.value;
       });
 
-      const moves = parseNotation(
+      const moves = getMoves(
         cell.known,
         data,
         G.size,
