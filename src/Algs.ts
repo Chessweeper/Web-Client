@@ -1,16 +1,5 @@
 import { Random } from "./Random";
 
-export function getMoves(
-  piece: string,
-  data: Array<string | number>,
-  size: number,
-  x: number,
-  y: number
-) {
-  const moves = parseNotation(pieceMovesCheck[piece], data, size, x, y);
-  return moves;
-}
-
 function isValid(
   data: Array<string | number>,
   size: number,
@@ -89,7 +78,7 @@ function parseDirection(letter: string): number[] {
   return [];
 }
 
-function parseNotation(
+export function parseNotation(
   notation: string,
   data: Array<string | number>,
   size: number,
