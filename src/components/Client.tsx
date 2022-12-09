@@ -54,7 +54,7 @@ export const Client = (): JSX.Element => {
         setGame(null);
         worker.postMessage(setupData);
       } else {
-        const { cells, knownCells, error } = generatePuzzleBoard(
+        const { cells, error } = generatePuzzleBoard(
           setupData.seed,
           setupData.pieces,
           setupData.size,
@@ -65,7 +65,7 @@ export const Client = (): JSX.Element => {
         if (error) {
           console.error(error);
         } else {
-          setGame({ ...Game({ ...setupData, cells, knownCells }) });
+          setGame({ ...Game({ ...setupData, cells }) });
         }
       }
     } else {
@@ -90,8 +90,8 @@ export const Client = (): JSX.Element => {
         if (typeof e.data === "string") {
           console.error(e.data);
         } else {
-          const { cells, knownCells } = e.data;
-          setGame(Game({ ...setupData, cells, knownCells }));
+          const { cells } = e.data;
+          setGame(Game({ ...setupData, cells }));
         }
       };
       setWorker(w);
@@ -115,17 +115,24 @@ export const Client = (): JSX.Element => {
     }
   }, [worker, setupGame]);
 
+  const Client = useMemo(
+    () =>
+      game
+        ? BgioClient({
+            game,
+            board: wrapBoardWithReload(setupGame, BoardWrapper),
+            numPlayers: 1,
+            debug: {
+              collapseOnLoad: true,
+            },
+          })
+        : () => null,
+    [game, setupGame]
+  );
+
   if (!game) {
     return <div>Generating Board...</div>;
   }
-  const Client = BgioClient({
-    game,
-    board: wrapBoardWithReload(setupGame, BoardWrapper),
-    numPlayers: 1,
-    debug: {
-      collapseOnLoad: true,
-    },
-  });
 
   return <Client />;
 };

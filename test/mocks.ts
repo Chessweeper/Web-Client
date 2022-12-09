@@ -15,7 +15,6 @@ export const createMockBoardPropsWithReload = (): BoardPropsWithReload => ({
       Q: Infinity,
     },
     cells: null,
-    knownCells: null,
   },
   ctx: {
     numPlayers: 1,

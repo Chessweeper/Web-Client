@@ -1,5 +1,15 @@
 import { Random } from "./Random";
 
+export function getMoves(
+  piece: string,
+  data: Array<string | number>,
+  size: number,
+  x: number,
+  y: number
+) {
+  return parseNotation(pieceMovesCheck[piece], data, size, x, y);
+}
+
 function isValid(
   data: Array<string | number>,
   size: number,
@@ -526,17 +536,22 @@ export function generatePuzzleBoard(
     }
   }
 
-  let knownCells;
+  let cells;
   if (c === maxIt) {
     error = "Failed to generate puzzle";
   } else {
-    knownCells = Array(size * size).fill(false);
+    cells = data.map((item) => ({
+      value: item,
+      known: false,
+      attackedValue: 0,
+    }));
+
     for (const i in discovered) {
       if (discovered[i]) {
-        knownCells[i] = true;
+        cells[i].known = true;
       }
     }
   }
 
-  return { cells: data, knownCells, error };
+  return { cells, error };
 }

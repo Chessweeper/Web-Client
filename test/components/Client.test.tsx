@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { render } from "@testing-library/react";
 import { Client } from "../../src/components/Client";
 import * as Algs from "../../src/Algs";
+import * as BoardWrapper from "../../src/components/BoardWrapper";
 
 class MockWorker {
   url: string;
@@ -19,7 +20,6 @@ class MockWorker {
     const mockResponse = {
       data: {
         cells: [],
-        knownCells: [],
       },
     };
     this.onmessage(mockResponse);
@@ -40,7 +40,11 @@ class MockErrorWorker extends MockWorker {
 vi.stubGlobal("scrollTo", vi.fn());
 
 vi.spyOn(Algs, "generatePuzzleBoard").mockImplementation(() => {
-  return { cells: [], knownCells: [], error: null };
+  return { cells: [], error: null };
+});
+
+vi.spyOn(BoardWrapper, "BoardWrapper").mockImplementation(() => {
+  return <div id="mockBoardWrapper" />;
 });
 
 describe("Client tests", () => {
@@ -55,7 +59,7 @@ describe("Client tests", () => {
   it("should generate classic game", () => {
     const { container } = render(<Client />, { wrapper: MemoryRouter });
 
-    const board = container.querySelector("#board-container");
+    const board = container.querySelector("#mockBoardWrapper");
 
     expect(board).toBeInTheDocument();
   });
@@ -67,7 +71,7 @@ describe("Client tests", () => {
       </MemoryRouter>
     );
 
-    const board = container.querySelector("#board-container");
+    const board = container.querySelector("#mockBoardWrapper");
 
     expect(board).toBeInTheDocument();
   });
@@ -94,7 +98,7 @@ describe("Client tests", () => {
       </MemoryRouter>
     );
 
-    const board = container.querySelector("#board-container");
+    const board = container.querySelector("#mockBoardWrapper");
 
     expect(board).toBeInTheDocument();
   });

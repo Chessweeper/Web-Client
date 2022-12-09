@@ -1,11 +1,12 @@
 // @vitest-environment jsdom
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import {
   BoardContext,
   BoardContextState,
 } from "../../src/components/BoardWrapper";
 import { Board } from "../../src/components/Board";
 import { createMockBoardContext } from "../mocks";
+import { renderWithProviders } from "../mockStore";
 
 let boardContext: BoardContextState;
 
@@ -16,7 +17,7 @@ describe("Board tests", () => {
   });
 
   it("should render a table with size * size cells", () => {
-    render(
+    renderWithProviders(
       <BoardContext.Provider value={boardContext}>
         <Board />
       </BoardContext.Provider>
@@ -33,7 +34,7 @@ describe("Board tests", () => {
   it("should render small class table when size > 10", () => {
     boardContext.G.size = 11;
 
-    render(
+    renderWithProviders(
       <BoardContext.Provider value={boardContext}>
         <Board />
       </BoardContext.Provider>
