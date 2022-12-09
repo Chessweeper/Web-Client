@@ -89,6 +89,7 @@ hr {
   border-style: inset;
   padding: 10px 0;
   margin: 0;
+  line-height: 30px;
 }
 
 #board-report {

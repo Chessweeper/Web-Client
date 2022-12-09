@@ -24,8 +24,15 @@ export type GameState = Required<SetupData>;
 
 function generateClassicBoard(G: GameState, id: number) {
   const random = new Random(G.seed);
-  const filledPositions: (string | number)[] = fillPositions(
-    generateBoard(random, id, G.pieces, G.size, G.count)
+  const filledPositions = fillPositions(
+    generateBoard(
+      random,
+      id,
+      G.pieces,
+      G.size,
+      G.count,
+      Array(G.size * G.size).fill(0)
+    )
   );
   G.cells = filledPositions.map((pos) => ({
     value: pos,
