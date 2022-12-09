@@ -436,18 +436,14 @@ export function generatePuzzleBoard(
       discovered = digData["discovered"];
 
       if (!isSolved) {
-        console.log(
-          `Skipping unsolvabled puzzle (${i} pieces construction, iteration n°${c})`
-        );
-        continue;
+        console.log(`Failed ${i} pieces construction`);
+        break;
       }
     }
 
     // We try to remove tiles to match the difficulty
     if (!isSolved) {
-      console.log(
-        `Skipping unsolvabled puzzle (${count} pieces construction, iteration n°${c})`
-      );
+      console.log(`Skipping unsolvabled puzzle (iteration n°${c})`);
     } else {
       for (let i = 0; i < data.length; i++) {
         if (!discovered[i]) {
