@@ -4,7 +4,7 @@ import { Game, GameState } from "../Game";
 import { generatePuzzleBoard } from "../Algs";
 import { BoardWrapper } from "./BoardWrapper";
 import { parseUrl } from "../Parsing";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
 
@@ -27,32 +27,18 @@ export const Client = (): JSX.Element => {
   const [searchParams] = useSearchParams();
 
   const [game, setGame] = useState<BgioGame | null>(null);
+  const [settingNextGame, setSettingNextGame] = useState(false);
   const [worker, setWorker] = useState<Worker | null>();
+
+  const nextGame = useRef<BgioGame | null>(null);
 
   const setupData = useMemo(() => parseUrl(searchParams), [searchParams]);
 
   const setupGame = useCallback(() => {
-    /* c8 ignore next 16 */
-    if (!import.meta.env.VITEST) {
-      console.log(
-        `Loading game: ${
-          setupData.gamemode === "c" ? "classic" : "puzzle"
-        } gamemode${
-          setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""
-        }, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${
-          setupData.size
-        }x${setupData.size} grid, piece${
-          Object.keys(setupData.pieces).length > 1 ? "s" : ""
-        } allowed: ${Object.keys(setupData.pieces)
-          .map((x) => `${x} (x${setupData.pieces[x]})`)
-          .join(", ")}`
-      );
-    }
-
     if (setupData.gamemode === "p") {
       if (worker) {
-        setGame(null);
-        worker.postMessage(setupData);
+        setGame(nextGame.current);
+        nextGame.current = null;
       } else {
         const { cells, error } = generatePuzzleBoard(
           setupData.seed,
@@ -71,10 +57,16 @@ export const Client = (): JSX.Element => {
     } else {
       setGame({ ...Game(setupData) });
     }
-  }, [worker, setGame, setupData]);
+  }, [worker, setupData]);
 
-  // Setup web worker
+  // Setup web worker on URL change
   useEffect(() => {
+    /* c8 ignore next 7 */
+    if (!import.meta.env.VITEST) {
+      // prettier-ignore
+      console.log(`Loading game: ${setupData.gamemode === "c" ? "classic" : "puzzle"} gamemode${setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map((x) => `${x} (x${setupData.pieces[x]})`).join(", ")}`);
+    }
+
     // Firefox does not allow module workers, but PuzzleGenWorker is compiled
     // to a non-module type in production - so don't allow worker in dev with Firefox
     const isFirefox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
@@ -91,7 +83,8 @@ export const Client = (): JSX.Element => {
           console.error(e.data);
         } else {
           const { cells } = e.data;
-          setGame(Game({ ...setupData, cells }));
+          nextGame.current = Game({ ...setupData, cells });
+          setSettingNextGame(false);
         }
       };
       setWorker(w);
@@ -105,15 +98,40 @@ export const Client = (): JSX.Element => {
         setWorker(undefined);
       }
     };
-  }, [setGame, setupData]);
+  }, [setupData]);
 
-  // Wait for worker creation to start game
+  // On worker creation, create a new game
   useEffect(() => {
     if (worker !== undefined) {
-      setupGame();
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Use next game generation in puzzle mode
+      if (worker && setupData.gamemode === "p") {
+        setGame(null);
+        setSettingNextGame(false);
+        nextGame.current = null;
+      } else {
+        setupGame();
+      }
     }
-  }, [worker, setupGame]);
+  }, [setupData, worker, setupGame]);
+
+  // Generate next game in puzzle mode
+  useEffect(() => {
+    if (setupData.gamemode === "c") return;
+
+    // Set the current game to the next game if the current game is null
+    if (game === null && nextGame.current) {
+      setGame(nextGame.current);
+      nextGame.current = null;
+    }
+
+    // When the next game has been consumed, tell the worker to generate a new one
+    if (worker && !settingNextGame && nextGame.current === null) {
+      setSettingNextGame(true);
+      worker.postMessage(setupData);
+    }
+  }, [game, worker, settingNextGame, setupData]);
 
   const Client = useMemo(
     () =>
@@ -126,13 +144,9 @@ export const Client = (): JSX.Element => {
               collapseOnLoad: true,
             },
           })
-        : () => null,
+        : () => <div>Generating Board...</div>,
     [game, setupGame]
   );
-
-  if (!game) {
-    return <div>Generating Board...</div>;
-  }
 
   return <Client />;
 };

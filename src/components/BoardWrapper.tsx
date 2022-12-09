@@ -17,7 +17,9 @@ export const BoardContext = createContext({} as BoardContextState);
 export const useBoardContext = () => useContext(BoardContext);
 
 export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
-  const [currAction, setCurrAction] = useState("");
+  const [currAction, setCurrAction] = useState(
+    props.G.gamemode === "c" ? "" : Object.keys(props.G.pieces)[0]
+  );
   const [displayCover, setDisplayCover] = useState(props.G.gamemode === "p");
   const timerRef = useRef() as React.MutableRefObject<TimerRefAttributes>;
 

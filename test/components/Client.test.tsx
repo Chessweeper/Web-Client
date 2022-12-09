@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // @vitest-environment jsdom
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { Client } from "../../src/components/Client";
 import * as Algs from "../../src/Algs";
 import * as BoardWrapper from "../../src/components/BoardWrapper";
@@ -22,7 +23,11 @@ class MockWorker {
         cells: [],
       },
     };
-    this.onmessage(mockResponse);
+
+    // Give component time to rerender
+    setTimeout(() => {
+      this.onmessage(mockResponse);
+    }, 0);
   }
 
   terminate() {}
@@ -43,13 +48,11 @@ vi.spyOn(Algs, "generatePuzzleBoard").mockImplementation(() => {
   return { cells: [], error: null };
 });
 
-vi.spyOn(BoardWrapper, "BoardWrapper").mockImplementation(() => {
-  return <div id="mockBoardWrapper" />;
-});
-
 describe("Client tests", () => {
   beforeEach(() => {
-    (window.Worker as any) = MockWorker;
+    vi.spyOn(BoardWrapper, "BoardWrapper").mockImplementation(() => {
+      return <div id="mockBoardWrapper" />;
+    });
   });
 
   afterEach(() => {
@@ -64,34 +67,7 @@ describe("Client tests", () => {
     expect(board).toBeInTheDocument();
   });
 
-  it("should generate puzzle game with worker when available", () => {
-    const { container } = render(
-      <MemoryRouter initialEntries={["?g=p"]}>
-        <Client />
-      </MemoryRouter>
-    );
-
-    const board = container.querySelector("#mockBoardWrapper");
-
-    expect(board).toBeInTheDocument();
-  });
-
-  it("should handle worker puzzle generation error", () => {
-    (window.Worker as any) = MockErrorWorker;
-    console.error = vi.fn();
-
-    render(
-      <MemoryRouter initialEntries={["?g=p"]}>
-        <Client />
-      </MemoryRouter>
-    );
-
-    expect(console.error).toHaveBeenCalledTimes(1);
-  });
-
   it("should generate puzzle game without worker when unavailable", () => {
-    (window.Worker as any) = undefined;
-
     const { container } = render(
       <MemoryRouter initialEntries={["?g=p"]}>
         <Client />
@@ -104,7 +80,6 @@ describe("Client tests", () => {
   });
 
   it("should handle non-worker puzzle generation error", () => {
-    (window.Worker as any) = undefined;
     console.error = vi.fn();
     vi.spyOn(Algs, "generatePuzzleBoard").mockImplementation(() => {
       return { cells: [], knownCells: [], error: "mock error" };
@@ -117,5 +92,66 @@ describe("Client tests", () => {
     );
 
     expect(console.error).toHaveBeenCalledTimes(1);
+  });
+
+  describe("puzzle worker", () => {
+    beforeEach(() => {
+      (window.Worker as any) = MockWorker;
+    });
+
+    it("should generate puzzle game with worker", async () => {
+      const { container } = render(
+        <MemoryRouter initialEntries={["?g=p"]}>
+          <Client />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        const board = container.querySelector("#mockBoardWrapper");
+        expect(board).toBeInTheDocument();
+      });
+    });
+
+    it("should create new game on reload with worker", async () => {
+      vi.spyOn(BoardWrapper, "BoardWrapper").mockImplementation((props) => {
+        return (
+          <div id="mockBoardWrapper">
+            <button id="popup-reload" onClick={props.reload}></button>
+          </div>
+        );
+      });
+
+      const { container } = render(
+        <MemoryRouter initialEntries={["?g=p"]}>
+          <Client />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        const reloadButton = container.querySelector("#popup-reload");
+        expect(reloadButton).toBeInTheDocument();
+      });
+
+      const reloadButton = container.querySelector("#popup-reload");
+      if (reloadButton) await userEvent.click(reloadButton);
+
+      await waitFor(() => {
+        const board = container.querySelector("#mockBoardWrapper");
+        expect(board).toBeInTheDocument();
+      });
+    });
+
+    it("should handle worker puzzle generation error", () => {
+      (window.Worker as any) = MockErrorWorker;
+      console.error = vi.fn();
+
+      render(
+        <MemoryRouter initialEntries={["?g=p"]}>
+          <Client />
+        </MemoryRouter>
+      );
+
+      expect(console.error).toHaveBeenCalledTimes(1);
+    });
   });
 });
