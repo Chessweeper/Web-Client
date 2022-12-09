@@ -96,7 +96,7 @@ describe("BoardWrapper tests", () => {
   });
 
   it("should set current action to shovel on initial render in classic mode", () => {
-    const { container } = render(<BoardWrapper {...boardProps} />);
+    const { container } = renderWithProviders(<BoardWrapper {...boardProps} />);
 
     const firstAction = container.querySelector("#action-buttons")?.firstChild;
 
@@ -106,7 +106,7 @@ describe("BoardWrapper tests", () => {
   it("should set current action to first piece on initial render in puzzle mode", () => {
     boardProps.G.gamemode = "p";
 
-    const { container } = render(<BoardWrapper {...boardProps} />);
+    const { container } = renderWithProviders(<BoardWrapper {...boardProps} />);
 
     const firstAction = container.querySelector("#action-buttons")?.firstChild;
 
