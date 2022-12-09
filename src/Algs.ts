@@ -210,12 +210,23 @@ export function fillPositions(
   return data;
 }
 
+/**
+ *
+ * @param random  Random class
+ * @param id      Tile ID where we must not generate a piece on
+ * @param pieces  List of pieces we can use for the generation
+ * @param size    Size of the board
+ * @param count   Number of pieces to place
+ * @param data    Initial array of data
+ * @returns       Board generated with pieces
+ */
 export function generateBoard(
   random: Random,
   id: number,
   pieces: Record<string, number>,
   size: number,
-  count: number
+  count: number,
+  data: Array<number | string>
 ): Array<number | string> {
   const piecesMdf: Record<string | number, number> = {};
   for (let i = 0; i < Object.keys(pieces).length; i++) {
@@ -223,7 +234,6 @@ export function generateBoard(
     piecesMdf[key] = pieces[key];
   }
 
-  const data: Array<number | string> = Array(size * size).fill(0);
   let i = count;
   while (i > 0) {
     const rand = Math.floor(random.next() * (size * size));
@@ -328,21 +338,29 @@ export function generatePuzzleBoard(
   count: number,
   difficulty: number
 ) {
-  let data: Array<number | string> = [];
+  const data: Array<number | string> = [];
   let discovered: boolean[] = [];
   let error: string | null = null;
 
   const random = new Random(seed);
 
   let c = 0;
-  const maxIt = 300;
+  const maxIt = 200;
   for (; c < maxIt; c++) {
-    data = fillPositions(generateBoard(random, -1, pieces, size, count));
+    let data: Array<number | string> = Array(size * size).fill(0);
+
+    const firstCount = count > 4 ? 4 : count; // Generate a first board with a max of 4 pieces
+
+    data = fillPositions(
+      generateBoard(random, -1, pieces, size, firstCount, data)
+    );
     discovered = Array(size * size).fill(false);
 
     let thinkData = null;
     let isSolved = false;
     let giveup = false;
+
+    // Generate base board
     while (!isSolved && !giveup) {
       // Get a random position that is not a piece and wasn't already taken
       const possibilities: number[] = [];
@@ -368,6 +386,7 @@ export function generatePuzzleBoard(
       thinkData = validation["thinkData"];
     }
 
+    // We try to remove tiles to match the difficulty
     if (!isSolved) {
       console.log("Skipping unsolvabled puzzle");
     } else {
