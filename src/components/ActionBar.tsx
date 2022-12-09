@@ -69,11 +69,8 @@ export const ActionBar = (): JSX.Element => {
   });
 
   return (
-    <div>
-      <p>Current Action:</p>
-      <div id="action-buttons" className="flex hor">
-        {actionButtons}
-      </div>
+    <div id="action-buttons" className="flex hor">
+      {actionButtons}
     </div>
   );
 };

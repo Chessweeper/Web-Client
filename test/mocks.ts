@@ -15,7 +15,6 @@ export const createMockBoardPropsWithReload = (): BoardPropsWithReload => ({
       Q: Infinity,
     },
     cells: null,
-    knownCells: null,
   },
   ctx: {
     numPlayers: 1,
@@ -58,5 +57,6 @@ export const createMockBoardContext = (): BoardContextState => ({
   timer: {
     isRunning: vi.fn(),
     start: vi.fn(),
+    getTime: vi.fn().mockImplementation(() => 100),
   },
 });

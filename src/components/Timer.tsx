@@ -10,6 +10,7 @@ import { useBoardContext } from "./BoardWrapper";
 export interface TimerRefAttributes {
   start: () => void;
   isRunning: () => boolean;
+  getTime: () => number;
 }
 
 export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
@@ -17,18 +18,26 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
   const [time, setTime] = useState(0);
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
-  useImperativeHandle(ref, () => ({
-    start: () => {
-      if (!intervalRef.current) {
-        const intervalID = setInterval(() => {
-          setTime((prev) => prev + 1);
-        }, 10);
-        intervalRef.current = intervalID;
-      }
-    },
+  useImperativeHandle(
+    ref,
+    () => ({
+      start: () => {
+        if (!intervalRef.current) {
+          const intervalID = setInterval(() => {
+            setTime((prev) => prev + 1);
+          }, 10);
+          intervalRef.current = intervalID;
+        }
+      },
 
-    isRunning: () => intervalRef.current !== null,
-  }));
+      isRunning: () => intervalRef.current !== null,
+
+      getTime: () => {
+        return time;
+      },
+    }),
+    [time]
+  );
 
   useEffect(() => {
     if (ctx.gameover && intervalRef.current) {
@@ -37,12 +46,12 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
     }
   }, [ctx.gameover, intervalRef]);
 
-  const secs = time % 100;
-
   return (
-    <div id="timer">
-      {`${Math.floor(time / 100)}:${secs < 10 ? "0" + secs : secs}`}
-    </div>
+    <h1 id="timer" className="board-header-item right">
+      {Math.floor(time / 100)
+        .toString()
+        .padStart(3, "0")}
+    </h1>
   );
 });
 

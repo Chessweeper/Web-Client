@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useRef, useState } from "react";
 import { ActionBar } from "./ActionBar";
 import { Board } from "./Board";
-import { Popup } from "./Popup";
 import { Timer, TimerRefAttributes } from "./Timer";
 import { BoardPropsWithReload } from "./Client";
+import { BoardHeaderButton } from "./BoardHeaderButton";
+import { BoardReport } from "./BoardReport";
+import { SettingsPanel } from "./SettingsPanel";
 
 export interface BoardContextState extends BoardPropsWithReload {
   currAction: string;
@@ -36,18 +38,40 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
     timerRef.current?.start();
   };
 
+  const numPiecesPlaced =
+    props.G.cells?.filter(({ known }) => typeof known === "string")?.length ??
+    0;
+
+  const numPiecesRemaining = props.G.count - numPiecesPlaced;
+
+  const numPiecesRemainingDisplay =
+    numPiecesRemaining < 0
+      ? `-${Math.abs(numPiecesRemaining).toString().padStart(2, "0")}`
+      : numPiecesRemaining.toString().padStart(3, "0");
+
   return (
     <BoardContext.Provider value={{ ...props, ...additionalProps }}>
-      <Popup />
       <div className="flex">
-        <Timer ref={timerRef} />
-        <div id="board-container">
-          <Board />
-          {displayCover && (
-            <div id="board-cover" onClick={hideCover}>
-              <p>Click to start puzzle!</p>
+        <div id="board-shell">
+          <div id="board-header" className="flex">
+            <div id="board-header-controls" className="flex hor">
+              <h1 className="board-header-item">{numPiecesRemainingDisplay}</h1>
+              <BoardHeaderButton />
+              <Timer ref={timerRef} />
             </div>
-          )}
+            <BoardReport />
+          </div>
+          <div id="board-container">
+            <div>
+              <Board />
+              {displayCover && (
+                <div id="board-cover" onClick={hideCover}>
+                  <p>Click to start puzzle!</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <SettingsPanel />
         </div>
         <ActionBar />
       </div>

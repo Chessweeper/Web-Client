@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { getPiece } from "../Pieces";
+import { useAppSelector } from "../store";
 import { useBoardContext } from "./BoardWrapper";
 
 interface CellProps {
@@ -8,8 +9,12 @@ interface CellProps {
 
 export const Cell = ({ id }: CellProps): JSX.Element => {
   const { G, ctx, moves, currAction, timer } = useBoardContext();
+  const isAttackedCellValuesEnabled = useAppSelector(
+    (s) => s.settings.isAttackedCellValuesEnabled
+  );
+
   let className = "cell";
-  let value: string | JSX.Element = "";
+  let value: string | number | JSX.Element = "";
 
   const isWhite = useMemo(() => {
     const y = Math.floor(id / G.size);
@@ -27,7 +32,7 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     }
 
     if (currAction !== "") {
-      if (G.knownCells?.[id] === currAction) {
+      if (G.cells?.[id].known === currAction) {
         moves.removeHint(id);
       } else {
         moves.placeHint(id, currAction);
@@ -36,6 +41,33 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       moves.discoverPiece(id);
     }
   };
+
+  if (G.cells === null) {
+    value = "";
+  } else if (
+    ctx.gameover?.isWin === false &&
+    !Number.isInteger(G.cells[id].value)
+  ) {
+    // Display pieces of gameover
+    value = <img src={getPiece(String(G.cells[id].value))} />;
+    className += " red";
+  } else if (G.cells[id].known === true) {
+    value = Number(G.cells[id].value);
+    if (isAttackedCellValuesEnabled) {
+      value -= G.cells[id].attackedValue;
+    }
+    if (value === 0 && G.cells[id].value === 0) {
+      value = "";
+    }
+    if (typeof value === "number" && value < 0) {
+      className += " red";
+    } else {
+      className += " open";
+      className += isWhite ? " white" : " black";
+    }
+  } else if (G.cells[id].known !== false && G.cells[id].known !== true) {
+    value = <img src={getPiece(String(G.cells[id].known))} />;
+  }
 
   // Text color
   const colors = [
@@ -49,24 +81,11 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     "#808080", // 8
   ];
   let color = "";
-  if (G.cells === null || G.cells[id] === 0) color = "";
-  else if (G.cells[id] > 8) color = colors[7];
-  else color = colors[Number(G.cells[id]) - 1];
-
-  if (G.cells === null || G.knownCells === null) {
-    value = "";
-  } else if (ctx.gameover?.isWin === false && !Number.isInteger(G.cells[id])) {
-    // Display pieces of gameover
-    value = <img src={getPiece(String(G.cells[id]))} />;
-    className += " red";
-  } else if (G.knownCells[id] === true) {
-    if (G.cells[id] !== 0) {
-      value = String(G.cells[id]);
-    }
-    className += " open";
-    className += isWhite ? " white" : " black";
-  } else if (G.knownCells[id] !== false && G.knownCells[id] !== true) {
-    value = <img src={getPiece(String(G.knownCells[id]))} />;
+  if (typeof value === "number") {
+    if (value === 0) color = "";
+    else if (value > 8) color = colors[7];
+    else if (value < 0) color = "white";
+    else color = colors[value - 1];
   }
 
   return (
@@ -75,7 +94,7 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       style={{ color: color, cursor: "pointer" }}
       onClick={onCellClick}
     >
-      {value}
+      {typeof value === "number" ? value.toString() : value}
     </td>
   );
 };
