@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import userEvent from "@testing-library/user-event";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import {
   BoardWrapper,
   useBoardContext,
@@ -8,6 +8,7 @@ import {
 import { createMockBoardPropsWithReload } from "../mocks";
 import { BoardPropsWithReload } from "../../src/components/Client";
 import { Cell } from "../../src/Game";
+import { renderWithProviders } from "../mockStore";
 
 let boardProps: BoardPropsWithReload;
 
@@ -18,7 +19,7 @@ describe("BoardWrapper tests", () => {
   });
 
   it("should not render puzzle cover in classic mode", () => {
-    const { container } = render(<BoardWrapper {...boardProps} />);
+    const { container } = renderWithProviders(<BoardWrapper {...boardProps} />);
 
     const puzzleCover = container.querySelector("#board-cover");
     expect(puzzleCover).not.toBeInTheDocument();
@@ -27,7 +28,7 @@ describe("BoardWrapper tests", () => {
   it("should render puzzle cover in puzzle mode", async () => {
     boardProps.G.gamemode = "p";
 
-    const { container } = render(<BoardWrapper {...boardProps} />);
+    const { container } = renderWithProviders(<BoardWrapper {...boardProps} />);
 
     const puzzleCover = container.querySelector("#board-cover");
     expect(puzzleCover).toBeInTheDocument();
@@ -36,7 +37,7 @@ describe("BoardWrapper tests", () => {
   it("should hide puzzle cover when it is clicked", async () => {
     boardProps.G.gamemode = "p";
 
-    const { container } = render(<BoardWrapper {...boardProps} />);
+    const { container } = renderWithProviders(<BoardWrapper {...boardProps} />);
 
     const puzzleCover = container.querySelector("#board-cover");
     if (puzzleCover) {
@@ -48,7 +49,7 @@ describe("BoardWrapper tests", () => {
 
   describe("pieces counter", () => {
     it("should show pieces remaining equal to game count if no pieces are placed", async () => {
-      render(<BoardWrapper {...boardProps} />);
+      renderWithProviders(<BoardWrapper {...boardProps} />);
 
       const count = await screen.findByText("003");
 
@@ -66,7 +67,7 @@ describe("BoardWrapper tests", () => {
       boardProps.G.cells[0] = { value: 0, known: "R", attackedValue: 0 };
       boardProps.G.cells[1] = { value: 0, known: "R", attackedValue: 0 };
 
-      render(<BoardWrapper {...boardProps} />);
+      renderWithProviders(<BoardWrapper {...boardProps} />);
 
       const count = await screen.findByText("001");
 
@@ -86,7 +87,7 @@ describe("BoardWrapper tests", () => {
       boardProps.G.cells[2] = { value: 0, known: "R", attackedValue: 0 };
       boardProps.G.cells[3] = { value: 0, known: "R", attackedValue: 0 };
 
-      render(<BoardWrapper {...boardProps} />);
+      renderWithProviders(<BoardWrapper {...boardProps} />);
 
       const count = await screen.findByText("-01");
 
@@ -102,7 +103,7 @@ describe("BoardWrapper tests", () => {
         context = useBoardContext();
         return null;
       };
-      render(<Child />);
+      renderWithProviders(<Child />);
 
       expect(context).toEqual({});
     });

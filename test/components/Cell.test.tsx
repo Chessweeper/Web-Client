@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // @vitest-environment jsdom
 import userEvent from "@testing-library/user-event";
-import { render, within } from "@testing-library/react";
+import { within } from "@testing-library/react";
 import {
   BoardContext,
   BoardContextState,
 } from "../../src/components/BoardWrapper";
 import { Cell } from "../../src/components/Cell";
 import { createMockBoardContext } from "../mocks";
+import { renderWithProviders } from "../mockStore";
 
 let boardContext: BoardContextState;
 const R = "R";
@@ -45,7 +46,7 @@ describe("Cell tests", () => {
   });
 
   it("should not initially render with open or black/white className", () => {
-    const { container } = render(
+    const { container } = renderWithProviders(
       <BoardContext.Provider value={boardContext}>
         <table>
           <tbody>
@@ -72,7 +73,7 @@ describe("Cell tests", () => {
   ])("should render open cell id %d with %s className", (id, expectedClass) => {
     boardContext.G.cells![id].known = true;
 
-    const { container } = render(
+    const { container } = renderWithProviders(
       <BoardContext.Provider value={boardContext}>
         <table>
           <tbody>
@@ -92,7 +93,7 @@ describe("Cell tests", () => {
 
   it("should not perform any actions on click when the game is over", async () => {
     boardContext.ctx.gameover = { isWin: true };
-    const { container } = render(
+    const { container } = renderWithProviders(
       <BoardContext.Provider value={boardContext}>
         <table>
           <tbody>
@@ -115,7 +116,7 @@ describe("Cell tests", () => {
 
   describe("moves", () => {
     it("should call discoverPiece move if current action is shovel", async () => {
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -136,7 +137,7 @@ describe("Cell tests", () => {
 
     it("should call placeHint move if current action is not shovel and the cell is not known", async () => {
       boardContext.currAction = "R";
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -159,7 +160,7 @@ describe("Cell tests", () => {
       boardContext.G.cells![0].known = "B";
       boardContext.currAction = "R";
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -181,7 +182,7 @@ describe("Cell tests", () => {
     it("should call removeHint move if current action is equal to known cell", async () => {
       boardContext.G.cells![0].known = "B";
       boardContext.currAction = "B";
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -203,7 +204,7 @@ describe("Cell tests", () => {
 
   describe("timer control", () => {
     it("should start timer when clicked if timer not running", async () => {
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -223,7 +224,7 @@ describe("Cell tests", () => {
 
     it("should not call start timer when clicked if timer running", async () => {
       boardContext.timer.isRunning = vi.fn().mockReturnValue(true);
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -244,7 +245,7 @@ describe("Cell tests", () => {
 
   describe("value", () => {
     it("should contain an empty string if cell is not revealed", () => {
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -264,7 +265,7 @@ describe("Cell tests", () => {
     it("should contain an empty string value if cells is null", () => {
       boardContext.G.cells = null;
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -284,7 +285,7 @@ describe("Cell tests", () => {
     it("should contain the numerical value when known and present", async () => {
       boardContext.G.cells![1].known = true;
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -309,7 +310,7 @@ describe("Cell tests", () => {
         attackedValue: 0,
       };
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -334,7 +335,7 @@ describe("Cell tests", () => {
         attackedValue: 0,
       };
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -359,7 +360,7 @@ describe("Cell tests", () => {
         attackedValue: 1,
       };
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -384,7 +385,7 @@ describe("Cell tests", () => {
         attackedValue: 2,
       };
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -409,7 +410,7 @@ describe("Cell tests", () => {
         attackedValue: 1,
       };
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -430,7 +431,7 @@ describe("Cell tests", () => {
     it("should contain the piece with red background after losing", async () => {
       boardContext.ctx.gameover = { isWin: false };
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
@@ -452,7 +453,7 @@ describe("Cell tests", () => {
     it("should contain the piece image after placing a hint", async () => {
       boardContext.G.cells![0].known = "B";
 
-      const { container } = render(
+      const { container } = renderWithProviders(
         <BoardContext.Provider value={boardContext}>
           <table>
             <tbody>
