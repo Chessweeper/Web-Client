@@ -210,12 +210,23 @@ export function fillPositions(
   return data;
 }
 
+/**
+ *
+ * @param random  Random class
+ * @param id      Tile ID where we must not generate a piece on
+ * @param pieces  List of pieces we can use for the generation
+ * @param size    Size of the board
+ * @param count   Number of pieces to place
+ * @param data    Initial array of data
+ * @returns       Board generated with pieces
+ */
 export function generateBoard(
   random: Random,
   id: number,
   pieces: Record<string, number>,
   size: number,
-  count: number
+  count: number,
+  data: Array<number | string>
 ): Array<number | string> {
   const piecesMdf: Record<string | number, number> = {};
   for (let i = 0; i < Object.keys(pieces).length; i++) {
@@ -223,7 +234,6 @@ export function generateBoard(
     piecesMdf[key] = pieces[key];
   }
 
-  const data: Array<number | string> = Array(size * size).fill(0);
   let i = count;
   while (i > 0) {
     const rand = Math.floor(random.next() * (size * size));
@@ -316,9 +326,71 @@ function validateBoard(
   }
 
   return {
-    isSolved: isSolved,
-    thinkData: thinkData,
+    isSolved,
+    thinkData,
   };
+}
+
+/**
+ * Once pieces are placed on a puzzle board, we need to generate empty tiles
+ * @param data Data array containing the pieces
+ * @param size Size of the board
+ * @param random Random class
+ * @param pieces List of pieces we can place, used later for validation purpose
+ * @returns Dictionary containing if the puzzle is solvable and the data array of tiles digged
+ */
+function digPuzzle(
+  data: Array<string | number>,
+  size: number,
+  random: Random,
+  pieces: Record<string, number>
+) {
+  const discovered = Array(size * size).fill(false);
+
+  let thinkData = null;
+  let isSolved = false;
+  let giveup = false;
+
+  // Generate base board
+  while (!isSolved && !giveup) {
+    // Get a random position that is not a piece and wasn't already taken
+    const possibilities: number[] = [];
+    for (let i = 0; i < data.length; i++) {
+      if (
+        !discovered[i] &&
+        Number.isInteger(data[i]) &&
+        (thinkData === null || thinkData[i] !== 0)
+      ) {
+        possibilities.push(i);
+      }
+    }
+    if (possibilities.length > 0) {
+      const randPos = Math.floor(random.next() * possibilities.length);
+      discovered[possibilities[randPos]] = true;
+    } else {
+      giveup = true; // Algorithm failed with this generation, we give up
+      continue;
+    }
+
+    const validation = validateBoard(data, discovered, pieces, size);
+    isSolved = validation["isSolved"];
+    thinkData = validation["thinkData"];
+  }
+
+  return {
+    isSolved,
+    discovered,
+  };
+}
+
+// https://stackoverflow.com/a/41633001/6663248
+function getTimeElapsed(startTime: number): number {
+  const endTime = performance.now();
+  let timeDiff = endTime - startTime;
+  timeDiff /= 1000;
+
+  const seconds = Math.round(timeDiff);
+  return seconds;
 }
 
 export function generatePuzzleBoard(
@@ -329,48 +401,85 @@ export function generatePuzzleBoard(
   difficulty: number
 ) {
   let data: Array<number | string> = [];
-  let discovered: boolean[] = [];
   let error: string | null = null;
+  let discovered: boolean[] = [];
 
   const random = new Random(seed);
 
+  const startTime = performance.now();
+
   let c = 0;
-  const maxIt = 300;
+  const maxIt = 100; // Max iteration count to attempt to generate a puzzle
+  const subGenMaxIt = 50; // Max iteration count to attempt to place pieces for the sub generation part
+  const firstGenCount = 4; // Number of pieces we place in the first generation
   for (; c < maxIt; c++) {
-    data = fillPositions(generateBoard(random, -1, pieces, size, count));
-    discovered = Array(size * size).fill(false);
+    const firstCount = count > firstGenCount ? firstGenCount : count; // Generate a first board with a max of 4 pieces
 
-    let thinkData = null;
-    let isSolved = false;
-    let giveup = false;
-    while (!isSolved && !giveup) {
-      // Get a random position that is not a piece and wasn't already taken
-      const possibilities: number[] = [];
-      for (let i = 0; i < data.length; i++) {
-        if (
-          !discovered[i] &&
-          Number.isInteger(data[i]) &&
-          (thinkData === null || thinkData[i] !== 0)
-        ) {
-          possibilities.push(i);
-        }
-      }
-      if (possibilities.length > 0) {
-        const randPos = Math.floor(random.next() * possibilities.length);
-        discovered[possibilities[randPos]] = true;
-      } else {
-        giveup = true; // Algorithm failed with this generation, we give up
-        continue;
-      }
+    data = fillPositions(
+      generateBoard(
+        random,
+        -1,
+        pieces,
+        size,
+        firstCount,
+        Array(size * size).fill(0)
+      )
+    );
 
-      const validation = validateBoard(data, discovered, pieces, size);
-      isSolved = validation["isSolved"];
-      thinkData = validation["thinkData"];
-    }
+    let digData = digPuzzle(data, size, random, pieces);
+    let isSolved = digData["isSolved"];
+    discovered = digData["discovered"];
 
     if (!isSolved) {
-      console.log("Skipping unsolvabled puzzle");
+      console.log(
+        `[${getTimeElapsed(
+          startTime
+        )}s] - Skipping unsolvabled puzzle (${firstGenCount} pieces construction, iteration n°${c})`
+      );
+      continue;
+    }
+
+    console.log(
+      `[${getTimeElapsed(
+        startTime
+      )}s] - ${firstGenCount} pieces puzzle generated`
+    );
+
+    for (let i = firstCount; i < count; i++) {
+      const startData = [...data]; // Original data, in case we change the puzzle and it no longer work
+      for (let c2 = 0; c2 < subGenMaxIt; c2++) {
+        data = [...startData];
+
+        // We update the current data array by just adding one piece
+        data = fillPositions(generateBoard(random, -1, pieces, size, 1, data));
+
+        digData = digPuzzle(data, size, random, pieces);
+        isSolved = digData["isSolved"];
+        discovered = digData["discovered"];
+
+        if (isSolved) {
+          break;
+        } else {
+          console.log(
+            `[${getTimeElapsed(startTime)}s] - Skipping unsolvabled puzzle (${
+              i + 1
+            } pieces construction, sub-iteration n°${c2})`
+          );
+        }
+      }
+    }
+
+    // We try to remove tiles to match the difficulty
+    if (!isSolved) {
+      console.log(
+        `[${getTimeElapsed(
+          startTime
+        )}s] - Skipping unsolvabled puzzle (iteration n°${c})`
+      );
     } else {
+      console.log(
+        `[${getTimeElapsed(startTime)}s] - ${count} pieces puzzle generated`
+      );
       for (let i = 0; i < data.length; i++) {
         if (!discovered[i]) {
           continue;
@@ -386,7 +495,11 @@ export function generatePuzzleBoard(
       const emptyCasesAfter = discovered.filter((x) => x === false).length;
 
       if (difficulty !== -1 && difficulty > emptyCasesAfter) {
-        console.log(`Skipping puzzle with ${emptyCasesAfter} empty tiles`);
+        console.log(
+          `[${getTimeElapsed(
+            startTime
+          )}s] - Skipping puzzle with ${emptyCasesAfter} empty tiles`
+        );
       } else {
         if (difficulty !== -1) {
           // Set tiles to adjust difficulty
@@ -404,7 +517,7 @@ export function generatePuzzleBoard(
           }
         }
         console.log(
-          `Generated solved puzzle with ${
+          `[${getTimeElapsed(startTime)}s] - Generated solved puzzle with ${
             discovered.filter((x) => x === false).length
           } empty tiles`
         );
