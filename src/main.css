@@ -238,22 +238,12 @@ hr {
 /* Settings */
 
 #settings-button {
-  position: absolute;
-  top: 10px;
-  left: 10px;
   width: 25px;
   height: 25px;
 }
 
 #settings-panel {
-  position: absolute;
-  top: 50px;
-  left: 10px;
-  z-index: 3;
-  background-color: black;
-  color: white;
-  padding: 20px;
-  border-radius: 10px;
+  margin-top: 10px;
 }
 
 /* Slider */
@@ -264,6 +254,18 @@ hr {
   display: inline-block;
   width: 60px;
   height: 34px;
+}
+
+.switch-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.switch-label {
+  margin-left: 10px;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 /* Hide default HTML checkbox */
