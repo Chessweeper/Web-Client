@@ -93,9 +93,10 @@ hr {
 }
 
 #board-report {
-  width: 100%;
-  text-align: center;
-  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 #board-report h3 {
