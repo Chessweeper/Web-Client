@@ -15,6 +15,19 @@ describe("BoardReport tests", () => {
     vi.clearAllMocks();
   });
 
+  it("should display nbsp message on initial render", () => {
+    const { container } = render(
+      <BoardContext.Provider value={boardContext}>
+        <BoardReport />
+      </BoardContext.Provider>
+    );
+
+    const msg =
+      container.querySelector("#board-report")?.firstChild?.textContent;
+
+    expect(msg).toBe("\xa0");
+  });
+
   it.each([
     [true, "You won!"],
     [false, "You lost."],
@@ -32,9 +45,62 @@ describe("BoardReport tests", () => {
       const regex = new RegExp(`^${expectedMsg}`, "i");
 
       const msg = await screen.findByText(regex);
-      //      await screen.findByText(expectedMsg);
 
       expect(msg).toBeInTheDocument();
     }
   );
+
+  it("should display only seconds when hours and minutes is zero", () => {
+    boardContext.timer.getTime = vi.fn().mockImplementation(() => 1000);
+    boardContext.ctx.gameover = { isWin: true };
+
+    const { container } = render(
+      <BoardContext.Provider value={boardContext}>
+        <BoardReport />
+      </BoardContext.Provider>
+    );
+
+    const msg =
+      container.querySelector("#board-report")?.firstChild?.textContent;
+
+    expect(msg).toContain("s");
+    expect(msg).not.toContain("m");
+    expect(msg).not.toContain("h");
+  });
+
+  it("should display only minutes and seconds when hours is zero", () => {
+    boardContext.timer.getTime = vi.fn().mockImplementation(() => 10000);
+    boardContext.ctx.gameover = { isWin: true };
+
+    const { container } = render(
+      <BoardContext.Provider value={boardContext}>
+        <BoardReport />
+      </BoardContext.Provider>
+    );
+
+    const msg =
+      container.querySelector("#board-report")?.firstChild?.textContent;
+
+    expect(msg).toContain("s");
+    expect(msg).toContain("m");
+    expect(msg).not.toContain("h");
+  });
+
+  it("should display hours minutes and seconds when all have value", () => {
+    boardContext.timer.getTime = vi.fn().mockImplementation(() => 1000000);
+    boardContext.ctx.gameover = { isWin: true };
+
+    const { container } = render(
+      <BoardContext.Provider value={boardContext}>
+        <BoardReport />
+      </BoardContext.Provider>
+    );
+
+    const msg =
+      container.querySelector("#board-report")?.firstChild?.textContent;
+
+    expect(msg).toContain("s");
+    expect(msg).toContain("m");
+    expect(msg).toContain("h");
+  });
 });
