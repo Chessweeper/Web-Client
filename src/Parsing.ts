@@ -13,14 +13,14 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
   let count = countParam === null ? 3 : parseInt(countParam);
   let difficulty = difficultyParam === null ? -1 : parseInt(difficultyParam);
   if (gamemode === null) {
-    gamemode = "c";
+    gamemode = "p";
   }
 
   if (gamemode !== "p" && gamemode !== "c") {
     console.warn(
-      `Parsing error: invalid gamemode ${gamemode}, falling back on classic`
+      `Parsing error: invalid gamemode ${gamemode}, falling back on puzzle`
     );
-    gamemode = "c";
+    gamemode = "p";
   }
 
   if (gamemode !== "p" && difficulty !== -1) {
@@ -107,7 +107,6 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
       R: Infinity,
       B: Infinity,
       N: Infinity,
-      Q: Infinity,
     };
   }
 
