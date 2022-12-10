@@ -15,7 +15,8 @@ export interface TimerRefAttributes {
 
 export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
   const { ctx } = useBoardContext();
-  const [time, setTime] = useState(0);
+  const [start, setStart] = useState(0);
+  const [now, setNow] = useState(0);
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
   useImperativeHandle(
@@ -23,8 +24,10 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
     () => ({
       start: () => {
         if (!intervalRef.current) {
+          setStart(Date.now());
+          setNow(Date.now());
           const intervalID = setInterval(() => {
-            setTime((prev) => prev + 1);
+            setNow(Date.now());
           }, 10);
           intervalRef.current = intervalID;
         }
@@ -33,10 +36,10 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
       isRunning: () => intervalRef.current !== null,
 
       getTime: () => {
-        return time;
+        return Math.floor((now - start) / 10);
       },
     }),
-    [time]
+    [now, start]
   );
 
   useEffect(() => {
@@ -46,11 +49,11 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
     }
   }, [ctx.gameover, intervalRef]);
 
+  const time = Math.floor((now - start) / 1000);
+
   return (
     <h1 id="timer" className="board-header-item right">
-      {Math.floor(time / 100)
-        .toString()
-        .padStart(3, "0")}
+      {time.toString().padStart(3, "0")}
     </h1>
   );
 });
