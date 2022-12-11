@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { settingsSlice } from "../store/settings";
-import settingsImg from "../assets/settings.png";
+import { IoMdSettings as SettingsIcon } from "react-icons/io";
 
 export const SettingsPanel = (): JSX.Element => {
   const [showSettings, setShowSettings] = useState(false);
@@ -15,12 +15,13 @@ export const SettingsPanel = (): JSX.Element => {
 
   return (
     <div id="settings-panel" className="flex">
-      <input
-        id="settings-button"
-        type="image"
-        src={settingsImg}
-        onClick={() => setShowSettings((prev) => !prev)}
-      />
+      <div className="flex hor" style={{ gap: 15 }}>
+        <SettingsIcon
+          id="settings-button"
+          size={25}
+          onClick={() => setShowSettings((prev) => !prev)}
+        />
+      </div>
       {showSettings && (
         <div className="switch-container">
           <label className="switch">
