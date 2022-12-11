@@ -226,6 +226,10 @@ hr {
   margin: 10px 0;
 }
 
+.footer-icons {
+  gap: 10px;
+}
+
 /* Rules */
 
 #rules img {

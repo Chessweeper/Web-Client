@@ -244,7 +244,7 @@ export const Footer = (): JSX.Element => {
           Once you identified a piece, click on the related button under the
           board then click on the tile, click again to remove it
           <br />
-          All kind of pieces can appear many times, except the king that can
+          All kinds of pieces can appear many times, except the king that can
           appear only 1 time maximum
           <br />
           The top left number is the number of pieces that need to be placed on
@@ -282,8 +282,7 @@ export const Footer = (): JSX.Element => {
             Wikipedia
           </a>
         </p>
-        <h2>Other Links</h2>
-        <p>
+        <div className="flex hor footer-icons">
           <a href="https://github.com/Xwilarg/Chessweeper">
             <GithubIcon title="GitHub" size={50} color="black" />
           </a>
@@ -294,7 +293,7 @@ export const Footer = (): JSX.Element => {
           >
             <DiscordIcon title="Discord" size={50} color="#7289DA" />
           </a>
-        </p>
+        </div>
       </div>
     </div>
   );
