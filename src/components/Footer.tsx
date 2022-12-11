@@ -249,14 +249,6 @@ export const Footer = (): JSX.Element => {
           <br />
           The top left number is the number of pieces that need to be placed on
           the board
-        </p>
-
-        <h3>Classic Mode</h3>
-        <p>
-          The shovel allows you to dig a tile
-          <br />
-          You lose if you use your shovel on a chess piece, you win if you find
-          all the pieces correctly
           <br />
           <br />
           For more information on how the pieces move, please click{" "}
@@ -267,6 +259,14 @@ export const Footer = (): JSX.Element => {
           >
             here
           </a>
+        </p>
+
+        <h2>Classic Mode</h2>
+        <p>
+          The shovel allows you to dig a tile
+          <br />
+          You lose if you use your shovel on a chess piece, you win if you find
+          all the pieces correctly
         </p>
 
         <h2>Special pieces</h2>
