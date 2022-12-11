@@ -283,7 +283,7 @@ export const Footer = (): JSX.Element => {
           </a>
         </p>
         <div className="flex hor footer-icons">
-          <a href="https://github.com/Xwilarg/Chessweeper">
+          <a href="https://github.com/Chessweeper/Chessweeper">
             <GithubIcon title="GitHub" size={50} color="black" />
           </a>
           <a
