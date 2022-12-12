@@ -30,18 +30,4 @@ describe("Board tests", () => {
     expect(table).not.toHaveClass("small");
     expect(cells).toHaveLength(size * size);
   });
-
-  it("should render small class table when size > 10", () => {
-    boardContext.G.size = 11;
-
-    renderWithProviders(
-      <BoardContext.Provider value={boardContext}>
-        <Board />
-      </BoardContext.Provider>
-    );
-
-    const table = screen.getByRole("table");
-
-    expect(table).toHaveClass("small");
-  });
 });

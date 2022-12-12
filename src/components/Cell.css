@@ -1,3 +1,17 @@
+.cell {
+  border: 1px solid #555;
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  background-color: #555;
+  font-weight: bolder;
+  font-size: 25px;
+}
+
+.cell img {
+  width: 30px;
+}
+
 .red {
   background-color: red;
 }
@@ -8,4 +22,16 @@
 
 .open.black {
   background-color: #d28c45;
+}
+
+@media (max-width: 750px) {
+  .cell.small {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+
+  .cell.small img {
+    width: 20px;
+  }
 }

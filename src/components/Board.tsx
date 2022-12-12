@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { useBoardContext } from "./BoardWrapper";
 import { Cell } from "./Cell";
-import "./Board.css";
 
 export const Board = (): JSX.Element => {
   const { G } = useBoardContext();
@@ -23,7 +22,7 @@ export const Board = (): JSX.Element => {
   }
 
   return (
-    <table id="board" className={G.size >= 10 ? "small" : ""}>
+    <table id="board">
       <tbody>
         {rows.map((row, index) => (
           <Fragment key={`row${index}`}>{row}</Fragment>

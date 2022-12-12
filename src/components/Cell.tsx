@@ -14,8 +14,12 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     (s) => s.settings.isAttackedCellValuesEnabled
   );
 
-  let className = "cell";
   let value: string | number | JSX.Element = "";
+
+  let className = "cell";
+  if (G.size > 10) {
+    className += " small";
+  }
 
   const isWhite = useMemo(() => {
     const y = Math.floor(id / G.size);
