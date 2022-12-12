@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { settingsSlice } from "../store/settings";
 import { Switch } from "./Switch";
-import settingsImg from "../assets/settings.png";
+import { IoMdSettings as SettingsIcon } from "react-icons/io";
 import "./SettingsPanel.css";
 
 export const SettingsPanel = (): JSX.Element => {
@@ -17,10 +17,9 @@ export const SettingsPanel = (): JSX.Element => {
 
   return (
     <div id="settings-panel" className="flex">
-      <input
+      <SettingsIcon
         id="settings-button"
-        type="image"
-        src={settingsImg}
+        size={25}
         onClick={() => setShowSettings((prev) => !prev)}
       />
       {showSettings && (

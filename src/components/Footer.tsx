@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  FaDiscord as DiscordIcon,
+  FaGithub as GithubIcon,
+} from "react-icons/fa";
 import "./Footer.css";
 
 const second = 1000;
@@ -233,19 +237,19 @@ export const Footer = (): JSX.Element => {
         <h1>How to play?</h1>
         <h2>Basic Rules</h2>
         <p>
-          The goal is to find where and what the 3 chess pieces are
+          The goal is to find where and what all the chess pieces are
           <br />
-          The shovel allow you to dig a tile, you&apos;ll see a number
-          representing the number of pieces that have it in check
+          Numbers on a tile represent the number of pieces that have that tile
+          in check
           <br />
           Once you identified a piece, click on the related button under the
           board then click on the tile, click again to remove it
           <br />
-          You loose if you use your shover on a chess piece, you win if you find
-          the 3 pieces correctly
-          <br />
-          All kind of pieces can appear many times, except the king that can
+          All kinds of pieces can appear many times, except the king that can
           appear only 1 time maximum
+          <br />
+          The top left number is the number of pieces that need to be placed on
+          the board
           <br />
           <br />
           For more information on how the pieces move, please click{" "}
@@ -257,9 +261,18 @@ export const Footer = (): JSX.Element => {
             here
           </a>
         </p>
+
+        <h2>Classic Mode</h2>
+        <p>
+          The shovel allows you to dig a tile
+          <br />
+          You lose if you use your shovel on a chess piece, you win if you find
+          all the pieces correctly
+        </p>
+
         <h2>Special pieces</h2>
         <p>
-          Knook: Have the same moves as a knight and a rook
+          Knook: Has the same moves as a knight and a rook
           <br />
           Shogi pieces:{" "}
           <a
@@ -270,19 +283,18 @@ export const Footer = (): JSX.Element => {
             Wikipedia
           </a>
         </p>
-        <h2>Other Links</h2>
-        <p>
-          Source code available under MIT license on{" "}
-          <a href="https://github.com/Xwilarg/Chessweeper">GitHub</a>
-          <br />A Discord server is available here:{" "}
+        <div className="flex hor footer-icons">
+          <a href="https://github.com/Chessweeper/Chessweeper">
+            <GithubIcon title="GitHub" size={50} color="black" />
+          </a>
           <a
             href="https://discord.gg/VjJ95N2mV9"
             target="_blank"
             rel="noreferrer"
           >
-            https://discord.gg/VjJ95N2mV9
+            <DiscordIcon title="Discord" size={50} color="#7289DA" />
           </a>
-        </p>
+        </div>
       </div>
     </div>
   );
