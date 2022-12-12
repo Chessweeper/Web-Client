@@ -55,19 +55,15 @@ export const ActionBar = (): JSX.Element => {
     };
   }, [availableActions, setCurrAction]);
 
-  const actionButtons = availableActions.map((action) => {
-    let className = "action";
-    if (currAction === action.ID) className += " selected";
-    return (
-      <button
-        key={action.ID}
-        className={className}
-        onClick={() => setCurrAction(action.ID)}
-      >
-        <img src={getPiece(action.ID)} alt={action.name} />
-      </button>
-    );
-  });
+  const actionButtons = availableActions.map((action) => (
+    <button
+      key={action.ID}
+      className={currAction === action.ID ? "selected" : undefined}
+      onClick={() => setCurrAction(action.ID)}
+    >
+      <img src={getPiece(action.ID)} alt={action.name} />
+    </button>
+  ));
 
   return (
     <div id="action-buttons" className="flex hor">

@@ -12,7 +12,7 @@
   background-color: green;
 }
 
-.action {
+#action-buttons button {
   width: 100px;
   height: 100px;
 }

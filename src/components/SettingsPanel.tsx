@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { settingsSlice } from "../store/settings";
+import { Switch } from "./Switch";
 import settingsImg from "../assets/settings.png";
 import "./SettingsPanel.css";
 
@@ -23,23 +24,12 @@ export const SettingsPanel = (): JSX.Element => {
         onClick={() => setShowSettings((prev) => !prev)}
       />
       {showSettings && (
-        <div className="switch-container">
-          <label className="switch">
-            <input
-              id="setting-attacked-cell-values"
-              type="checkbox"
-              checked={settings.isAttackedCellValuesEnabled}
-              onChange={onAttackedCellsCheckboxClicked}
-            />
-            <span className="slider"></span>
-          </label>
-          <label
-            className="switch-label"
-            htmlFor="setting-attacked-cell-values"
-          >
-            Show Attacked Cells
-          </label>
-        </div>
+        <Switch
+          id="setting-attacked-cell-values"
+          label="Show Attacked Cells"
+          checked={settings.isAttackedCellValuesEnabled}
+          onChange={onAttackedCellsCheckboxClicked}
+        />
       )}
     </div>
   );
