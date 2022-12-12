@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import "./Footer.css";
 
 const second = 1000;
 const minute = second * 60;

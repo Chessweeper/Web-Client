@@ -1,0 +1,25 @@
+.cell img {
+  width: 30px;
+}
+
+.cell {
+  border: 1px solid #555;
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  background-color: #555;
+  font-weight: bolder;
+  font-size: 25px;
+}
+
+@media (max-width: 750px) {
+  #board.small .cell {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+
+  #board.small .cell img {
+    width: 20px;
+  }
+}

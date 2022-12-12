@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { getPiece } from "../Pieces";
 import { useBoardContext } from "./BoardWrapper";
+import "./ActionBar.css";
 
 export const ActionBar = (): JSX.Element => {
   const { G, currAction, setCurrAction } = useBoardContext();

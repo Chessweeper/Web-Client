@@ -6,6 +6,7 @@ import { BoardPropsWithReload } from "./Client";
 import { BoardHeaderButton } from "./BoardHeaderButton";
 import { BoardReport } from "./BoardReport";
 import { SettingsPanel } from "./SettingsPanel";
+import "./BoardWrapper.css";
 
 export interface BoardContextState extends BoardPropsWithReload {
   currAction: string;

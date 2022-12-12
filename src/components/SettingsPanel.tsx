@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { settingsSlice } from "../store/settings";
 import settingsImg from "../assets/settings.png";
+import "./SettingsPanel.css";
 
 export const SettingsPanel = (): JSX.Element => {
   const [showSettings, setShowSettings] = useState(false);

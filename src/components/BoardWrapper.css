@@ -1,0 +1,42 @@
+#board-shell {
+  border: 8px solid gray;
+  border-style: outset;
+  padding: 10px;
+  background-color: darkgray;
+}
+
+#board-header {
+  border: 6px solid gray;
+  border-style: inset;
+  margin-bottom: 5px;
+  background-color: darkgray;
+  box-sizing: border-box;
+  padding: 10px 5px;
+}
+
+#board-header-controls {
+  width: 100%;
+  justify-content: space-between;
+}
+
+#board-container {
+  position: relative;
+  border: 6px solid gray;
+  border-style: inset;
+}
+
+#board-cover {
+  z-index: 1;
+  background-color: rgb(87, 87, 87);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-weight: bold;
+  font-size: larger;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

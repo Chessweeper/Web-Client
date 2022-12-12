@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { getPiece } from "../Pieces";
 import { useAppSelector } from "../store";
 import { useBoardContext } from "./BoardWrapper";
+import "./Cell.css";
 
 interface CellProps {
   id: number;

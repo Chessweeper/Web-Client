@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { useBoardContext } from "./BoardWrapper";
 import { Cell } from "./Cell";
+import "./Board.css";
 
 export const Board = (): JSX.Element => {
   const { G } = useBoardContext();
