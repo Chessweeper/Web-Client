@@ -1,8 +1,12 @@
-#settings-button {
-  cursor: pointer;
-  color: #555;
-}
-
 #settings-panel {
   margin-top: 10px;
+}
+
+#settings-icons {
+  gap: 15px;
+}
+
+.settings-icon {
+  cursor: pointer;
+  color: #555;
 }
