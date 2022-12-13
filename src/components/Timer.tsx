@@ -47,7 +47,7 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
   }, [ctx.gameover, intervalRef]);
 
   return (
-    <h1 id="timer" className="board-header-item right">
+    <h1 id="timer">
       {Math.floor(time / 100)
         .toString()
         .padStart(3, "0")}

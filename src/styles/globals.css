@@ -1,0 +1,42 @@
+@font-face {
+  font-family: Digital;
+  src: url("../assets/fonts/digital.otf");
+}
+
+hr {
+  border: 0;
+  clear: both;
+  display: block;
+  width: 96%;
+  background-color: black;
+  height: 1px;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flex.hor {
+  flex-flow: row wrap;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.button {
+  border: 1px solid black;
+  color: black;
+  text-decoration: none;
+  padding: 5px;
+  display: inline-block;
+  background-color: rgba(238, 238, 238, 0.418);
+  text-align: center;
+}
+
+.button:hover {
+  background-color: rgba(200, 200, 200, 0.418);
+}

@@ -6,6 +6,7 @@ import { BoardPropsWithReload } from "./Client";
 import { BoardHeaderButton } from "./BoardHeaderButton";
 import { BoardReport } from "./BoardReport";
 import { SettingsPanel } from "./SettingsPanel";
+import "./BoardWrapper.css";
 
 export interface BoardContextState extends BoardPropsWithReload {
   currAction: string;
@@ -62,14 +63,12 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
             <BoardReport />
           </div>
           <div id="board-container">
-            <div>
-              <Board />
-              {displayCover && (
-                <div id="board-cover" onClick={hideCover}>
-                  <p>Click to start puzzle!</p>
-                </div>
-              )}
-            </div>
+            <Board />
+            {displayCover && (
+              <div id="board-cover" onClick={hideCover}>
+                <p>Click to start puzzle!</p>
+              </div>
+            )}
           </div>
           <SettingsPanel />
         </div>

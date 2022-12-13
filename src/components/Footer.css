@@ -1,0 +1,12 @@
+.gamemode {
+  width: 300px;
+  border-radius: 15px;
+}
+
+.gamemode h2 {
+  margin: 10px 0;
+}
+
+.footer-icons {
+  gap: 10px;
+}

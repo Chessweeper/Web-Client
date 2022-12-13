@@ -65,6 +65,26 @@ describe("Cell tests", () => {
     expect(cell).not.toHaveClass("white");
   });
 
+  it("should render with small class when size > 10", () => {
+    boardContext.G.size = 11;
+
+    const { container } = renderWithProviders(
+      <BoardContext.Provider value={boardContext}>
+        <table>
+          <tbody>
+            <tr>
+              <Cell id={0} />
+            </tr>
+          </tbody>
+        </table>{" "}
+      </BoardContext.Provider>
+    );
+
+    const cell = container.getElementsByTagName("td")[0];
+
+    expect(cell).toHaveClass("small");
+  });
+
   it.each([
     [0, "white"],
     [1, "black"],

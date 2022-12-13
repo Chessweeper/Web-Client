@@ -4,6 +4,7 @@ import {
   FaDiscord as DiscordIcon,
   FaGithub as GithubIcon,
 } from "react-icons/fa";
+import "./Footer.css";
 
 const second = 1000;
 const minute = second * 60;
