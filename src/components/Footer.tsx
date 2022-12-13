@@ -101,6 +101,66 @@ export const Footer = (): JSX.Element => {
   return (
     <div>
       <h1>More boards</h1>
+      <h2>Puzzle</h2>
+      <p>You must find where the pieces are without being allowed to dig</p>
+      <div className="flex hor">
+        {dailyPuzzleSeed && (
+          <Link
+            className="gamemode button"
+            to={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
+            id="daily"
+          >
+            <h2>Daily {dailyTimeRemaining}</h2>
+            8 pieces
+            <br />
+            Rook, Bishop, Knight and King
+            <br />
+            10x10
+          </Link>
+        )}
+        <Link className="gamemode button" to="?g=p&p=R2&s=6&c=2&d=20">
+          <h2>Easy</h2>
+          2 pieces
+          <br />
+          Rook only
+          <br />
+          6x6
+        </Link>
+        <br />
+        <Link className="gamemode button" to="?g=p&p=R2B2N2&s=8&c=3&d=30">
+          <h2>Normal</h2>
+          3 pieces
+          <br />
+          Rook, Bishop and Knight
+          <br />
+          8x8
+        </Link>
+        <br />
+        <Link className="gamemode button" to="?g=p&p=R3B3N3K1&s=10&c=8&d=50">
+          <h2>Hard</h2>
+          8 pieces
+          <br />
+          Rook, Bishop, Knight and King
+          <br />
+          10x10
+        </Link>
+        <Link className="gamemode button" to="?g=p&p=R4B4N4K1&s=12&c=12&d=60">
+          <h2>Extreme</h2>
+          12 pieces
+          <br />
+          Rook, Bishop, Knight and King
+          <br />
+          12x12
+        </Link>
+        <Link className="gamemode button" to="?g=p&p=飛2角2玉2銀2金2&s=8&c=5">
+          <h2>Shogi</h2>
+          5 pieces
+          <br />
+          Most shogi pieces, facing up
+          <br />
+          8x8
+        </Link>
+      </div>
       <h2>Classic</h2>
       <p>Dig and try to find where the pieces are</p>
       <div className="flex hor">
@@ -169,66 +229,6 @@ export const Footer = (): JSX.Element => {
           All pieces + Black Pawn
           <br />
           10x10
-        </Link>
-      </div>
-      <h2>Puzzle</h2>
-      <p>You must find where the pieces are without being allowed to dig</p>
-      <div className="flex hor">
-        {dailyPuzzleSeed && (
-          <Link
-            className="gamemode button"
-            to={`?g=p&p=R3B3N3K1&s=10&c=8&r=${dailyPuzzleSeed}`}
-            id="daily"
-          >
-            <h2>Daily {dailyTimeRemaining}</h2>
-            8 pieces
-            <br />
-            Rook, Bishop, Knight and King
-            <br />
-            10x10
-          </Link>
-        )}
-        <Link className="gamemode button" to="?g=p&p=R2&s=6&c=2&d=20">
-          <h2>Easy</h2>
-          2 pieces
-          <br />
-          Rook only
-          <br />
-          6x6
-        </Link>
-        <br />
-        <Link className="gamemode button" to="?g=p&p=R2B2N2&s=8&c=3&d=30">
-          <h2>Normal</h2>
-          3 pieces
-          <br />
-          Rook, Bishop and Knight
-          <br />
-          8x8
-        </Link>
-        <br />
-        <Link className="gamemode button" to="?g=p&p=R3B3N3K1&s=10&c=8&d=50">
-          <h2>Hard</h2>
-          8 pieces
-          <br />
-          Rook, Bishop, Knight and King
-          <br />
-          10x10
-        </Link>
-        <Link className="gamemode button" to="?g=p&p=R4B4N4K1&s=12&c=12&d=60">
-          <h2>Extreme</h2>
-          12 pieces
-          <br />
-          Rook, Bishop, Knight and King
-          <br />
-          12x12
-        </Link>
-        <Link className="gamemode button" to="?g=p&p=飛2角2玉2銀2金2&s=8&c=5">
-          <h2>Shogi</h2>
-          5 pieces
-          <br />
-          Most shogi pieces, facing up
-          <br />
-          8x8
         </Link>
       </div>
       <hr />
