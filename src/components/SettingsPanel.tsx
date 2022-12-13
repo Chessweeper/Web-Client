@@ -6,8 +6,8 @@ import { IoMdSettings as SettingsIcon } from "react-icons/io";
 import { FaShare as ShareIcon } from "react-icons/fa";
 import { useBoardContext } from "./BoardWrapper";
 import { Modal } from "./ui/Modal";
+import { isMobile } from "../util";
 import "./SettingsPanel.css";
-import { isMobileOrTablet } from "../util";
 
 export const SettingsPanel = (): JSX.Element => {
   const {
@@ -31,7 +31,7 @@ export const SettingsPanel = (): JSX.Element => {
       url.searchParams.append("r", urlSeed);
     }
 
-    if (isMobileOrTablet() && navigator.canShare?.()) {
+    if (isMobile() && navigator.canShare?.()) {
       const shareData = {
         title: "Chessweeper",
         text: "Chess X Minesweeper",
