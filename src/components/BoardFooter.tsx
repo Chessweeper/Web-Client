@@ -48,8 +48,8 @@ export const BoardFooter = (): JSX.Element => {
   };
 
   const copyToClipboard = async () => {
-    setIsTooltipVisible(true);
     await navigator.clipboard.writeText(urlWithSeed);
+    setIsTooltipVisible(true);
     setTimeout(() => {
       setIsTooltipVisible(false);
     }, 2000);
@@ -58,7 +58,7 @@ export const BoardFooter = (): JSX.Element => {
   return (
     <>
       <Modal
-        title="Share this Board"
+        titleText="Share this Board"
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
@@ -75,7 +75,6 @@ export const BoardFooter = (): JSX.Element => {
       <div id="board-footer" className="flex">
         <div id="board-footer-icons" className="flex hor">
           <SettingsIcon
-            id="settings-button"
             className="board-footer-icon"
             title="Settings"
             size={25}

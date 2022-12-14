@@ -3,14 +3,14 @@ import { IoMdClose as CloseIcon } from "react-icons/io";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
-  title: string;
+  titleText: string;
   isOpen: boolean;
   onClose: () => void;
   children?: ReactNode;
 }
 
 export const Modal = ({
-  title,
+  titleText,
   isOpen,
   onClose,
   children,
@@ -29,8 +29,13 @@ export const Modal = ({
 
   return (
     <dialog ref={ref} className={styles.modalContainer} onClose={onClose}>
-      <h2 className={styles.modalTitle}>{title}</h2>
-      <CloseIcon size={25} className={styles.modalCloseIcon} onClick={close} />
+      <h2 className={styles.modalTitle}>{titleText}</h2>
+      <CloseIcon
+        size={25}
+        title="Close"
+        className={styles.modalCloseIcon}
+        onClick={close}
+      />
       <div className={styles.modalBody}>
         <hr />
         {children}
