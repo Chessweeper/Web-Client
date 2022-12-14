@@ -6,10 +6,15 @@ interface ModalProps {
   title: string;
   isOpen: boolean;
   onClose: () => void;
-  children?: ReactNode[];
+  children?: ReactNode;
 }
 
-export const Modal = ({ title, isOpen, onClose, children }: ModalProps) => {
+export const Modal = ({
+  title,
+  isOpen,
+  onClose,
+  children,
+}: ModalProps): JSX.Element => {
   const ref = useRef<HTMLDialogElement | null>(null);
 
   useEffect(() => {

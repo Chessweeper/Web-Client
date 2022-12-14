@@ -6,6 +6,7 @@ import { IoMdSettings as SettingsIcon } from "react-icons/io";
 import { FaShare as ShareIcon } from "react-icons/fa";
 import { useBoardContext } from "./BoardWrapper";
 import { Modal } from "./ui/Modal";
+import { Tooltip } from "./ui/Tooltip";
 import { isMobile } from "../util";
 import "./BoardFooter.css";
 
@@ -14,6 +15,7 @@ export const BoardFooter = (): JSX.Element => {
     G: { seed },
   } = useBoardContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const settings = useAppSelector((s) => s.settings);
   const dispatch = useAppDispatch();
@@ -46,7 +48,11 @@ export const BoardFooter = (): JSX.Element => {
   };
 
   const copyToClipboard = async () => {
+    setIsTooltipVisible(true);
     await navigator.clipboard.writeText(urlWithSeed);
+    setTimeout(() => {
+      setIsTooltipVisible(false);
+    }, 2000);
   };
 
   return (
@@ -59,9 +65,11 @@ export const BoardFooter = (): JSX.Element => {
         <p>Share this board with the random seed included in the url.</p>
         <div className="modal-copy-section flex hor">
           <input className="modal-input" value={urlWithSeed} readOnly />
-          <button className="button" onClick={copyToClipboard}>
-            Copy
-          </button>
+          <Tooltip text="Copied" direction="top" isVisible={isTooltipVisible}>
+            <button className="button" onClick={copyToClipboard}>
+              Copy
+            </button>
+          </Tooltip>
         </div>
       </Modal>
       <div id="board-footer" className="flex">
