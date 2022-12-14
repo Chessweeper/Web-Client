@@ -45,6 +45,7 @@
 .tooltiptext.top {
   top: calc(var(--tooltip-margin) * -1);
 }
+
 /* CSS border triangles */
 .Tooltip-Tip.top::before {
   top: 100%;
@@ -57,6 +58,7 @@
   top: 50%;
   transform: translateX(0) translateY(-50%);
 }
+
 /* CSS border triangles */
 .tooltiptext.right::before {
   left: calc(var(--tooltip-arrow-size) * -1);
@@ -69,6 +71,7 @@
 .tooltiptext.bottom {
   bottom: calc(var(--tooltip-margin) * -1);
 }
+
 /* CSS border triangles */
 .tooltiptext.bottom::before {
   bottom: 100%;
