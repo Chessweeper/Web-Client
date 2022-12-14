@@ -44,13 +44,22 @@ export const BoardFooter = (): JSX.Element => {
     }
   };
 
+  const copyToClipboard = async () => {
+    const copyable = window.location.href;
+    await navigator.clipboard.writeText(copyable);
+  };
+
   return (
     <>
       <Modal
         title="Share"
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-      />
+      >
+        <p>Share your current game and include the random seed</p>
+        <input value={window.location.href} readOnly />
+        <button onClick={copyToClipboard}>copy</button>
+      </Modal>
       <div id="board-footer" className="flex">
         <div id="board-footer-icons" className="flex hor">
           <SettingsIcon
