@@ -11,7 +11,7 @@ export interface Cell {
 // todo: replace string with a union type for pieces?
 
 export interface SetupData {
-  seed: string | null;
+  seed: string;
   pieces: Record<string, number>;
   size: number;
   count: number;

@@ -1,7 +1,9 @@
 import { SetupData } from "./Game";
 import { piecesImages } from "./Pieces";
 
-export function parseUrl(searchParams: URLSearchParams): SetupData {
+export function parseUrl(
+  searchParams: URLSearchParams
+): Omit<SetupData, "seed"> & { seed: string | null } {
   const seed = searchParams.get("r");
   const pieces = searchParams.get("p");
   const sizeParam = searchParams.get("s");
