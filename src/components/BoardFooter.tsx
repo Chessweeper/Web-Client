@@ -7,9 +7,9 @@ import { FaShare as ShareIcon } from "react-icons/fa";
 import { useBoardContext } from "./BoardWrapper";
 import { Modal } from "./ui/Modal";
 import { isMobile } from "../util";
-import "./SettingsPanel.css";
+import "./BoardFooter.css";
 
-export const SettingsPanel = (): JSX.Element => {
+export const BoardFooter = (): JSX.Element => {
   const {
     G: { seed },
   } = useBoardContext();
@@ -51,23 +51,25 @@ export const SettingsPanel = (): JSX.Element => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      <div id="settings-panel" className="flex">
-        <div id="settings-icons" className="flex hor">
+      <div id="board-footer" className="flex">
+        <div id="board-footer-icons" className="flex hor">
           <SettingsIcon
             id="settings-button"
-            className="settings-icon"
+            className="board-footer-icon"
             size={25}
             onClick={() => setShowSettings((prev) => !prev)}
           />
-          <ShareIcon className="settings-icon" size={20} onClick={share} />
+          <ShareIcon className="board-footer-icon" size={20} onClick={share} />
         </div>
         {showSettings && (
-          <Switch
-            id="setting-attacked-cell-values"
-            label="Show Attacked Cells"
-            checked={settings.isAttackedCellValuesEnabled}
-            onChange={onAttackedCellsCheckboxClicked}
-          />
+          <div id="settings-panel">
+            <Switch
+              id="setting-attacked-cell-values"
+              label="Show Attacked Cells"
+              checked={settings.isAttackedCellValuesEnabled}
+              onChange={onAttackedCellsCheckboxClicked}
+            />
+          </div>
         )}
       </div>
     </>

@@ -1,12 +1,12 @@
-#settings-panel {
+#board-footer {
   margin-top: 10px;
 }
 
-#settings-icons {
+#board-footer-icons {
   gap: 15px;
 }
 
-.settings-icon {
+.board-footer-icon {
   cursor: pointer;
   color: #555;
 }

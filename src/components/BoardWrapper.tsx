@@ -5,7 +5,7 @@ import { Timer, TimerRefAttributes } from "./Timer";
 import { BoardPropsWithReload } from "./Client";
 import { BoardHeaderButton } from "./BoardHeaderButton";
 import { BoardReport } from "./BoardReport";
-import { SettingsPanel } from "./SettingsPanel";
+import { BoardFooter } from "./BoardFooter";
 import "./BoardWrapper.css";
 
 export interface BoardContextState extends BoardPropsWithReload {
@@ -70,7 +70,7 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
               </div>
             )}
           </div>
-          <SettingsPanel />
+          <BoardFooter />
         </div>
         <ActionBar />
       </div>
