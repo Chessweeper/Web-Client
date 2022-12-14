@@ -62,9 +62,11 @@ export const BoardFooter = (): JSX.Element => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
-        <p>Share this board with the random seed included in the url.</p>
+        <p className="modal-description">
+          Share this board with the random seed included in the url.
+        </p>
         <div className="modal-copy-section flex hor">
-          <input className="modal-input" value={urlWithSeed} readOnly />
+          <div className="modal-link">{urlWithSeed}</div>
           <Tooltip text="Copied" direction="top" isVisible={isTooltipVisible}>
             <button className="button" onClick={copyToClipboard}>
               Copy
