@@ -51,18 +51,19 @@ export const Client = (): JSX.Element => {
         setGame(nextGame.current);
         nextGame.current = null;
       } else {
+        const setupData = getSetupDataWithSeed();
         const { cells, error } = generatePuzzleBoard(
-          setupDataFromUrl.seed,
-          setupDataFromUrl.pieces,
-          setupDataFromUrl.size,
-          setupDataFromUrl.count,
-          setupDataFromUrl.difficulty
+          setupData.seed,
+          setupData.pieces,
+          setupData.size,
+          setupData.count,
+          setupData.difficulty
         );
 
         if (error) {
           console.error(error);
         } else {
-          setGame(Game({ ...getSetupDataWithSeed(), cells }));
+          setGame(Game({ ...setupData, cells }));
         }
       }
     } else {
