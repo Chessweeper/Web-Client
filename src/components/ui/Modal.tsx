@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { IoMdClose as CloseIcon } from "react-icons/io";
-import "./Modal.css";
+import styles from "./Modal.module.css";
 
 export const Modal = ({
   title,
@@ -31,10 +31,10 @@ export const Modal = ({
   };
 
   return (
-    <dialog ref={ref} className="modal-container" onClose={onClose}>
-      <h2 className="modal-title">{title}</h2>
-      <CloseIcon size={25} className="modal-close-icon" onClick={close} />
-      <div className="modal-body">
+    <dialog ref={ref} className={styles.modalContainer} onClose={onClose}>
+      <h2 className={styles.modalTitle}>{title}</h2>
+      <CloseIcon size={25} className={styles.modalCloseIcon} onClick={close} />
+      <div className={styles.modalBody}>
         <hr />
         <p>Share your current game and include the random seed</p>
         <input value={window.location.href} readOnly />

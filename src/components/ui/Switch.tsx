@@ -1,5 +1,5 @@
 import { forwardRef, InputHTMLAttributes } from "react";
-import "./Switch.css";
+import styles from "./Switch.module.css";
 
 interface SwitchProps {
   id: string;
@@ -11,8 +11,8 @@ export const Switch = forwardRef<
   SwitchProps & InputHTMLAttributes<HTMLInputElement>
 >((props, ref): JSX.Element => {
   return (
-    <div className="switch-container">
-      <label className="switch">
+    <div className={styles.switchContainer}>
+      <label className={styles.switch}>
         <input
           ref={ref}
           type="checkbox"
@@ -20,9 +20,9 @@ export const Switch = forwardRef<
           checked={props.checked}
           onChange={props.onChange}
         />
-        <span className="slider"></span>
+        <span className={styles.slider}></span>
       </label>
-      <label htmlFor={props.id} className="switch-label">
+      <label htmlFor={props.id} className={styles.label}>
         {props.label}
       </label>
     </div>
