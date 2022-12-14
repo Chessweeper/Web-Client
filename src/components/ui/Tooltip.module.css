@@ -85,6 +85,7 @@
   top: 50%;
   transform: translateX(0) translateY(-50%);
 }
+
 /* CSS border triangles */
 .tooltiptext.left::before {
   left: auto;
