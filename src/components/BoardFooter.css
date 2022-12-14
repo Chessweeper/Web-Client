@@ -10,3 +10,15 @@
   cursor: pointer;
   color: #555;
 }
+
+.modal-copy-section {
+  gap: 15px;
+}
+
+.modal-input {
+  width: 80%;
+  height: 20px;
+  padding: 5px;
+  border-radius: 10px;
+  font-weight: bold;
+}

@@ -52,23 +52,33 @@ export const BoardFooter = (): JSX.Element => {
   return (
     <>
       <Modal
-        title="Share"
+        title="Share this Board"
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
-        <p>Share your current game and include the random seed</p>
-        <input value={urlWithSeed} readOnly />
-        <button onClick={copyToClipboard}>Copy</button>
+        <p>Share this board with the random seed included in the url.</p>
+        <div className="modal-copy-section flex hor">
+          <input className="modal-input" value={urlWithSeed} readOnly />
+          <button className="button" onClick={copyToClipboard}>
+            Copy
+          </button>
+        </div>
       </Modal>
       <div id="board-footer" className="flex">
         <div id="board-footer-icons" className="flex hor">
           <SettingsIcon
             id="settings-button"
             className="board-footer-icon"
+            title="Settings"
             size={25}
             onClick={() => setShowSettings((prev) => !prev)}
           />
-          <ShareIcon className="board-footer-icon" size={20} onClick={share} />
+          <ShareIcon
+            className="board-footer-icon"
+            title="Share this Board"
+            size={20}
+            onClick={share}
+          />
         </div>
         {showSettings && (
           <div id="settings-panel">
