@@ -60,7 +60,11 @@ describe("Client tests", () => {
   });
 
   it("should generate classic game", () => {
-    const { container } = render(<Client />, { wrapper: MemoryRouter });
+    const { container } = render(
+      <MemoryRouter initialEntries={["?g=c"]}>
+        <Client />
+      </MemoryRouter>
+    );
 
     const board = container.querySelector("#mockBoardWrapper");
 
@@ -68,11 +72,7 @@ describe("Client tests", () => {
   });
 
   it("should generate puzzle game without worker when unavailable", () => {
-    const { container } = render(
-      <MemoryRouter initialEntries={["?g=p"]}>
-        <Client />
-      </MemoryRouter>
-    );
+    const { container } = render(<Client />, { wrapper: MemoryRouter });
 
     const board = container.querySelector("#mockBoardWrapper");
 
@@ -85,11 +85,7 @@ describe("Client tests", () => {
       return { cells: [], knownCells: [], error: "mock error" };
     });
 
-    render(
-      <MemoryRouter initialEntries={["?g=p"]}>
-        <Client />
-      </MemoryRouter>
-    );
+    render(<Client />, { wrapper: MemoryRouter });
 
     expect(console.error).toHaveBeenCalledTimes(1);
   });
@@ -100,11 +96,7 @@ describe("Client tests", () => {
     });
 
     it("should generate puzzle game with worker", async () => {
-      const { container } = render(
-        <MemoryRouter initialEntries={["?g=p"]}>
-          <Client />
-        </MemoryRouter>
-      );
+      const { container } = render(<Client />, { wrapper: MemoryRouter });
 
       await waitFor(() => {
         const board = container.querySelector("#mockBoardWrapper");
@@ -121,11 +113,7 @@ describe("Client tests", () => {
         );
       });
 
-      const { container } = render(
-        <MemoryRouter initialEntries={["?g=p"]}>
-          <Client />
-        </MemoryRouter>
-      );
+      const { container } = render(<Client />, { wrapper: MemoryRouter });
 
       await waitFor(() => {
         const reloadButton = container.querySelector("#popup-reload");
@@ -145,11 +133,7 @@ describe("Client tests", () => {
       (window.Worker as any) = MockErrorWorker;
       console.error = vi.fn();
 
-      render(
-        <MemoryRouter initialEntries={["?g=p"]}>
-          <Client />
-        </MemoryRouter>
-      );
+      render(<Client />, { wrapper: MemoryRouter });
 
       expect(console.error).toHaveBeenCalledTimes(1);
     });
