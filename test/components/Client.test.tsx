@@ -82,7 +82,7 @@ describe("Client tests", () => {
   it("should handle non-worker puzzle generation error", () => {
     console.error = vi.fn();
     vi.spyOn(Algs, "generatePuzzleBoard").mockImplementation(() => {
-      return { cells: [], knownCells: [], error: "mock error" };
+      return { cells: [], error: "mock error" };
     });
 
     render(<Client />, { wrapper: MemoryRouter });

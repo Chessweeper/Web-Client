@@ -21,8 +21,6 @@ export const BoardHeaderButton = (): JSX.Element => {
     image = knook;
   } else if (ctx.gameover?.isWin === false) {
     image = pawn;
-  } else if (ctx.gameover) {
-    return <h2>{ctx.gameover?.error ?? "Error"}</h2>;
   }
 
   return (

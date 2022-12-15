@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import userEvent from "@testing-library/user-event";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import {
   BoardContext,
   BoardContextState,
@@ -14,34 +14,6 @@ describe("BoardHeaderButton tests", () => {
   beforeEach(() => {
     boardContext = createMockBoardContext();
     vi.clearAllMocks();
-  });
-
-  it("should display error message if gameover is error", async () => {
-    boardContext.ctx.gameover = { error: "Error Msg" };
-
-    render(
-      <BoardContext.Provider value={boardContext}>
-        <BoardHeaderButton />
-      </BoardContext.Provider>
-    );
-
-    const errorMsg = await screen.findByText("Error Msg");
-
-    expect(errorMsg).toBeInTheDocument();
-  });
-
-  it("should display 'Error' if no error message provided", async () => {
-    boardContext.ctx.gameover = {};
-
-    render(
-      <BoardContext.Provider value={boardContext}>
-        <BoardHeaderButton />
-      </BoardContext.Provider>
-    );
-
-    const errorMsg = await screen.findByText("Error");
-
-    expect(errorMsg).toBeInTheDocument();
   });
 
   it.each([
