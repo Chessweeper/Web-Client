@@ -1,8 +1,4 @@
 {
-  "type": "module",
-  "name": "chessweeper",
-  "version": "1.0.0",
-  "description": "Chess X Minesweeper",
   "engines": {
     "node": ">=18.0.0"
   },
@@ -12,23 +8,11 @@
     "build": "tsc && vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "format": "npx prettier --write .",
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint": "eslint .",
     "tsc": "tsc --noEmit",
     "prepare": "husky install"
   },
   "browserslist": "defaults and supports async-functions",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Xwilarg/Chessweeper.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Xwilarg/Chessweeper/issues"
-  },
-  "homepage": "https://github.com/Xwilarg/Chessweeper#readme",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
     "boardgame.io": "^0.50.2",
@@ -60,8 +44,11 @@
     "vitest": "^0.25.5"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.{ts,tsx}": [
       "eslint --cache --fix",
+      "prettier --write"
+    ],
+    "*.{md,css,yml,json}": [
       "prettier --write"
     ]
   }

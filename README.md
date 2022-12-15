@@ -1,4 +1,4 @@
-# Chessweeper &middot; [![Discord](https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat)](https://discord.gg/VjJ95N2mV9)
+# Chessweeper &middot; [![Discord](https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat)](https://discord.gg/VjJ95N2mV9) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/522c0c888197458d80afef9ff5955371)](https://www.codacy.com/gh/Chessweeper/Chessweeper/dashboard?utm_source=github.com&utm_medium=referral&utm_content=Chessweeper/Chessweeper&utm_campaign=Badge_Grade) [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/522c0c888197458d80afef9ff5955371)](https://www.codacy.com/gh/Chessweeper/Chessweeper/dashboard?utm_source=github.com&utm_medium=referral&utm_content=Chessweeper/Chessweeper&utm_campaign=Badge_Coverage)
 
 Chess X Minesweeper - Numbered tiles represent the number of pieces that have that tile in check.
 
@@ -16,17 +16,16 @@ To build a release version of the game, run `npm run build`. The output is place
 
 ### All NPM Commands
 
-| Command    | Description                                                                            |
-| ---------- | -------------------------------------------------------------------------------------- |
-| `start`    | run dev server                                                                         |
-| `preview`  | run output from local build directory (requires running build first)                   |
-| `build`    | create production build in the `build` directory                                       |
-| `test`     | run unit tests                                                                         |
-| `coverage` | run unit tests and generate a coverage report                                          |
-| `format`   | run prettier formatting on all files (husky does this on staged files before a commit) |
-| `lint`     | check for eslint warnings/errors in all files                                          |
-| `tsc`      | run typescript compiler to check for type errors in all ts/tsx files                   |
-| `prepare`  | automatically run by NPM during install to setup husky                                 |
+| Command    | Description                                                          |
+| ---------- | -------------------------------------------------------------------- |
+| `start`    | run dev server                                                       |
+| `preview`  | run output from local build directory (requires running build first) |
+| `build`    | create production build in the `build` directory                     |
+| `test`     | run unit tests                                                       |
+| `coverage` | run unit tests and generate a coverage report                        |
+| `lint`     | check for eslint warnings/errors in all ts/tsx files                 |
+| `tsc`      | run typescript compiler to check for type errors in all ts/tsx files |
+| `prepare`  | automatically run by NPM during install to setup husky               |
 
 ## Credits
 

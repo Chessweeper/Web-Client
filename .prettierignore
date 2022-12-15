@@ -1,2 +1,4 @@
 build
 coverage
+package-lock.json
+.github/ISSUE_TEMPLATE
