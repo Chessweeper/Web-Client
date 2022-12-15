@@ -1,7 +1,9 @@
 import { SetupData } from "./Game";
 import { piecesImages } from "./Pieces";
 
-export function parseUrl(searchParams: URLSearchParams): SetupData {
+export function parseUrl(
+  searchParams: URLSearchParams
+): Omit<SetupData, "seed"> & { seed: string | null } {
   const seed = searchParams.get("r");
   const pieces = searchParams.get("p");
   const sizeParam = searchParams.get("s");
@@ -11,20 +13,15 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
 
   let size = sizeParam === null ? 8 : parseInt(sizeParam);
   let count = countParam === null ? 3 : parseInt(countParam);
-  let difficulty = difficultyParam === null ? -1 : parseInt(difficultyParam);
   if (gamemode === null) {
-    gamemode = "c";
+    gamemode = "p";
   }
 
   if (gamemode !== "p" && gamemode !== "c") {
     console.warn(
-      `Parsing error: invalid gamemode ${gamemode}, falling back on classic`
+      `Parsing error: invalid gamemode ${gamemode}, falling back on puzzle`
     );
-    gamemode = "c";
-  }
-
-  if (gamemode !== "p" && difficulty !== -1) {
-    console.warn("Difficulty argument is ignored outside of puzzle gamemode");
+    gamemode = "p";
   }
 
   if (size < 3 || size > 1000) {
@@ -42,14 +39,23 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
     count = 3;
   }
 
-  if (
-    difficulty !== -1 &&
-    (difficulty < 1 || difficulty >= size * size - count)
-  ) {
-    console.warn(
-      `Parsing error: invalid difficulty ${difficulty}, unsetting value`
-    );
-    difficulty = -1;
+  let difficulty = gamemode === "p" ? 30 : -1;
+
+  if (difficultyParam !== null) {
+    difficulty = parseInt(difficultyParam);
+
+    if (gamemode !== "p" && difficulty !== -1) {
+      console.warn("Difficulty argument is ignored outside of puzzle gamemode");
+    } else if (
+      gamemode === "p" &&
+      (difficulty < 1 || difficulty >= size * size - count)
+    ) {
+      console.warn(
+        `Parsing error: invalid difficulty ${difficulty}, unsetting difficulty`
+      );
+
+      difficulty = -1;
+    }
   }
 
   const validLetters = Object.keys(piecesImages);
@@ -107,7 +113,6 @@ export function parseUrl(searchParams: URLSearchParams): SetupData {
       R: Infinity,
       B: Infinity,
       N: Infinity,
-      Q: Infinity,
     };
   }
 

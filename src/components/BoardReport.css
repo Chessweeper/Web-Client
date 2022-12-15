@@ -1,0 +1,10 @@
+#board-report {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#board-report h3 {
+  margin: 0;
+}

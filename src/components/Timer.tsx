@@ -51,11 +51,7 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
 
   const time = Math.floor((now - start) / 1000);
 
-  return (
-    <h1 id="timer" className="board-header-item right">
-      {time.toString().padStart(3, "0")}
-    </h1>
-  );
+  return <h1 id="timer">{time.toString().padStart(3, "0")}</h1>;
 });
 
 Timer.displayName = "Timer";

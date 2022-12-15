@@ -3,6 +3,7 @@ import knook from "../assets/knook.png";
 import pawn from "../assets/wP.png";
 import { useBoardContext } from "./BoardWrapper";
 import { useEffect } from "react";
+import "./BoardHeaderButton.css";
 
 export const BoardHeaderButton = (): JSX.Element => {
   const { ctx, reload } = useBoardContext();

@@ -1,0 +1,36 @@
+#board-footer {
+  margin-top: 10px;
+}
+
+#board-footer-icons {
+  gap: 15px;
+}
+
+.board-footer-icon {
+  cursor: pointer;
+  color: #555;
+}
+
+.modal-description {
+  text-align: center;
+}
+
+.modal-copy-section {
+  gap: 15px;
+}
+
+.modal-link {
+  width: 70%;
+  border: 3px solid black;
+  padding: 12px 16px;
+  font-weight: bolder;
+  font-size: 16px;
+  border-radius: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.modal-link::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}

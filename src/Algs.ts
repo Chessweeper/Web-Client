@@ -398,7 +398,7 @@ function getTimeElapsed(startTime: number): number {
 }
 
 export function generatePuzzleBoard(
-  seed: string | null,
+  seed: string,
   pieces: Record<string, number>,
   size: number,
   count: number,

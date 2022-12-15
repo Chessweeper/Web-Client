@@ -1,8 +1,8 @@
 import { generatePuzzleBoard } from "./Algs";
 import { SetupData } from "./Game";
 
-onmessage = (e) => {
-  const { seed, pieces, size, count, difficulty } = e.data as SetupData;
+onmessage = (e: MessageEvent<SetupData>) => {
+  const { seed, pieces, size, count, difficulty } = e.data;
 
   const { cells, error } = generatePuzzleBoard(
     seed,
@@ -15,6 +15,6 @@ onmessage = (e) => {
   if (error) {
     postMessage(error);
   } else {
-    postMessage({ cells });
+    postMessage({ ...e.data, cells });
   }
 };

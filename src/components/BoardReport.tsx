@@ -1,4 +1,5 @@
 import { useBoardContext } from "./BoardWrapper";
+import "./BoardReport.css";
 
 export const BoardReport = (): JSX.Element | null => {
   const { ctx, timer } = useBoardContext();
