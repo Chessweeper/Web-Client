@@ -24,7 +24,7 @@ To build a release version of the game, run `npm run build`. The output is place
 | `test`     | run unit tests                                                                         |
 | `coverage` | run unit tests and generate a coverage report                                          |
 | `format`   | run prettier formatting on all files (husky does this on staged files before a commit) |
-| `lint`     | check for eslint warnings/errors in all files                                          |
+| `lint`     | check for eslint warnings/errors in all ts/tsx files                                   |
 | `tsc`      | run typescript compiler to check for type errors in all ts/tsx files                   |
 | `prepare`  | automatically run by NPM during install to setup husky                                 |
 
