@@ -28,7 +28,7 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
           setNow(Date.now());
           const intervalID = setInterval(() => {
             setNow(Date.now());
-          }, 10);
+          }, 100);
           intervalRef.current = intervalID;
         }
       },
@@ -45,6 +45,7 @@ export const Timer = forwardRef<TimerRefAttributes>((_, ref): JSX.Element => {
   useEffect(() => {
     if (ctx.gameover && intervalRef.current) {
       clearInterval(intervalRef.current);
+      setNow(Date.now());
       intervalRef.current = null;
     }
   }, [ctx.gameover, intervalRef]);
