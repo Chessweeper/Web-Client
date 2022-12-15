@@ -3,7 +3,7 @@ import { BoardContextState } from "../src/components/BoardWrapper";
 
 export const createMockBoardPropsWithReload = (): BoardPropsWithReload => ({
   G: {
-    seed: null,
+    seed: "default",
     size: 8,
     count: 3,
     difficulty: -1,

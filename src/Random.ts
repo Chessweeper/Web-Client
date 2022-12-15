@@ -1,12 +1,8 @@
 export class Random {
   seed: number;
 
-  constructor(seed: string | null) {
-    if (!seed) {
-      this.seed = Date.now();
-    } else {
-      this.seed = this.getHashCode(seed);
-    }
+  constructor(seed: string) {
+    this.seed = this.getHashCode(seed);
   }
 
   // https://stackoverflow.com/a/7616484
@@ -23,16 +19,12 @@ export class Random {
     return hash;
   }
 
-  setSeed(seed: string) {
-    this.seed = this.getHashCode(seed);
-  }
-
-  reset() {
-    this.seed = Date.now();
-  }
-
   next() {
     const x = Math.sin(this.seed++) * 10000;
     return x - Math.floor(x);
+  }
+
+  static generateSeed() {
+    return (Math.random() + 1).toString(36).substring(2);
   }
 }
