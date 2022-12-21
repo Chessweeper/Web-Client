@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Random } from "../Random";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
+import "./Client.css";
 
 export interface BoardPropsWithReload extends BoardProps<GameState> {
   reload: () => void;
@@ -156,7 +157,14 @@ export const Client = (): JSX.Element => {
               collapseOnLoad: true,
             },
           })
-        : () => <div>Generating Board...</div>,
+        : () => (
+            <div id="progress-container">
+              Generating Board...
+              <div id="progress">
+                <div id="progress-content"></div>
+              </div>
+            </div>
+          ),
     [game, setupGame]
   );
 
