@@ -10,7 +10,7 @@ export const LoadingBar = ({ value }: LoadingBarProps): JSX.Element => {
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.style.width = value + "%";
+      ref.current.style.width = value * 100 + "%";
     }
   }, [value]);
 
