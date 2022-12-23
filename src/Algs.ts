@@ -1,5 +1,4 @@
 import { Random } from "./Random";
-import { LoadingBarRefAttributes } from "./components/LoadingBar";
 
 export function getMoves(
   piece: string,
@@ -404,7 +403,7 @@ export function generatePuzzleBoard(
   size: number,
   count: number,
   difficulty: number,
-  loadingBar: React.MutableRefObject<LoadingBarRefAttributes> | null
+  updateProgress: (value: number) => void
 ) {
   let data: Array<number | string> = [];
   let error: string | null = null;
@@ -435,7 +434,7 @@ export function generatePuzzleBoard(
   const subGenMaxIt = 50; // Max iteration count to attempt to place pieces for the sub generation part
   const firstGenCount = 4; // Number of pieces we place in the first generation
   for (; c < maxIt; c++) {
-    loadingBar?.current?.update(0);
+    updateProgress(0);
     resetState(pieces); // Reset pieces on new loop
     const firstCount = count > firstGenCount ? firstGenCount : count; // Generate a first board with a max of 4 pieces
 
@@ -463,7 +462,7 @@ export function generatePuzzleBoard(
       continue;
     }
 
-    loadingBar?.current?.update(firstGenCount / count);
+    updateProgress(firstGenCount / count);
     console.log(
       `[${getTimeElapsed(
         startTime
@@ -503,7 +502,7 @@ export function generatePuzzleBoard(
           resetState(piecesSaveState);
         }
       }
-      loadingBar?.current?.update(i / count);
+      updateProgress(i / count);
       if (!isSolved) {
         break;
       }

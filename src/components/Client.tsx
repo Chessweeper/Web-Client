@@ -7,7 +7,7 @@ import { parseUrl } from "../Parsing";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Random } from "../Random";
-import { LoadingBar, LoadingBarRefAttributes } from "./LoadingBar";
+import { LoadingBar } from "./LoadingBar";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
 
 export interface BoardPropsWithReload extends BoardProps<GameState> {
@@ -31,10 +31,9 @@ export const Client = (): JSX.Element => {
   const [game, setGame] = useState<BgioGame | null>(null);
   const [settingNextGame, setSettingNextGame] = useState(false);
   const [worker, setWorker] = useState<Worker | null>();
+  const [progress, setProgress] = useState(0);
 
   const nextGame = useRef<BgioGame | null>(null);
-  const loadingBarRef =
-    useRef() as React.MutableRefObject<LoadingBarRefAttributes>;
 
   const setupDataFromUrl = useMemo(
     () => parseUrl(searchParams),
@@ -61,7 +60,7 @@ export const Client = (): JSX.Element => {
           setupData.size,
           setupData.count,
           setupData.difficulty,
-          loadingBarRef
+          setProgress
         );
 
         if (error) {
@@ -94,9 +93,13 @@ export const Client = (): JSX.Element => {
 
     if (isWorkerAvailable) {
       w = new PuzzleGenWorker();
-      w.onmessage = (e: MessageEvent<SetupData> | MessageEvent<string>) => {
+      w.onmessage = (
+        e: MessageEvent<SetupData> | MessageEvent<string> | MessageEvent<number>
+      ) => {
         if (typeof e.data === "string") {
           console.error(e.data);
+        } else if (typeof e.data === "number") {
+          setProgress(e.data);
         } else {
           const setupData = e.data;
           nextGame.current = Game(setupData);
@@ -160,9 +163,9 @@ export const Client = (): JSX.Element => {
               collapseOnLoad: true,
             },
           })
-        : () => <LoadingBar ref={loadingBarRef} />,
+        : () => null,
     [game, setupGame]
   );
 
-  return <Client />;
+  return game ? <Client /> : <LoadingBar value={progress} />;
 };

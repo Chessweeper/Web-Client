@@ -1,28 +1,25 @@
-import { forwardRef, useImperativeHandle } from "react";
+import { useEffect, useRef } from "react";
 import "./LoadingBar.css";
 
-export interface LoadingBarRefAttributes {
-  update: (value: number) => void;
+interface LoadingBarProps {
+  value: number;
 }
 
-export const LoadingBar = forwardRef<LoadingBarRefAttributes>(
-  (_, ref): JSX.Element => {
-    useImperativeHandle(ref, () => ({
-      update: (value: number) => {
-        document.getElementById("progress-content")!.style.width = value + "%";
-        console.log(value);
-      },
-    }));
+export const LoadingBar = ({ value }: LoadingBarProps): JSX.Element => {
+  const ref = useRef<HTMLDivElement | null>(null);
 
-    return (
-      <div id="progress-container">
-        Generating Board...
-        <div id="progress">
-          <div id="progress-content"></div>
-        </div>
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.style.width = value + "%";
+    }
+  }, [value]);
+
+  return (
+    <div id="progress-container">
+      Generating Board...
+      <div id="progress">
+        <div id="progress-content" ref={ref} />
       </div>
-    );
-  }
-);
-
-LoadingBar.displayName = "Loading Bar";
+    </div>
+  );
+};
