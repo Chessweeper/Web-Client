@@ -7,8 +7,8 @@ import { parseUrl } from "../Parsing";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Random } from "../Random";
+import { LoadingBar, LoadingBarRefAttributes } from "./LoadingBar";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
-import "./Client.css";
 
 export interface BoardPropsWithReload extends BoardProps<GameState> {
   reload: () => void;
@@ -33,6 +33,8 @@ export const Client = (): JSX.Element => {
   const [worker, setWorker] = useState<Worker | null>();
 
   const nextGame = useRef<BgioGame | null>(null);
+  const loadingBarRef =
+    useRef() as React.MutableRefObject<LoadingBarRefAttributes>;
 
   const setupDataFromUrl = useMemo(
     () => parseUrl(searchParams),
@@ -157,14 +159,7 @@ export const Client = (): JSX.Element => {
               collapseOnLoad: true,
             },
           })
-        : () => (
-            <div id="progress-container">
-              Generating Board...
-              <div id="progress">
-                <div id="progress-content"></div>
-              </div>
-            </div>
-          ),
+        : () => <LoadingBar ref={loadingBarRef} />,
     [game, setupGame]
   );
 
