@@ -454,7 +454,7 @@ export function generatePuzzleBoard(
     discovered = digData["discovered"];
 
     if (!isSolved) {
-      console.log(
+      console.debug(
         `[${getTimeElapsed(
           startTime
         )}s] - Skipping unsolvabled puzzle (${firstGenCount} pieces construction, iteration n°${c})`
@@ -463,7 +463,7 @@ export function generatePuzzleBoard(
     }
 
     updateProgress(firstGenCount / count);
-    console.log(
+    console.debug(
       `[${getTimeElapsed(
         startTime
       )}s] - ${firstGenCount} pieces puzzle generated`
@@ -494,7 +494,7 @@ export function generatePuzzleBoard(
         if (isSolved) {
           break;
         } else {
-          console.log(
+          console.debug(
             `[${getTimeElapsed(startTime)}s] - Skipping unsolvabled puzzle (${
               i + 1
             } pieces construction, sub-iteration n°${c2})`
@@ -510,13 +510,13 @@ export function generatePuzzleBoard(
 
     // We try to remove tiles to match the difficulty
     if (!isSolved) {
-      console.log(
+      console.debug(
         `[${getTimeElapsed(
           startTime
         )}s] - Skipping unsolvabled puzzle (iteration n°${c})`
       );
     } else {
-      console.log(
+      console.debug(
         `[${getTimeElapsed(startTime)}s] - ${count} pieces puzzle generated`
       );
       for (let i = 0; i < data.length; i++) {
@@ -534,7 +534,7 @@ export function generatePuzzleBoard(
       const emptyCasesAfter = discovered.filter((x) => x === false).length;
 
       if (difficulty !== -1 && difficulty > emptyCasesAfter) {
-        console.log(
+        console.debug(
           `[${getTimeElapsed(
             startTime
           )}s] - Skipping puzzle with ${emptyCasesAfter} empty tiles`
