@@ -9,7 +9,8 @@ onmessage = (e: MessageEvent<SetupData>) => {
     pieces,
     size,
     count,
-    difficulty
+    difficulty,
+    null
   );
 
   if (error) {

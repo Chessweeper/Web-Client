@@ -9,7 +9,8 @@ export const LoadingBar = forwardRef<LoadingBarRefAttributes>(
   (_, ref): JSX.Element => {
     useImperativeHandle(ref, () => ({
       update: (value: number) => {
-        const ignore = value;
+        document.getElementById("progress-content")!.style.width = value + "%";
+        console.log(value);
       },
     }));
 

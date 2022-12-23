@@ -60,7 +60,8 @@ export const Client = (): JSX.Element => {
           setupData.pieces,
           setupData.size,
           setupData.count,
-          setupData.difficulty
+          setupData.difficulty,
+          loadingBarRef
         );
 
         if (error) {
