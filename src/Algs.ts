@@ -402,7 +402,8 @@ export function generatePuzzleBoard(
   pieces: Record<string, number>,
   size: number,
   count: number,
-  difficulty: number
+  difficulty: number,
+  updateProgress: (value: number) => void
 ) {
   let data: Array<number | string> = [];
   let error: string | null = null;
@@ -433,6 +434,7 @@ export function generatePuzzleBoard(
   const subGenMaxIt = 50; // Max iteration count to attempt to place pieces for the sub generation part
   const firstGenCount = 4; // Number of pieces we place in the first generation
   for (; c < maxIt; c++) {
+    updateProgress(0);
     resetState(pieces); // Reset pieces on new loop
     const firstCount = count > firstGenCount ? firstGenCount : count; // Generate a first board with a max of 4 pieces
 
@@ -452,7 +454,7 @@ export function generatePuzzleBoard(
     discovered = digData["discovered"];
 
     if (!isSolved) {
-      console.log(
+      console.debug(
         `[${getTimeElapsed(
           startTime
         )}s] - Skipping unsolvabled puzzle (${firstGenCount} pieces construction, iteration n°${c})`
@@ -460,7 +462,8 @@ export function generatePuzzleBoard(
       continue;
     }
 
-    console.log(
+    updateProgress(firstGenCount / count);
+    console.debug(
       `[${getTimeElapsed(
         startTime
       )}s] - ${firstGenCount} pieces puzzle generated`
@@ -491,7 +494,7 @@ export function generatePuzzleBoard(
         if (isSolved) {
           break;
         } else {
-          console.log(
+          console.debug(
             `[${getTimeElapsed(startTime)}s] - Skipping unsolvabled puzzle (${
               i + 1
             } pieces construction, sub-iteration n°${c2})`
@@ -499,6 +502,7 @@ export function generatePuzzleBoard(
           resetState(piecesSaveState);
         }
       }
+      updateProgress(i / count);
       if (!isSolved) {
         break;
       }
@@ -506,13 +510,13 @@ export function generatePuzzleBoard(
 
     // We try to remove tiles to match the difficulty
     if (!isSolved) {
-      console.log(
+      console.debug(
         `[${getTimeElapsed(
           startTime
         )}s] - Skipping unsolvabled puzzle (iteration n°${c})`
       );
     } else {
-      console.log(
+      console.debug(
         `[${getTimeElapsed(startTime)}s] - ${count} pieces puzzle generated`
       );
       for (let i = 0; i < data.length; i++) {
@@ -530,7 +534,7 @@ export function generatePuzzleBoard(
       const emptyCasesAfter = discovered.filter((x) => x === false).length;
 
       if (difficulty !== -1 && difficulty > emptyCasesAfter) {
-        console.log(
+        console.debug(
           `[${getTimeElapsed(
             startTime
           )}s] - Skipping puzzle with ${emptyCasesAfter} empty tiles`
