@@ -35,7 +35,7 @@ jobs:
           PORT: 22
           KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         with:
-          source: "./build/"
+          source: "build/"
           target: ${{ env.DEPLOY_TARGET }}
           strip_components: 1
       - name: Upload coverage to Codacy
