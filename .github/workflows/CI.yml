@@ -26,8 +26,8 @@ jobs:
       - if: ${{ github.ref_name == 'master' }}
         run: echo ${{ secrets.DEPLOY_PATH }} >> $DEPLOY_TARGET
       - if: ${{ github.ref_name == 'develop' }}
-        run: echo ${{ secrets.DEPLOY_PATH }} >> $DEPLOY_TARGET_BETA
-      - if: ${{ secrets.DEPLOY_PATH != 'None' }}
+        run: echo ${{ secrets.DEPLOY_PATH }} >> $DEPLOY_TARGET
+      - if: $DEPLOY_TARGET != 'None'
         uses: appleboy/scp-action@master
         env:
           HOST: ${{ secrets.DEPLOY_HOST }}
