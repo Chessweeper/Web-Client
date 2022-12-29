@@ -20,10 +20,26 @@ jobs:
       - run: npm run lint
       - run: npm run coverage
       - run: npm run build
-      - uses: actions/upload-artifact@v2
+      - if: ${{ github.ref_name == 'master' }}
+        uses: appleboy/scp-action@master
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_USER }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         with:
-          name: Chessweeper
-          path: ./build
+          source: "./build"
+          target: ${{ secrets.DEPLOY_PATH }}
+      - if: ${{ github.ref_name == 'develop' }}
+        uses: appleboy/scp-action@master
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_USER }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        with:
+          source: "./build"
+          target: ${{ secrets.DEPLOY_PATH_BETA }}
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@master
         with:
