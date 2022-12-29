@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [master, develop]
 
+env:
+  DEPLOY_TARGET: "None"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,16 +24,10 @@ jobs:
       - run: npm run coverage
       - run: npm run build
       - if: ${{ github.ref_name == 'master' }}
-        uses: appleboy/scp-action@master
-        env:
-          HOST: ${{ secrets.DEPLOY_HOST }}
-          USERNAME: ${{ secrets.DEPLOY_USER }}
-          PORT: 22
-          KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-        with:
-          source: "./build"
-          target: ${{ secrets.DEPLOY_PATH }}
+        run: echo ${{ secrets.DEPLOY_PATH }} >> $DEPLOY_TARGET
       - if: ${{ github.ref_name == 'develop' }}
+        run: echo ${{ secrets.DEPLOY_PATH }} >> $DEPLOY_TARGET_BETA
+      - if: ${{ secrets.DEPLOY_PATH != 'None' }}
         uses: appleboy/scp-action@master
         env:
           HOST: ${{ secrets.DEPLOY_HOST }}
@@ -39,7 +36,7 @@ jobs:
           KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         with:
           source: "./build"
-          target: ${{ secrets.DEPLOY_PATH_BETA }}
+          target: $DEPLOY_TARGET
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@master
         with:
