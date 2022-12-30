@@ -2,7 +2,7 @@
 // @vitest-environment jsdom
 import { MemoryRouter } from "react-router-dom";
 import { render, waitFor, screen } from "@testing-library/react";
-import { Footer } from "../../src/components/Footer";
+import { Home } from "../../src/components/home/Home";
 import { act } from "react-dom/test-utils";
 
 console.error = vi.fn();
@@ -18,7 +18,7 @@ describe("Footer tests", () => {
       text: vi.fn().mockResolvedValue("mockPuzzleSeed"),
     });
 
-    const { container } = render(<Footer />, { wrapper: MemoryRouter });
+    const { container } = render(<Home />, { wrapper: MemoryRouter });
 
     await screen.findByText(/^Daily/i);
     const dailyPuzzleLink = container.querySelector("#daily");
@@ -31,7 +31,7 @@ describe("Footer tests", () => {
       ok: false,
     });
 
-    render(<Footer />, { wrapper: MemoryRouter });
+    render(<Home />, { wrapper: MemoryRouter });
 
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledOnce();
@@ -48,7 +48,7 @@ describe("Footer tests", () => {
       text: vi.fn().mockResolvedValue("longErrorValueOnFetchReturn"),
     });
 
-    render(<Footer />, { wrapper: MemoryRouter });
+    render(<Home />, { wrapper: MemoryRouter });
 
     await waitFor(() => {
       expect(console.error).toHaveBeenCalledOnce();
@@ -66,7 +66,7 @@ describe("Footer tests", () => {
     });
     vi.useFakeTimers();
 
-    render(<Footer />, { wrapper: MemoryRouter });
+    render(<Home />, { wrapper: MemoryRouter });
 
     act(() => {
       vi.advanceTimersByTime(5000);
@@ -84,7 +84,7 @@ describe("Footer tests", () => {
     });
     vi.useFakeTimers();
 
-    render(<Footer />, { wrapper: MemoryRouter });
+    render(<Home />, { wrapper: MemoryRouter });
 
     act(() => {
       vi.advanceTimersByTime(86400001);

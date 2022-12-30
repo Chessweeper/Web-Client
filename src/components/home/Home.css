@@ -1,0 +1,12 @@
+.home {
+  text-align: center;
+}
+
+.home__title {
+  font-size: 3em;
+  margin: 0.25em;
+}
+
+.footer-icons {
+  gap: 10px;
+}
