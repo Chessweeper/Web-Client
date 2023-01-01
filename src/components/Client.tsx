@@ -1,12 +1,12 @@
 import { BoardProps, Client as BgioClient } from "boardgame.io/react";
 import { Game as BgioGame } from "boardgame.io";
 import { Game, GameState, SetupData } from "../Game";
-import { generatePuzzleBoard } from "../Algs";
+import { generatePuzzleBoard } from "../gen/Algs";
 import { BoardWrapper } from "./BoardWrapper";
 import { parseUrl } from "../Parsing";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Random } from "../Random";
+import { Random } from "../gen/Random";
 import { LoadingBar } from "./LoadingBar";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
 

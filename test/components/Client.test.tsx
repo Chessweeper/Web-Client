@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { render, waitFor } from "@testing-library/react";
 import { Client } from "../../src/components/Client";
-import * as Algs from "../../src/Algs";
+import * as Algs from "../../src/gen/Algs";
 import * as BoardWrapper from "../../src/components/BoardWrapper";
 
 class MockWorker {
