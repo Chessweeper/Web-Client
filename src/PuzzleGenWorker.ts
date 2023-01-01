@@ -1,4 +1,4 @@
-import { generatePuzzleBoard } from "./Algs";
+import { generatePuzzleBoard } from "./gen/Algs";
 import { SetupData } from "./Game";
 
 onmessage = (e: MessageEvent<SetupData>) => {
