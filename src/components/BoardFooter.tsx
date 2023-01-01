@@ -1,6 +1,6 @@
 import { ChangeEvent, useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
-import { settingsSlice } from "../store/settings";
+import { setIsAttackedCellValuesEnabled } from "../store/settings";
 import { Switch } from "./ui/Switch";
 import { IoMdSettings as SettingsIcon } from "react-icons/io";
 import { FaShare as ShareIcon } from "react-icons/fa";
@@ -30,7 +30,7 @@ export const BoardFooter = (): JSX.Element => {
 
   const onAttackedCellsCheckboxClicked = (e: ChangeEvent<HTMLInputElement>) => {
     const { checked } = e.target;
-    dispatch(settingsSlice.actions.setIsAttackedCellValuesEnabled(checked));
+    dispatch(setIsAttackedCellValuesEnabled(checked));
   };
 
   const share = async () => {

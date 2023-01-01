@@ -2,16 +2,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export const ATTACKED_CELLS_STORAGE_KEY = "chessweeper-attacked-cells";
 
-interface State {
+export interface Settings {
   isAttackedCellValuesEnabled: boolean;
 }
 
-const initialState: State = {
+const initialState: Settings = {
   isAttackedCellValuesEnabled:
     localStorage.getItem(ATTACKED_CELLS_STORAGE_KEY) === "true",
 };
 
-export const settingsSlice = createSlice({
+const settingsSlice = createSlice({
   name: "settings",
   initialState,
   reducers: {
@@ -24,3 +24,6 @@ export const settingsSlice = createSlice({
     },
   },
 });
+
+export const { setIsAttackedCellValuesEnabled } = settingsSlice.actions;
+export default settingsSlice.reducer;
