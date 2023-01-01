@@ -12,11 +12,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    with:
-      submodules: recursive
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
       - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
