@@ -1,29 +1,24 @@
-import React, { PropsWithChildren } from "react";
+import { ReactElement, PropsWithChildren } from "react";
 import { render } from "@testing-library/react";
 import type { RenderOptions } from "@testing-library/react";
-import { configureStore } from "@reduxjs/toolkit";
 import type { PreloadedState } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 
-import { store as AppStore, RootState } from "../src/store";
-import { settingsSlice } from "../src/store/settings";
+import { AppStore, RootState, setupStore } from "../src/store";
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
   preloadedState?: PreloadedState<RootState>;
-  store?: typeof AppStore;
+  store?: AppStore;
 }
 
 export function renderWithProviders(
-  ui: React.ReactElement,
+  ui: ReactElement,
   {
     preloadedState = { settings: { isAttackedCellValuesEnabled: true } },
     // Automatically create a store instance if no store was passed in
-    store = configureStore({
-      reducer: { settings: settingsSlice.reducer },
-      preloadedState,
-    }),
+    store = setupStore(preloadedState),
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
