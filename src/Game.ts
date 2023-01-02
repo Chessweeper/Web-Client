@@ -1,7 +1,7 @@
 import { Game as BgioGame } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { fillPositions, generateBoard, getMoves } from "./Algs";
-import { Random } from "./Random";
+import { fillPositions, generateBoard, getMoves } from "./gen/Algs";
+import { Random } from "./gen/Random";
 
 export interface Cell {
   value: number | string;
