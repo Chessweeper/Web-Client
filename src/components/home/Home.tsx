@@ -4,9 +4,9 @@ import {
   FaDiscord as DiscordIcon,
   FaGithub as GithubIcon,
 } from "react-icons/fa";
-import "./Home.css";
 import { GamemodeButtonProps } from "./GamemodeButton";
 import { GamemodeSection } from "./GamemodeSection";
+import "./Home.css";
 
 const second = 1000;
 const minute = second * 60;
@@ -206,7 +206,9 @@ export const Home = (): JSX.Element => {
   return (
     <div className="home">
       <h1 className="home__title">Chessweeper</h1>
-      <Link to="/howtoplay">How to Play?</Link>
+      <Link className="home__howtoplay-link" to="/howtoplay">
+        How to Play?
+      </Link>
       <div className="flex hor footer-icons">
         <a href="https://github.com/Chessweeper/Chessweeper">
           <GithubIcon title="GitHub" size={30} color="black" />

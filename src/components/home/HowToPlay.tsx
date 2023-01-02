@@ -1,7 +1,11 @@
+import { BackButton } from "../ui/BackButton";
+import "./HowToPlay.css";
+
 export const HowToPlay = () => {
   return (
-    <div id="rules">
-      <h1>How to play?</h1>
+    <div>
+      <BackButton />
+      <h1 className="rules__title">How to play?</h1>
       <h2>Basic Rules</h2>
       <p>
         The goal is to find where and what all the chess pieces are

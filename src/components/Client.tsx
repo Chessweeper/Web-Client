@@ -5,11 +5,11 @@ import { generatePuzzleBoard } from "../Algs";
 import { BoardWrapper } from "./BoardWrapper";
 import { parseUrl } from "../Parsing";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Random } from "../Random";
 import { LoadingBar } from "./LoadingBar";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
-import { FaArrowLeft } from "react-icons/fa";
+import { BackButton } from "./ui/BackButton";
 
 export interface BoardPropsWithReload extends BoardProps<GameState> {
   reload: () => void;
@@ -170,20 +170,7 @@ export const Client = (): JSX.Element => {
 
   return (
     <div className="flex">
-      <div className="flex hor">
-        <Link
-          to="/"
-          style={{
-            position: "absolute",
-            left: "1em",
-            top: "1em",
-            cursor: "pointer",
-          }}
-        >
-          <FaArrowLeft size={25} color="black" />
-        </Link>
-        <h2>Game Type and stuff</h2>
-      </div>
+      <BackButton />
       {game ? <Client /> : <LoadingBar value={progress} />}
     </div>
   );
