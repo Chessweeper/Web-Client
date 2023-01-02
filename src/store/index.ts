@@ -4,6 +4,7 @@ import {
   PreloadedState,
 } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import { listenerMiddleware } from "./listenerMiddleware";
 import settingsReducer from "./settings";
 
 const rootReducer = combineReducers({
@@ -14,6 +15,8 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) =>
   configureStore({
     reducer: rootReducer,
     preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().prepend(listenerMiddleware.middleware),
     devTools: process.env.NODE_ENV !== "production",
   });
 
