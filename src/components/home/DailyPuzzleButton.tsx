@@ -38,7 +38,6 @@ export const DailyPuzzleButton = (): JSX.Element | null => {
   const intervalRef = useRef<NodeJS.Timer | null>(null);
 
   async function updateDailyPuzzle() {
-    setDailyPuzzleSeed("penis");
     const resp = await fetch("../../api/daily.php");
     if (resp.ok) {
       const text = await resp.text();
