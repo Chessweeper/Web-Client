@@ -1,7 +1,6 @@
 import { Game as BgioGame } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { fillPositions, generateBoard, getMoves } from "./gen/Algs";
-import { Random } from "./gen/Random";
+import { generateClassicBoard, getMoves } from "./gen/Algs";
 
 export interface Cell {
   value: number | string;
@@ -21,25 +20,6 @@ export interface SetupData {
 }
 
 export type GameState = Required<SetupData>;
-
-function generateClassicBoard(G: GameState, id: number) {
-  const random = new Random(G.seed);
-  const filledPositions = fillPositions(
-    generateBoard(
-      random,
-      id,
-      G.pieces,
-      G.size,
-      G.count,
-      Array(G.size * G.size).fill(0)
-    )
-  );
-  G.cells = filledPositions.map((pos) => ({
-    value: pos,
-    known: false,
-    attackedValue: 0,
-  }));
-}
 
 function isWinCondition(G: GameState, id: number) {
   if (G.cells === null) {
@@ -107,38 +87,27 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
 
   moves: {
     discoverPiece: ({ G, events }, id: number) => {
-      if (G.cells === null) {
-        generateClassicBoard(G, id);
-      }
+      G.cells ??= generateClassicBoard(G.seed, G.pieces, G.size, G.count, id);
 
-      // cells and knownCells will be already set or set in generateClassicBoard
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (G.cells![id].known !== false || G.gamemode === "p") {
+      if (G.cells[id].known !== false || G.gamemode === "p") {
         return INVALID_MOVE;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (Number.isInteger(G.cells![id].value)) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        G.cells![id].known = true;
+      if (Number.isInteger(G.cells[id].value)) {
+        G.cells[id].known = true;
       } else {
         events.endGame({ isWin: false });
       }
     },
 
     placeHint: ({ G, events }, id: number, action: string) => {
-      if (G.cells === null) {
-        generateClassicBoard(G, id);
-      }
+      G.cells ??= generateClassicBoard(G.seed, G.pieces, G.size, G.count, id);
 
-      // cells and knownCells will be already set or set in generateClassicBoard
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (G.cells![id].known === true) {
+      if (G.cells[id].known === true) {
         return INVALID_MOVE;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      G.cells![id].known = action;
+      G.cells[id].known = action;
 
       calcAttackedCells(G);
 
