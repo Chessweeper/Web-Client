@@ -1,6 +1,6 @@
-import { ChangeEvent, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
-import { setIsAttackedCellValuesEnabled } from "../store/settings";
+import { toggleAttackedCellValuesEnabled } from "../store/settings";
 import { Switch } from "./ui/Switch";
 import { IoMdSettings as SettingsIcon } from "react-icons/io";
 import { FaShare as ShareIcon } from "react-icons/fa";
@@ -27,11 +27,6 @@ export const BoardFooter = (): JSX.Element => {
     }
     return url.href;
   }, [seed]);
-
-  const onAttackedCellsCheckboxClicked = (e: ChangeEvent<HTMLInputElement>) => {
-    const { checked } = e.target;
-    dispatch(setIsAttackedCellValuesEnabled(checked));
-  };
 
   const share = async () => {
     const nativeShareData = {
@@ -95,7 +90,7 @@ export const BoardFooter = (): JSX.Element => {
               id="setting-attacked-cell-values"
               label="Show Attacked Cells"
               checked={settings.isAttackedCellValuesEnabled}
-              onChange={onAttackedCellsCheckboxClicked}
+              onChange={() => dispatch(toggleAttackedCellValuesEnabled())}
             />
           </div>
         )}

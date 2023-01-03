@@ -95,7 +95,9 @@ describe("BoardFooter tests", () => {
 
       expect(mockDispatch).toHaveBeenCalledTimes(1);
       expect(mockDispatch).toHaveBeenCalledWith(
-        expect.objectContaining({ payload: false })
+        expect.objectContaining({
+          type: "settings/toggleAttackedCellValuesEnabled",
+        })
       );
     });
   });
