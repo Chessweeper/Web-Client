@@ -58,11 +58,15 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     className += " red";
   } else if (G.cells[id].known === true) {
     value = Number(G.cells[id].value);
-    if (isAttackedCellValuesEnabled) {
-      value -= G.cells[id].attackedValue;
-    }
-    if (value === 0 && G.cells[id].value === 0) {
-      value = "";
+    if (isNaN(value)) {
+      value = <img src={getPiece(String(G.cells[id].value))} />;
+    } else {
+      if (isAttackedCellValuesEnabled) {
+        value -= G.cells[id].attackedValue;
+      }
+      if (value === 0 && G.cells[id].value === 0) {
+        value = "";
+      }
     }
     if (typeof value === "number" && value < 0) {
       className += " red";

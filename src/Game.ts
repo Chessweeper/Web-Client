@@ -14,7 +14,7 @@ export interface SetupData {
   pieces: Record<string, number>;
   size: number;
   count: number;
-  gamemode: "c" | "p";
+  gamemode: "c" | "p" | "r";
   difficulty: number;
   cells?: Cell[] | null;
 }

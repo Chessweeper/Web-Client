@@ -34,7 +34,7 @@ export const ActionBar = (): JSX.Element => {
     return actions.filter(
       (action) =>
         availablePieces.includes(action.ID) ||
-        (action.ID === "" && G.gamemode !== "p")
+        (action.ID === "" && G.gamemode === "c")
     );
   }, [actions, G.pieces, G.gamemode]);
 

@@ -1,7 +1,7 @@
 import { BoardProps, Client as BgioClient } from "boardgame.io/react";
 import { Game as BgioGame } from "boardgame.io";
 import { Game, GameState, SetupData } from "../Game";
-import { generatePuzzleBoard } from "../gen/Algs";
+import { generatePuzzleBoard, generateReverseBoard } from "../gen/Algs";
 import { BoardWrapper } from "./BoardWrapper";
 import { parseUrl } from "../Parsing";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -69,6 +69,15 @@ export const Client = (): JSX.Element => {
           setGame(Game({ ...setupData, cells }));
         }
       }
+    } else if (setupDataFromUrl.gamemode === "r") {
+      const setupData = getSetupDataWithSeed();
+      const cells = generateReverseBoard(
+        setupData.seed,
+        setupData.pieces,
+        setupData.size,
+        setupData.count
+      );
+      setGame(Game({ ...setupData, cells }));
     } else {
       setGame(Game(getSetupDataWithSeed()));
     }
@@ -78,8 +87,20 @@ export const Client = (): JSX.Element => {
   useEffect(() => {
     /* c8 ignore next 7 */
     if (!import.meta.env.VITEST) {
+      let gamemode: string;
+      switch (setupDataFromUrl.gamemode) {
+        case "c":
+          gamemode = "classic";
+          break;
+        case "p":
+          gamemode = "puzzle";
+          break;
+        case "r":
+          gamemode = "reverse";
+          break;
+      }
       // prettier-ignore
-      console.log(`Loading game: ${setupDataFromUrl.gamemode === "c" ? "classic" : "puzzle"} gamemode${setupDataFromUrl.seed != null ? ` with a seed of "${setupDataFromUrl.seed}"` : ""}, ${setupDataFromUrl.count} piece${setupDataFromUrl.count > 1 ? "s" : ""}, ${setupDataFromUrl.size}x${setupDataFromUrl.size} grid, piece${Object.keys(setupDataFromUrl.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupDataFromUrl.pieces).map((x) => `${x} (x${setupDataFromUrl.pieces[x]})`).join(", ")}`);
+      console.log(`Loading game: ${gamemode} gamemode${setupDataFromUrl.seed != null ? ` with a seed of "${setupDataFromUrl.seed}"` : ""}, ${setupDataFromUrl.count} piece${setupDataFromUrl.count > 1 ? "s" : ""}, ${setupDataFromUrl.size}x${setupDataFromUrl.size} grid, piece${Object.keys(setupDataFromUrl.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupDataFromUrl.pieces).map((x) => `${x} (x${setupDataFromUrl.pieces[x]})`).join(", ")}`);
     }
 
     // Firefox does not allow module workers, but PuzzleGenWorker is compiled

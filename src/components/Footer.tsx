@@ -232,6 +232,18 @@ export const Footer = (): JSX.Element => {
           10x10
         </Link>
       </div>
+      <h2>Reverse</h2>
+      <p>You have to find the numbers instead of the pieces</p>
+      <div className="flex hor">
+        <Link className="gamemode button" to="?g=r&p=R2B2Q1N2K1P2&s=10&c=5">
+          <h2>Easy</h2>
+          5 pieces
+          <br />
+          All pieces
+          <br />
+          10x10
+        </Link>
+      </div>
       <hr />
       <div id="rules">
         <h1>How to play?</h1>
