@@ -235,13 +235,13 @@ export const Footer = (): JSX.Element => {
       <h2>Reverse</h2>
       <p>You have to find the numbers instead of the pieces</p>
       <div className="flex hor">
-        <Link className="gamemode button" to="?g=r&p=R2B2Q1N2K1P2&s=10&c=5">
-          <h2>Easy</h2>
-          5 pieces
+        <Link className="gamemode button" to="?g=r&p=R2B2Q1N2K1P2&s=10&c=20">
+          <h2>Normal</h2>
+          20 pieces
           <br />
           All pieces
           <br />
-          10x10
+          5x5
         </Link>
       </div>
       <hr />

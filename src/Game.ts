@@ -5,7 +5,7 @@ import { generateClassicBoard, getMoves } from "./gen/Algs";
 export interface Cell {
   value: number | string;
   attackedValue: number;
-  known: boolean | string;
+  known: boolean | string | number;
 }
 // todo: replace string with a union type for pieces?
 
@@ -97,6 +97,17 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
         G.cells[id].known = true;
       } else {
         events.endGame({ isWin: false });
+      }
+    },
+
+    increaseCell: ({ G }, id: number, value: number) => {
+      if (G.cells !== null) {
+        if (G.cells[id].known === false) {
+          G.cells[id].known = value > 0 ? value : false;
+        } else if (typeof G.cells[id].known === "number") {
+          const targetValue = Number(G.cells[id].known) + value;
+          G.cells[id].known = targetValue === 0 ? false : targetValue;
+        }
       }
     },
 

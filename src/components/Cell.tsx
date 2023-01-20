@@ -39,9 +39,9 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     if (currAction === "shovel") {
       moves.discoverPiece(id);
     } else if (currAction === "plus") {
-      console.log("TODO");
+      moves.increaseCell(id, 1);
     } else if (currAction === "minus") {
-      console.log("TODO");
+      moves.increaseCell(id, -1);
     } else {
       if (G.cells?.[id].known === currAction) {
         moves.removeHint(id);
@@ -61,17 +61,18 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     value = <img src={getPiece(String(G.cells[id].value))} />;
     className += " red";
   } else if (G.cells[id].known === true) {
-    value = Number(G.cells[id].value);
-    if (isNaN(value)) {
-      value = <img src={getPiece(String(G.cells[id].value))} />;
-    } else {
+    if (typeof G.cells[id].value === "number") {
+      value = Number(G.cells[id].value);
       if (isAttackedCellValuesEnabled) {
         value -= G.cells[id].attackedValue;
       }
       if (value === 0 && G.cells[id].value === 0) {
         value = "";
       }
+    } else {
+      value = <img src={getPiece(String(G.cells[id].value))} />; // We display a piece
     }
+
     if (typeof value === "number" && value < 0) {
       className += " red";
     } else {
@@ -79,7 +80,11 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       className += isWhite ? " white" : " black";
     }
   } else if (G.cells[id].known !== false && G.cells[id].known !== true) {
-    value = <img src={getPiece(String(G.cells[id].known))} />;
+    if (typeof G.cells[id].known === "number") {
+      value = Number(G.cells[id].known);
+    } else {
+      value = <img src={getPiece(String(G.cells[id].known))} />;
+    }
   }
 
   // Text color
