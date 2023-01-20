@@ -36,14 +36,18 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       timer.start();
     }
 
-    if (currAction !== "") {
+    if (currAction === "shovel") {
+      moves.discoverPiece(id);
+    } else if (currAction === "plus") {
+      console.log("TODO");
+    } else if (currAction === "minus") {
+      console.log("TODO");
+    } else {
       if (G.cells?.[id].known === currAction) {
         moves.removeHint(id);
       } else {
         moves.placeHint(id, currAction);
       }
-    } else {
-      moves.discoverPiece(id);
     }
   };
 
