@@ -202,7 +202,7 @@ export const Footer = (): JSX.Element => {
         </Link>
       </div>
       <h2>Variant</h2>
-      <p>classic mode with pieces that are normally not in chess</p>
+      <p>Classic mode with pieces that are normally not in chess</p>
       <div className="flex hor">
         <Link className="gamemode button" to="?g=c&p=R3N3O3&s=10&c=5">
           <h2>Knook</h2>
