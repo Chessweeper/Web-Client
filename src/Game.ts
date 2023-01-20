@@ -21,6 +21,24 @@ export interface SetupData {
 
 export type GameState = Required<SetupData>;
 
+function isReverseWinCondition(G: GameState, id: number) {
+  if (G.cells === null) {
+    return false;
+  }
+
+  for (let i = 0; i < G.size * G.size; i++) {
+    if (typeof G.cells[i].known === "number") {
+      if (G.cells[i].value !== G.cells[i].known && G.cells[i].value !== id) {
+        return false;
+      }
+    } else if (G.cells[i].known === false) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function isWinCondition(G: GameState, id: number) {
   if (G.cells === null) {
     return false;
@@ -100,13 +118,17 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
       }
     },
 
-    increaseCell: ({ G }, id: number, value: number) => {
+    increaseCell: ({ G, events }, id: number, value: number) => {
       if (G.cells !== null) {
         if (G.cells[id].known === false) {
           G.cells[id].known = value > 0 ? value : false;
         } else if (typeof G.cells[id].known === "number") {
           const targetValue = Number(G.cells[id].known) + value;
           G.cells[id].known = targetValue === 0 ? false : targetValue;
+        }
+
+        if (isReverseWinCondition(G, id)) {
+          events.endGame({ isWin: true });
         }
       }
     },
