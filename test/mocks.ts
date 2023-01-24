@@ -52,7 +52,7 @@ export const createMockBoardPropsWithReload = (): BoardPropsWithReload => ({
 
 export const createMockBoardContext = (): BoardContextState => ({
   ...createMockBoardPropsWithReload(),
-  currAction: "",
+  currAction: "shovel",
   setCurrAction: vi.fn(),
   timer: {
     isRunning: vi.fn(),

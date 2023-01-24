@@ -82,7 +82,7 @@ describe("ActionBar tests", () => {
 
       const shovelButton = screen.getByAltText("Shovel").parentNode;
 
-      expect(boardContext.currAction).toBe("");
+      expect(boardContext.currAction).toBe("shovel");
       expect(shovelButton).toHaveClass("selected");
     });
 

@@ -17,7 +17,7 @@ export function parseUrl(
     gamemode = "p";
   }
 
-  if (gamemode !== "p" && gamemode !== "c") {
+  if (gamemode !== "p" && gamemode !== "c" && gamemode !== "r") {
     console.warn(
       `Parsing error: invalid gamemode ${gamemode}, falling back on puzzle`
     );

@@ -5,7 +5,7 @@ import { generateClassicBoard, getMoves } from "./gen/Algs";
 export interface Cell {
   value: number | string;
   attackedValue: number;
-  known: boolean | string;
+  known: boolean | string | number;
 }
 // todo: replace string with a union type for pieces?
 
@@ -14,12 +14,30 @@ export interface SetupData {
   pieces: Record<string, number>;
   size: number;
   count: number;
-  gamemode: "c" | "p";
+  gamemode: "c" | "p" | "r";
   difficulty: number;
   cells?: Cell[] | null;
 }
 
 export type GameState = Required<SetupData>;
+
+function isReverseWinCondition(G: GameState, id: number) {
+  if (G.cells === null) {
+    return false;
+  }
+
+  for (let i = 0; i < G.size * G.size; i++) {
+    if (typeof G.cells[i].known === "number") {
+      if (G.cells[i].value !== G.cells[i].known && G.cells[i].value !== id) {
+        return false;
+      }
+    } else if (G.cells[i].known === false) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 function isWinCondition(G: GameState, id: number) {
   if (G.cells === null) {
@@ -97,6 +115,21 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
         G.cells[id].known = true;
       } else {
         events.endGame({ isWin: false });
+      }
+    },
+
+    increaseCell: ({ G, events }, id: number, value: number) => {
+      if (G.cells !== null) {
+        if (G.cells[id].known === false) {
+          G.cells[id].known = value > 0 ? value : false;
+        } else if (typeof G.cells[id].known === "number") {
+          const targetValue = Number(G.cells[id].known) + value;
+          G.cells[id].known = targetValue === 0 ? false : targetValue;
+        }
+
+        if (isReverseWinCondition(G, id)) {
+          events.endGame({ isWin: true });
+        }
       }
     },
 

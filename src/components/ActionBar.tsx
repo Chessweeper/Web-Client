@@ -8,7 +8,9 @@ export const ActionBar = (): JSX.Element => {
 
   const actions = useMemo(
     () => [
-      { ID: "", name: "Shovel" },
+      { ID: "shovel", name: "Shovel" },
+      { ID: "plus", name: "Plus" },
+      { ID: "minus", name: "Minus" },
       { ID: "R", name: "Rook" },
       { ID: "B", name: "Bishop" },
       { ID: "N", name: "Knight" },
@@ -33,8 +35,9 @@ export const ActionBar = (): JSX.Element => {
     const availablePieces = Object.keys(G.pieces);
     return actions.filter(
       (action) =>
-        availablePieces.includes(action.ID) ||
-        (action.ID === "" && G.gamemode !== "p")
+        (availablePieces.includes(action.ID) && G.gamemode !== "r") ||
+        (action.ID === "shovel" && G.gamemode === "c") ||
+        ((action.ID === "plus" || action.ID === "minus") && G.gamemode === "r")
     );
   }, [actions, G.pieces, G.gamemode]);
 

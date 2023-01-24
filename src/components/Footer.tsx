@@ -202,7 +202,7 @@ export const Footer = (): JSX.Element => {
         </Link>
       </div>
       <h2>Variant</h2>
-      <p>classic mode with pieces that are normally not in chess</p>
+      <p>Classic mode with pieces that are normally not in chess</p>
       <div className="flex hor">
         <Link className="gamemode button" to="?g=c&p=R3N3O3&s=10&c=5">
           <h2>Knook</h2>
@@ -230,6 +230,18 @@ export const Footer = (): JSX.Element => {
           All pieces + Black Pawn
           <br />
           10x10
+        </Link>
+      </div>
+      <h2>Reverse</h2>
+      <p>You have to find the numbers instead of the pieces</p>
+      <div className="flex hor">
+        <Link className="gamemode button" to="?g=r&p=RBQNKP&s=8&c=15">
+          <h2>Normal</h2>
+          15 pieces
+          <br />
+          All pieces
+          <br />
+          8x8
         </Link>
       </div>
       <hr />
