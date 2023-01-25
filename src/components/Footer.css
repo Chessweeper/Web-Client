@@ -1,6 +1,7 @@
 .gamemode {
   width: 300px;
   border-radius: 15px;
+  margin: 2px;
 }
 
 .gamemode h2 {

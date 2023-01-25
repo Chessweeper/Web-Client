@@ -200,10 +200,6 @@ export const Footer = (): JSX.Element => {
           <br />
           10x10
         </Link>
-      </div>
-      <h2>Variant</h2>
-      <p>Classic mode with pieces that are normally not in chess</p>
-      <div className="flex hor">
         <Link className="gamemode button" to="?g=c&p=R3N3O3&s=10&c=5">
           <h2>Knook</h2>
           5 pieces
@@ -235,11 +231,30 @@ export const Footer = (): JSX.Element => {
       <h2>Reverse</h2>
       <p>You have to find the numbers instead of the pieces</p>
       <div className="flex hor">
-        <Link className="gamemode button" to="?g=r&p=RBQNKP&s=8&c=15">
+        <Link className="gamemode button" to="?g=r&p=RBQN&s=6&c=5">
+          <h2>Easy</h2>
+          5 pieces
+          <br />
+          Rook, Bishop, Queen and Knight
+          <br />
+          6x6
+        </Link>
+        <Link className="gamemode button" to="?g=r&p=RBQNK1P&s=8&c=15">
           <h2>Normal</h2>
           15 pieces
           <br />
           All pieces
+          <br />
+          8x8
+        </Link>
+        <Link
+          className="gamemode button"
+          to="?g=r&p=飛3角3桂3歩3玉3香3銀3金3&s=8&c=15"
+        >
+          <h2>Shogi</h2>
+          15 pieces
+          <br />
+          Shogi pieces, facing up
           <br />
           8x8
         </Link>
