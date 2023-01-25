@@ -7,6 +7,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children?: ReactNode;
+  isSmall: boolean;
 }
 
 export const Modal = ({
@@ -14,6 +15,7 @@ export const Modal = ({
   isOpen,
   onClose,
   children,
+  isSmall,
 }: ModalProps): JSX.Element => {
   const ref = useRef<HTMLDialogElement | null>(null);
 
@@ -28,7 +30,13 @@ export const Modal = ({
   };
 
   return (
-    <dialog ref={ref} className={styles.modalContainer} onClose={onClose}>
+    <dialog
+      ref={ref}
+      className={[styles.modalContainer, isSmall && styles.modalSmallContainer]
+        .filter((e) => !!e)
+        .join(" ")}
+      onClose={onClose}
+    >
       <h2 className={styles.modalTitle}>{titleText}</h2>
       <CloseIcon
         size={25}
