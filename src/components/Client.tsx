@@ -42,7 +42,7 @@ export const Client = (): JSX.Element => {
 
   const getSetupDataWithSeed = useCallback(() => {
     return {
-      ...setupDataFromUrl,
+      ...structuredClone(setupDataFromUrl),
       seed: setupDataFromUrl.seed ?? Random.generateSeed(),
     };
   }, [setupDataFromUrl]);
@@ -158,7 +158,7 @@ export const Client = (): JSX.Element => {
 
   // Generate next game in puzzle mode
   useEffect(() => {
-    if (setupDataFromUrl.gamemode === "c") return;
+    if (setupDataFromUrl.gamemode !== "p") return;
 
     // Set the current game to the next game if the current game is null
     if (game === null && nextGame.current) {
