@@ -30,7 +30,9 @@ describe("Timer tests", () => {
       </BoardContext.Provider>
     );
 
-    timerRef.current.start();
+    act(() => {
+      timerRef.current.start();
+    });
 
     expect(timerRef.current.isRunning()).toBe(true);
   });
@@ -44,9 +46,11 @@ describe("Timer tests", () => {
       </BoardContext.Provider>
     );
 
-    timerRef.current.start();
-    boardContext.ctx.gameover = { isWin: true };
+    act(() => {
+      timerRef.current.start();
+    });
 
+    boardContext.ctx.gameover = { isWin: true };
     rerender(
       <BoardContext.Provider value={boardContext}>
         <Timer ref={timerRef} />
@@ -65,9 +69,8 @@ describe("Timer tests", () => {
       </BoardContext.Provider>
     );
 
-    timerRef.current.start();
-
     act(() => {
+      timerRef.current.start();
       vi.advanceTimersByTime(5000);
     });
 
@@ -85,9 +88,8 @@ describe("Timer tests", () => {
       </BoardContext.Provider>
     );
 
-    timerRef.current.start();
-
     act(() => {
+      timerRef.current.start();
       vi.advanceTimersByTime(5000);
     });
 

@@ -1,44 +1,42 @@
 import { Game as BgioGame } from "boardgame.io";
 import { INVALID_MOVE } from "boardgame.io/core";
-import { fillPositions, generateBoard, getMoves } from "./Algs";
-import { Random } from "./Random";
+import { generateClassicBoard, getMoves } from "./gen/Algs";
 
 export interface Cell {
   value: number | string;
   attackedValue: number;
-  known: boolean | string;
+  known: boolean | string | number;
 }
 // todo: replace string with a union type for pieces?
 
 export interface SetupData {
-  seed: string | null;
+  seed: string;
   pieces: Record<string, number>;
   size: number;
   count: number;
-  gamemode: "c" | "p";
+  gamemode: "c" | "p" | "r";
   difficulty: number;
   cells?: Cell[] | null;
 }
 
 export type GameState = Required<SetupData>;
 
-function generateClassicBoard(G: GameState, id: number) {
-  const random = new Random(G.seed);
-  const filledPositions = fillPositions(
-    generateBoard(
-      random,
-      id,
-      G.pieces,
-      G.size,
-      G.count,
-      Array(G.size * G.size).fill(0)
-    )
-  );
-  G.cells = filledPositions.map((pos) => ({
-    value: pos,
-    known: false,
-    attackedValue: 0,
-  }));
+function isReverseWinCondition(G: GameState, id: number) {
+  if (G.cells === null) {
+    return false;
+  }
+
+  for (let i = 0; i < G.size * G.size; i++) {
+    if (typeof G.cells[i].known === "number") {
+      if (G.cells[i].value !== G.cells[i].known && G.cells[i].value !== id) {
+        return false;
+      }
+    } else if (G.cells[i].known === false) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function isWinCondition(G: GameState, id: number) {
@@ -107,38 +105,42 @@ export const Game = (setupData: SetupData): BgioGame<GameState> => ({
 
   moves: {
     discoverPiece: ({ G, events }, id: number) => {
-      if (G.cells === null) {
-        generateClassicBoard(G, id);
-      }
+      G.cells ??= generateClassicBoard(G.seed, G.pieces, G.size, G.count, id);
 
-      // cells and knownCells will be already set or set in generateClassicBoard
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (G.cells![id].known !== false || G.gamemode === "p") {
+      if (G.cells[id].known !== false || G.gamemode === "p") {
         return INVALID_MOVE;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (Number.isInteger(G.cells![id].value)) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        G.cells![id].known = true;
+      if (Number.isInteger(G.cells[id].value)) {
+        G.cells[id].known = true;
       } else {
         events.endGame({ isWin: false });
       }
     },
 
-    placeHint: ({ G, events }, id: number, action: string) => {
-      if (G.cells === null) {
-        generateClassicBoard(G, id);
-      }
+    increaseCell: ({ G, events }, id: number, value: number) => {
+      if (G.cells !== null) {
+        if (G.cells[id].known === false) {
+          G.cells[id].known = value > 0 ? value : false;
+        } else if (typeof G.cells[id].known === "number") {
+          const targetValue = Number(G.cells[id].known) + value;
+          G.cells[id].known = targetValue === 0 ? false : targetValue;
+        }
 
-      // cells and knownCells will be already set or set in generateClassicBoard
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (G.cells![id].known === true) {
+        if (isReverseWinCondition(G, id)) {
+          events.endGame({ isWin: true });
+        }
+      }
+    },
+
+    placeHint: ({ G, events }, id: number, action: string) => {
+      G.cells ??= generateClassicBoard(G.seed, G.pieces, G.size, G.count, id);
+
+      if (G.cells[id].known === true) {
         return INVALID_MOVE;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      G.cells![id].known = action;
+      G.cells[id].known = action;
 
       calcAttackedCells(G);
 

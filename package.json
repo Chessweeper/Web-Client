@@ -1,8 +1,4 @@
 {
-  "type": "module",
-  "name": "chessweeper",
-  "version": "1.0.0",
-  "description": "Chess X Minesweeper",
   "engines": {
     "node": ">=18.0.0"
   },
@@ -12,28 +8,17 @@
     "build": "tsc && vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "format": "npx prettier --write .",
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint": "eslint .",
     "tsc": "tsc --noEmit",
     "prepare": "husky install"
   },
   "browserslist": "defaults and supports async-functions",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Xwilarg/Chessweeper.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Xwilarg/Chessweeper/issues"
-  },
-  "homepage": "https://github.com/Xwilarg/Chessweeper#readme",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
     "boardgame.io": "^0.50.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.4"
   },
@@ -44,7 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^5.45.1",
     "@typescript-eslint/parser": "^5.45.1",
     "@vitejs/plugin-react": "^2.2.0",
-    "@vitest/coverage-c8": "^0.25.5",
+    "@vitest/coverage-c8": "^0.26.2",
     "eslint": "^8.29.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-react": "^7.31.11",
@@ -56,11 +41,14 @@
     "prettier": "^2.8.0",
     "typescript": "^4.9.3",
     "vite": "^3.2.5",
-    "vitest": "^0.25.5"
+    "vitest": "^0.26.2"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "*.{ts,tsx}": [
       "eslint --cache --fix",
+      "prettier --write"
+    ],
+    "*.{md,css,yml,json}": [
       "prettier --write"
     ]
   }

@@ -1,13 +1,16 @@
 import { useEffect, useMemo } from "react";
 import { getPiece } from "../Pieces";
 import { useBoardContext } from "./BoardWrapper";
+import "./ActionBar.css";
 
 export const ActionBar = (): JSX.Element => {
   const { G, currAction, setCurrAction } = useBoardContext();
 
   const actions = useMemo(
     () => [
-      { ID: "", name: "Shovel" },
+      { ID: "shovel", name: "Shovel" },
+      { ID: "plus", name: "Plus" },
+      { ID: "minus", name: "Minus" },
       { ID: "R", name: "Rook" },
       { ID: "B", name: "Bishop" },
       { ID: "N", name: "Knight" },
@@ -32,8 +35,9 @@ export const ActionBar = (): JSX.Element => {
     const availablePieces = Object.keys(G.pieces);
     return actions.filter(
       (action) =>
-        availablePieces.includes(action.ID) ||
-        (action.ID === "" && G.gamemode !== "p")
+        (availablePieces.includes(action.ID) && G.gamemode !== "r") ||
+        (action.ID === "shovel" && G.gamemode === "c") ||
+        ((action.ID === "plus" || action.ID === "minus") && G.gamemode === "r")
     );
   }, [actions, G.pieces, G.gamemode]);
 
@@ -54,19 +58,15 @@ export const ActionBar = (): JSX.Element => {
     };
   }, [availableActions, setCurrAction]);
 
-  const actionButtons = availableActions.map((action) => {
-    let className = "action";
-    if (currAction === action.ID) className += " selected";
-    return (
-      <button
-        key={action.ID}
-        className={className}
-        onClick={() => setCurrAction(action.ID)}
-      >
-        <img src={getPiece(action.ID)} alt={action.name} />
-      </button>
-    );
-  });
+  const actionButtons = availableActions.map((action) => (
+    <button
+      key={action.ID}
+      className={currAction === action.ID ? "selected" : undefined}
+      onClick={() => setCurrAction(action.ID)}
+    >
+      <img src={getPiece(action.ID)} alt={action.name} />
+    </button>
+  ));
 
   return (
     <div id="action-buttons" className="flex hor">

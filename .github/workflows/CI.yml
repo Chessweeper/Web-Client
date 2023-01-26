@@ -2,9 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, develop]
   pull_request:
-    branches: [master]
+    branches: [master, develop]
+
+env:
+  DEPLOY_TARGET: "None"
 
 jobs:
   build:
@@ -12,17 +15,31 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
       - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
           node-version: 18
       - run: npm install
+      - run: npm run lint
       - run: npm run coverage
       - run: npm run build
-      - uses: actions/upload-artifact@v2
+      - if: ${{ github.ref_name == 'master' }}
+        run: echo "DEPLOY_TARGET=${{ secrets.DEPLOY_PATH }}" >> "$GITHUB_ENV"
+      - if: ${{ github.ref_name == 'develop' }}
+        run: echo "DEPLOY_TARGET=${{ secrets.DEPLOY_PATH_BETA }}" >> "$GITHUB_ENV"
+      - if: env.DEPLOY_TARGET != 'None'
+        uses: appleboy/scp-action@master
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          USERNAME: ${{ secrets.DEPLOY_USER }}
+          PORT: 22
+          KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         with:
-          name: Chessweeper
-          path: ./build
+          source: "build/"
+          target: ${{ env.DEPLOY_TARGET }}
+          strip_components: 1
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@master
         with:

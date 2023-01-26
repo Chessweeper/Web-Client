@@ -22,7 +22,7 @@ export const Board = (): JSX.Element => {
   }
 
   return (
-    <table id="board" className={G.size >= 10 ? "small" : ""}>
+    <table id="board">
       <tbody>
         {rows.map((row, index) => (
           <Fragment key={`row${index}`}>{row}</Fragment>

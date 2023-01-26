@@ -3,6 +3,7 @@ import knook from "../assets/knook.png";
 import pawn from "../assets/wP.png";
 import { useBoardContext } from "./BoardWrapper";
 import { useEffect } from "react";
+import "./BoardHeaderButton.css";
 
 export const BoardHeaderButton = (): JSX.Element => {
   const { ctx, reload } = useBoardContext();
@@ -20,8 +21,6 @@ export const BoardHeaderButton = (): JSX.Element => {
     image = knook;
   } else if (ctx.gameover?.isWin === false) {
     image = pawn;
-  } else if (ctx.gameover) {
-    return <h2>{ctx.gameover?.error ?? "Error"}</h2>;
   }
 
   return (

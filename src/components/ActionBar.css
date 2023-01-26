@@ -1,0 +1,18 @@
+#action-buttons {
+  margin-top: 10px;
+}
+
+#action-buttons img {
+  width: 64px;
+  padding: 5px;
+  margin: 5px;
+}
+
+#action-buttons .selected {
+  background-color: green;
+}
+
+#action-buttons button {
+  width: 100px;
+  height: 100px;
+}

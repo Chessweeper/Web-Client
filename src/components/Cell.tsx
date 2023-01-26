@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { getPiece } from "../Pieces";
 import { useAppSelector } from "../store";
 import { useBoardContext } from "./BoardWrapper";
+import "./Cell.css";
 
 interface CellProps {
   id: number;
@@ -13,8 +14,12 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     (s) => s.settings.isAttackedCellValuesEnabled
   );
 
-  let className = "cell";
   let value: string | number | JSX.Element = "";
+
+  let className = "cell";
+  if (G.size > 10) {
+    className += " small";
+  }
 
   const isWhite = useMemo(() => {
     const y = Math.floor(id / G.size);
@@ -31,14 +36,18 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       timer.start();
     }
 
-    if (currAction !== "") {
+    if (currAction === "shovel") {
+      moves.discoverPiece(id);
+    } else if (currAction === "plus") {
+      moves.increaseCell(id, 1);
+    } else if (currAction === "minus") {
+      moves.increaseCell(id, -1);
+    } else {
       if (G.cells?.[id].known === currAction) {
         moves.removeHint(id);
       } else {
         moves.placeHint(id, currAction);
       }
-    } else {
-      moves.discoverPiece(id);
     }
   };
 
@@ -52,13 +61,18 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
     value = <img src={getPiece(String(G.cells[id].value))} />;
     className += " red";
   } else if (G.cells[id].known === true) {
-    value = Number(G.cells[id].value);
-    if (isAttackedCellValuesEnabled) {
-      value -= G.cells[id].attackedValue;
+    if (typeof G.cells[id].value === "number") {
+      value = Number(G.cells[id].value);
+      if (isAttackedCellValuesEnabled) {
+        value -= G.cells[id].attackedValue;
+      }
+      if (value === 0 && G.cells[id].value === 0) {
+        value = "";
+      }
+    } else {
+      value = <img src={getPiece(String(G.cells[id].value))} />; // We display a piece
     }
-    if (value === 0 && G.cells[id].value === 0) {
-      value = "";
-    }
+
     if (typeof value === "number" && value < 0) {
       className += " red";
     } else {
@@ -66,7 +80,11 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
       className += isWhite ? " white" : " black";
     }
   } else if (G.cells[id].known !== false && G.cells[id].known !== true) {
-    value = <img src={getPiece(String(G.cells[id].known))} />;
+    if (typeof G.cells[id].known === "number") {
+      value = Number(G.cells[id].known);
+    } else {
+      value = <img src={getPiece(String(G.cells[id].known))} />;
+    }
   }
 
   // Text color

@@ -5,7 +5,8 @@ import { Timer, TimerRefAttributes } from "./Timer";
 import { BoardPropsWithReload } from "./Client";
 import { BoardHeaderButton } from "./BoardHeaderButton";
 import { BoardReport } from "./BoardReport";
-import { SettingsPanel } from "./SettingsPanel";
+import { BoardFooter } from "./BoardFooter";
+import "./BoardWrapper.css";
 
 export interface BoardContextState extends BoardPropsWithReload {
   currAction: string;
@@ -18,7 +19,11 @@ export const useBoardContext = () => useContext(BoardContext);
 
 export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
   const [currAction, setCurrAction] = useState(
-    props.G.gamemode === "c" ? "" : Object.keys(props.G.pieces)[0]
+    props.G.gamemode === "c"
+      ? "shovel"
+      : props.G.gamemode === "r"
+      ? "plus"
+      : Object.keys(props.G.pieces)[0]
   );
   const [displayCover, setDisplayCover] = useState(props.G.gamemode === "p");
   const timerRef = useRef() as React.MutableRefObject<TimerRefAttributes>;
@@ -62,16 +67,14 @@ export const BoardWrapper = (props: BoardPropsWithReload): JSX.Element => {
             <BoardReport />
           </div>
           <div id="board-container">
-            <div>
-              <Board />
-              {displayCover && (
-                <div id="board-cover" onClick={hideCover}>
-                  <p>Click to start puzzle!</p>
-                </div>
-              )}
-            </div>
+            <Board />
+            {displayCover && (
+              <div id="board-cover" onClick={hideCover}>
+                <p>Click to start puzzle!</p>
+              </div>
+            )}
           </div>
-          <SettingsPanel />
+          <BoardFooter />
         </div>
         <ActionBar />
       </div>

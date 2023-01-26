@@ -1,0 +1,33 @@
+.modal-container {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 1.6rem;
+}
+
+.modal-small-container {
+  max-width: 400px;
+}
+
+.modal-container::backdrop {
+  backdrop-filter: blur(1px);
+}
+
+.modal-close-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.modal-title {
+  position: absolute;
+  top: 15px;
+  left: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-body {
+  margin-top: 25px;
+}

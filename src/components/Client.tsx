@@ -1,11 +1,13 @@
 import { BoardProps, Client as BgioClient } from "boardgame.io/react";
 import { Game as BgioGame } from "boardgame.io";
-import { Game, GameState } from "../Game";
-import { generatePuzzleBoard } from "../Algs";
+import { Game, GameState, SetupData } from "../Game";
+import { generatePuzzleBoard, generateReverseBoard } from "../gen/Algs";
 import { BoardWrapper } from "./BoardWrapper";
 import { parseUrl } from "../Parsing";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Random } from "../gen/Random";
+import { LoadingBar } from "./LoadingBar";
 import PuzzleGenWorker from "../PuzzleGenWorker?worker";
 
 export interface BoardPropsWithReload extends BoardProps<GameState> {
@@ -29,42 +31,76 @@ export const Client = (): JSX.Element => {
   const [game, setGame] = useState<BgioGame | null>(null);
   const [settingNextGame, setSettingNextGame] = useState(false);
   const [worker, setWorker] = useState<Worker | null>();
+  const [progress, setProgress] = useState(0);
 
   const nextGame = useRef<BgioGame | null>(null);
 
-  const setupData = useMemo(() => parseUrl(searchParams), [searchParams]);
+  const setupDataFromUrl = useMemo(
+    () => parseUrl(searchParams),
+    [searchParams]
+  );
+
+  const getSetupDataWithSeed = useCallback(() => {
+    return {
+      ...structuredClone(setupDataFromUrl),
+      seed: setupDataFromUrl.seed ?? Random.generateSeed(),
+    };
+  }, [setupDataFromUrl]);
 
   const setupGame = useCallback(() => {
-    if (setupData.gamemode === "p") {
+    if (setupDataFromUrl.gamemode === "p") {
       if (worker) {
         setGame(nextGame.current);
         nextGame.current = null;
       } else {
+        const setupData = getSetupDataWithSeed();
         const { cells, error } = generatePuzzleBoard(
           setupData.seed,
           setupData.pieces,
           setupData.size,
           setupData.count,
-          setupData.difficulty
+          setupData.difficulty,
+          setProgress
         );
 
         if (error) {
           console.error(error);
         } else {
-          setGame({ ...Game({ ...setupData, cells }) });
+          setGame(Game({ ...setupData, cells }));
         }
       }
+    } else if (setupDataFromUrl.gamemode === "r") {
+      const setupData = getSetupDataWithSeed();
+      const cells = generateReverseBoard(
+        setupData.seed,
+        setupData.pieces,
+        setupData.size,
+        setupData.count
+      );
+      setGame(Game({ ...setupData, cells }));
     } else {
-      setGame({ ...Game(setupData) });
+      setGame(Game(getSetupDataWithSeed()));
     }
-  }, [worker, setupData]);
+  }, [worker, setupDataFromUrl, getSetupDataWithSeed]);
 
   // Setup web worker on URL change
   useEffect(() => {
     /* c8 ignore next 7 */
     if (!import.meta.env.VITEST) {
+      let gamemode: string;
+      switch (setupDataFromUrl.gamemode) {
+        case "c":
+          gamemode = "classic";
+          break;
+        case "p":
+          gamemode = "puzzle";
+          break;
+        case "r":
+          gamemode = "reverse";
+          break;
+      }
       // prettier-ignore
-      console.log(`Loading game: ${setupData.gamemode === "c" ? "classic" : "puzzle"} gamemode${setupData.seed != null ? ` with a seed of "${setupData.seed}"` : ""}, ${setupData.count} piece${setupData.count > 1 ? "s" : ""}, ${setupData.size}x${setupData.size} grid, piece${Object.keys(setupData.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupData.pieces).map((x) => `${x} (x${setupData.pieces[x]})`).join(", ")}`);
+      console.log(`Loading game: ${gamemode} gamemode${setupDataFromUrl.seed != null ? ` with a seed of "${setupDataFromUrl.seed}"` : ""}, ${setupDataFromUrl.count} piece${setupDataFromUrl.count > 1 ? "s" : ""}, ${setupDataFromUrl.size}x${setupDataFromUrl.size} grid, piece${Object.keys(setupDataFromUrl.pieces).length > 1 ? "s" : ""} allowed: ${Object.keys(setupDataFromUrl.pieces).map((x) => `${x} (x${setupDataFromUrl.pieces[x]})`).join(", ")}`);
     }
 
     // Firefox does not allow module workers, but PuzzleGenWorker is compiled
@@ -78,12 +114,16 @@ export const Client = (): JSX.Element => {
 
     if (isWorkerAvailable) {
       w = new PuzzleGenWorker();
-      w.onmessage = (e) => {
+      w.onmessage = (
+        e: MessageEvent<SetupData> | MessageEvent<string> | MessageEvent<number>
+      ) => {
         if (typeof e.data === "string") {
           console.error(e.data);
+        } else if (typeof e.data === "number") {
+          setProgress(e.data);
         } else {
-          const { cells } = e.data;
-          nextGame.current = Game({ ...setupData, cells });
+          const setupData = e.data;
+          nextGame.current = Game(setupData);
           setSettingNextGame(false);
         }
       };
@@ -98,7 +138,7 @@ export const Client = (): JSX.Element => {
         setWorker(undefined);
       }
     };
-  }, [setupData]);
+  }, [setupDataFromUrl]);
 
   // On worker creation, create a new game
   useEffect(() => {
@@ -106,7 +146,7 @@ export const Client = (): JSX.Element => {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       // Use next game generation in puzzle mode
-      if (worker && setupData.gamemode === "p") {
+      if (worker && setupDataFromUrl.gamemode === "p") {
         setGame(null);
         setSettingNextGame(false);
         nextGame.current = null;
@@ -114,11 +154,11 @@ export const Client = (): JSX.Element => {
         setupGame();
       }
     }
-  }, [setupData, worker, setupGame]);
+  }, [setupDataFromUrl, worker, setupGame]);
 
   // Generate next game in puzzle mode
   useEffect(() => {
-    if (setupData.gamemode === "c") return;
+    if (setupDataFromUrl.gamemode !== "p") return;
 
     // Set the current game to the next game if the current game is null
     if (game === null && nextGame.current) {
@@ -129,9 +169,9 @@ export const Client = (): JSX.Element => {
     // When the next game has been consumed, tell the worker to generate a new one
     if (worker && !settingNextGame && nextGame.current === null) {
       setSettingNextGame(true);
-      worker.postMessage(setupData);
+      worker.postMessage(getSetupDataWithSeed());
     }
-  }, [game, worker, settingNextGame, setupData]);
+  }, [game, worker, settingNextGame, setupDataFromUrl, getSetupDataWithSeed]);
 
   const Client = useMemo(
     () =>
@@ -144,9 +184,9 @@ export const Client = (): JSX.Element => {
               collapseOnLoad: true,
             },
           })
-        : () => <div>Generating Board...</div>,
+        : () => null,
     [game, setupGame]
   );
 
-  return <Client />;
+  return game ? <Client /> : <LoadingBar value={progress} />;
 };

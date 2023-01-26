@@ -3,7 +3,7 @@ import { BoardContextState } from "../src/components/BoardWrapper";
 
 export const createMockBoardPropsWithReload = (): BoardPropsWithReload => ({
   G: {
-    seed: null,
+    seed: "default",
     size: 8,
     count: 3,
     difficulty: -1,
@@ -52,7 +52,7 @@ export const createMockBoardPropsWithReload = (): BoardPropsWithReload => ({
 
 export const createMockBoardContext = (): BoardContextState => ({
   ...createMockBoardPropsWithReload(),
-  currAction: "",
+  currAction: "shovel",
   setCurrAction: vi.fn(),
   timer: {
     isRunning: vi.fn(),

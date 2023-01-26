@@ -15,6 +15,8 @@ import shogiKing from "./assets/shogiKing.svg";
 import shogiLance from "./assets/shogiLance.svg";
 import shogiSilverGeneral from "./assets/shogiSilverGeneral.svg";
 import shogiGoldGeneral from "./assets/shogiGoldGeneral.svg";
+import plus from "./assets/plus.svg";
+import minus from "./assets/minus.svg";
 
 // todo: union type for pieces?
 export const piecesImages: Record<string, string> = {
@@ -37,6 +39,8 @@ export const piecesImages: Record<string, string> = {
 };
 
 export function getPiece(c: string) {
-  if (c === "") return shovel;
+  if (c === "shovel") return shovel;
+  if (c === "plus") return plus;
+  if (c === "minus") return minus;
   return piecesImages[c];
 }
