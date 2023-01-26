@@ -137,8 +137,8 @@ describe("BoardFooter tests", () => {
 
       const shareIcon = await screen.findByTitle("Share this Board");
       await userEvent.click(shareIcon);
-      const closeIcon = await screen.findByTitle("Close");
-      await userEvent.click(closeIcon);
+      const closeIcons = await screen.findAllByTitle("Close");
+      await userEvent.click(closeIcons[0]);
 
       expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
     });
