@@ -200,10 +200,6 @@ export const Footer = (): JSX.Element => {
           <br />
           10x10
         </Link>
-      </div>
-      <h2>Variant</h2>
-      <p>Classic mode with pieces that are normally not in chess</p>
-      <div className="flex hor">
         <Link className="gamemode button" to="?g=c&p=R3N3O3&s=10&c=5">
           <h2>Knook</h2>
           5 pieces
@@ -235,7 +231,15 @@ export const Footer = (): JSX.Element => {
       <h2>Reverse</h2>
       <p>You have to find the numbers instead of the pieces</p>
       <div className="flex hor">
-        <Link className="gamemode button" to="?g=r&p=RBQNKP&s=8&c=15">
+        <Link className="gamemode button" to="?g=r&p=RBQN&s=6&c=5">
+          <h2>Easy</h2>
+          5 pieces
+          <br />
+          Rook, Bishop, Queen and Knight
+          <br />
+          6x6
+        </Link>
+        <Link className="gamemode button" to="?g=r&p=RBQNK1P&s=8&c=15">
           <h2>Normal</h2>
           15 pieces
           <br />
@@ -243,58 +247,20 @@ export const Footer = (): JSX.Element => {
           <br />
           8x8
         </Link>
+        <Link
+          className="gamemode button"
+          to="?g=r&p=飛3角3桂3歩3玉3香3銀3金3&s=8&c=15"
+        >
+          <h2>Shogi</h2>
+          15 pieces
+          <br />
+          Shogi pieces, facing up
+          <br />
+          8x8
+        </Link>
       </div>
       <hr />
       <div id="rules">
-        <h1>How to play?</h1>
-        <h2>Basic Rules</h2>
-        <p>
-          The goal is to find where and what all the chess pieces are
-          <br />
-          Numbers on a tile represent the number of pieces that have that tile
-          in check
-          <br />
-          Once you identified a piece, click on the related button under the
-          board then click on the tile, click again to remove it
-          <br />
-          All kinds of pieces can appear many times, except the king that can
-          appear only 1 time maximum
-          <br />
-          The top left number is the number of pieces that need to be placed on
-          the board
-          <br />
-          <br />
-          For more information on how the pieces move, please click{" "}
-          <a
-            href="https://en.wikipedia.org/wiki/Chess#Movement"
-            target="_blank"
-            rel="noreferrer"
-          >
-            here
-          </a>
-        </p>
-
-        <h2>Classic Mode</h2>
-        <p>
-          The shovel allows you to dig a tile
-          <br />
-          You lose if you use your shovel on a chess piece, you win if you find
-          all the pieces correctly
-        </p>
-
-        <h2>Special pieces</h2>
-        <p>
-          Knook: Has the same moves as a knight and a rook
-          <br />
-          Shogi pieces:{" "}
-          <a
-            href="https://en.wikipedia.org/wiki/Shogi#Movement"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Wikipedia
-          </a>
-        </p>
         <div className="flex hor footer-icons">
           <a href="https://github.com/Chessweeper/Chessweeper">
             <GithubIcon title="GitHub" size={50} color="black" />
