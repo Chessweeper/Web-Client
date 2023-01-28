@@ -17,7 +17,7 @@ describe("BoardHeaderButton tests", () => {
   });
 
   it.each([
-    [true, "/src/img/knook.png"],
+    [true, "/src/assets/img/knook.png"],
     [false, "/src/assets/img/wP.png"],
   ])(
     "should render and display isWin message if gameover is normal result",
