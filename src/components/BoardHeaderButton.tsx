@@ -1,6 +1,6 @@
-import rook from "../assets/wR.png";
-import knook from "../assets/knook.png";
-import pawn from "../assets/wP.png";
+import rook from "../assets/img/wR.png";
+import knook from "../assets/img/knook.png";
+import pawn from "../assets/img/wP.png";
 import { useBoardContext } from "./BoardWrapper";
 import { useEffect } from "react";
 import "./BoardHeaderButton.css";
