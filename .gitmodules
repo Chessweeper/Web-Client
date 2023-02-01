@@ -1,3 +1,6 @@
 [submodule "src/gen"]
 	path = src/gen
 	url = https://github.com/Chessweeper/Puzzle-Gen
+[submodule "src/assets"]
+	path = src/assets
+	url = https://github.com/Chessweeper/Assets

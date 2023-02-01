@@ -31,7 +31,7 @@ function isReverseWinCondition(G: GameState, id: number) {
       if (G.cells[i].value !== G.cells[i].known && G.cells[i].value !== id) {
         return false;
       }
-    } else if (G.cells[i].known === false) {
+    } else if (G.cells[i].known === false && G.cells[i].value !== 0) {
       return false;
     }
   }
