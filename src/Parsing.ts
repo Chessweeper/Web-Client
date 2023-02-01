@@ -69,7 +69,7 @@ export function parseUrl(
       if (isNaN(Number(letter))) {
         // Piece found
         if (target !== null) {
-          availablePieces[letter.toUpperCase()] = Infinity;
+          availablePieces[target.toUpperCase()] = Infinity;
         }
 
         if (validLetters.includes(letter.toUpperCase())) {
