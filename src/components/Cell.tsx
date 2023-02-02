@@ -17,7 +17,7 @@ export const Cell = ({ id }: CellProps): JSX.Element => {
   let value: string | number | JSX.Element = "";
 
   let className = "cell";
-  if (G.size > 10) {
+  if (G.size > 7) {
     className += " small";
   }
 

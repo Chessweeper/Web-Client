@@ -65,8 +65,8 @@ describe("Cell tests", () => {
     expect(cell).not.toHaveClass("white");
   });
 
-  it("should render with small class when size > 10", () => {
-    boardContext.G.size = 11;
+  it("should render with small class when size > 7", () => {
+    boardContext.G.size = 8;
 
     const { container } = renderWithProviders(
       <BoardContext.Provider value={boardContext}>
